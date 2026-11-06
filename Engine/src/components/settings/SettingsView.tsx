@@ -1,0 +1,1191 @@
+"use client";
+
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search, Check, Plus, Trash2, Lock, Sparkles, Undo2, Send } from "lucide-react";
+import { useUI, ClearX, Kbd } from "../ui";
+import { Ago, Until, Clock } from "../Live";
+import { postJSON, getJSON, sendJSON, readJSON } from "@/lib/client";
+import { UNDO_LINE } from "@/lib/copy";
+import { ACTIONS, loadBindings, saveBindings, comboOf, prettyCombo } from "@/lib/shortcuts";
+import { PHASE2_ITEMS, phase2Tip } from "@/lib/phase2";
+import { TalkLink } from "@/components/talk";
+import { SCORE_PARTS } from "@/lib/score";
+import { nextRun, titleCase } from "@/lib/format";
+import { toggleTheme } from "../Shell";
+import { firm, firmSlug, NAMES, on, jobOn, BUILDER, builderFirst } from "@/firm";
+import { PROOF_OUTLETS } from "@/lib/proof-rungs";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type Data = any;
+
+type Sec = { id: string; label: string; key: string; group: "Yours" | "Shared" | "Record"; words: string };
+const ALL_SECTIONS: Sec[] = [
+  { id: "appearance", label: "Appearance", key: "a", group: "Yours", words: "theme night day density compact roomy text size motion animation" },
+  { id: "shortcuts", label: "Shortcuts", key: "k", group: "Yours", words: "keyboard keys rebind" },
+  { id: "thesis", label: "Thesis", key: "t", group: "Shared", words: "thesis keyword search queries stage check" },
+  { id: "scoring", label: "Scoring", key: "c", group: "Shared", words: "weights threshold worth a look penalties score" },
+  { id: "sources", label: "Sources", key: "u", group: "Shared", words: "sources health extra github gdelt rss" },
+  { id: "jobs", label: "Jobs", key: "j", group: "Shared", words: "jobs schedule cron runs" },
+  { id: "voices", label: "Creators and Shows", key: "r", group: "Shared", words: "creators shows podcasts youtube add remove quiet" },
+  { id: "funds", label: "Funds", key: "f", group: "Shared", words: `funds co-investors ${NAMES.coInvestors.toLowerCase()} ${NAMES.peerFunds.toLowerCase()} focus specialist broad` },
+  { id: "trackers", label: "Trackers", key: "i", group: "Shared", words: "tracked companies trends people" },
+  { id: "hidden", label: "Hidden Startups", key: "h", group: "Shared", words: "hidden not a startup blog placeholder big company restore filter" },
+  { id: "alerts", label: "Alerts", key: "l", group: "Shared", words: "alerts" },
+  { id: "slack", label: "Slack", key: "s", group: "Shared", words: "slack connect channel" },
+  { id: "ai", label: "AI", key: "g", group: "Shared", words: "ai drafting memo gateway cap" },
+  { id: "phase2", label: "Phase II", key: "p", group: "Shared", words: "phase ii together" },
+  { id: "log", label: "Change Log", key: "o", group: "Record", words: "change log undo history" },
+];
+// a section a firm turned off is gone, with its shortcut: Creators and Shows goes with the creator feeds (switches:
+// creatorFeeds, phaseTwoSettings, changeLog; Sidekick has no Phase II or Change Log here, user 11-03-26)
+const SECTION_ON: Record<string, boolean> = { voices: on("creatorFeeds"), phase2: on("phaseTwoSettings"), log: on("changeLog"), slack: on("slack") };
+const SECTIONS = ALL_SECTIONS.filter((s) => SECTION_ON[s.id] ?? true);
+const GROUPS = (["Yours", "Shared", "Record"] as const).filter((g) => SECTIONS.some((s) => s.group === g));
+// the thesis industries by name, for Settings › Thesis: "A, B and C"
+const INDUSTRIES = firm.thesis.areas.map((a) => a.label).reduce((t, x, i, all) => (i === 0 ? x : `${t}${i === all.length - 1 ? " and " : ", "}${x}`), "");
+const ATTRS = { autoComplete: "off", autoCorrect: "off", autoCapitalize: "off", spellCheck: false } as const;
+
+function Num({ value, min, max, onChange, label, unit }: { value: number; min: number; max: number; onChange: (n: number) => void; label: string; unit?: string }) {
+  const [txt, setTxt] = useState(String(value));
+  useEffect(() => setTxt(String(value)), [value]);
+  const commit = (s: string) => {
+    const n = Math.max(min, Math.min(max, Math.round(Number(s) || 0)));
+    onChange(n);
+    setTxt(String(n));
+  };
+  return (
+    <div className="num">
+      <input
+        type="text"
+        inputMode="numeric"
+        value={txt}
+        aria-label={`${label} value`}
+        onChange={(e) => setTxt(e.target.value)}
+        onBlur={(e) => commit(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") commit((e.target as HTMLInputElement).value);
+          if (e.key === "ArrowUp") (e.preventDefault(), commit(String(value + 1)));
+          if (e.key === "ArrowDown") (e.preventDefault(), commit(String(value - 1)));
+        }}
+        {...ATTRS}
+      />
+      {unit && <small>{unit}</small>}
+    </div>
+  );
+}
+
+function SliderRow({ label, sub, value, min, max, onChange, unit }: { label: string; sub?: string; value: number; min: number; max: number; onChange: (n: number) => void; unit?: string }) {
+  return (
+    <div className="wrow" data-setting={label}>
+      <div className="lbl">
+        {label}
+        {sub && <small>{sub}</small>}
+      </div>
+      <div className="sl">
+        <span>{min}</span>
+        <input type="range" min={min} max={max} value={value} aria-label={label} onChange={(e) => onChange(Number(e.target.value))} />
+        <span>{max}</span>
+      </div>
+      <Num value={value} min={min} max={max} onChange={onChange} label={label} unit={unit} />
+    </div>
+  );
+}
+
+function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
+  return <button className="tog" role="switch" aria-checked={on} aria-label={label} title={on ? `Turn off: ${label}` : `Turn on: ${label}`} onClick={() => onChange(!on)} onKeyDown={(e) => e.key === " " && (e.preventDefault(), onChange(!on))} />;
+}
+
+function Seg({ value, opts, onChange, label }: { value: string; opts: [string, string][]; onChange: (v: string) => void; label: string }) {
+  return (
+    <div className="seg2" role="group" aria-label={label}>
+      {opts.map(([v, l]) => (
+        <button key={v} aria-pressed={value === v} onClick={() => onChange(v)} disabled={value === v} title={`${label}: ${l}`}>
+          {l}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Card({ title, note, children }: { title: string; note?: ReactNode; children: ReactNode }) {
+  return (
+    <div className="scard" data-card={title}>
+      <h3>
+        {title}
+        {note && <span className="note-h">{typeof note === "string" ? titleCase(note) : note}</span>}
+      </h3>
+      {children}
+    </div>
+  );
+}
+
+export const WLABEL: [string, string, string][] = (
+  [
+    ["thesis", "Thesis fit", `Matches a thesis area and a play ${firm.short} has backed`],
+    ["stage", "Stage and check", firm.thesis.stageLabel],
+    ["unitEconomics", "Unit economics", "A deck's figures at or past their industry's verified reference; an unknown line costs nothing"],
+    ["signal", "Signal strength", "Independent signals, recency, momentum"],
+    ["culture", "Culture", "Creators and shows, sponsors, the taste map"],
+    ["team", "Team", "Founder track record in public sources"],
+    ["geo", "Geography", firm.thesis.geo.label],
+  ] as [string, string, string][]
+).filter(([k]) => SCORE_PARTS.some(([p]) => p === k)); // only the parts this firm scores (Culture and Unit Economics go with their switches)
+const COUNT = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight"];
+
+export function SettingsView({ data }: { data: Data }) {
+  const ui = useUI();
+  const router = useRouter();
+  const params = useSearchParams();
+  const [sec, setSec] = useState(params.get("s") || "appearance");
+  const [q, setQ] = useState("");
+  const search = useRef<HTMLInputElement>(null);
+
+  // the search field is focused on open, and typing anywhere with no field focused goes to it
+  useEffect(() => {
+    search.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (document.getElementById("app-root")?.hasAttribute("inert")) return;
+      const t = e.target as HTMLElement;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
+      if (e.ctrlKey && !e.metaKey && !e.altKey) {
+        const s = SECTIONS.find((x) => x.key === e.key.toLowerCase());
+        if (s) {
+          e.preventDefault();
+          e.stopPropagation();
+          setSec(s.id);
+          return;
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        search.current?.focus();
+        return;
+      }
+      if (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey && /\S/.test(e.key)) {
+        e.stopPropagation(); // the letter goes into the search field, not to a page shortcut
+        search.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, []);
+  useEffect(() => {
+    if (params.get("s")) setSec(params.get("s")!);
+    if (params.get("explain")) ui.toast("Slack Setup Needed");
+    if (params.get("connected")) ui.toast("Slack Connected");
+  }, [params, ui]);
+
+  const hits = useMemo(() => {
+    const n = q.trim().toLowerCase();
+    if (!n) return null;
+    const secs = SECTIONS.filter((s) => `${s.label} ${s.words}`.toLowerCase().includes(n));
+    const keys = ACTIONS.filter((a) => `${a.label} ${a.keys.join(" ")}`.toLowerCase().includes(n));
+    return { secs, keys };
+  }, [q]);
+
+  const badge = (id: string) => {
+    if (id === "sources") return data.health.filter((h: any) => h.last_error && (!h.last_ok || h.last_error > h.last_ok)).length || 0;
+    return 0;
+  };
+  const cur = SECTIONS.find((s) => s.id === sec) || SECTIONS[0];
+
+  return (
+    <div>
+      <header className="pgh">
+        <div>
+          <span className="label">Settings</span>
+          <h1>Settings</h1>
+          <p className="lede2">Shared settings change Scout for everyone. {UNDO_LINE} Your settings stay in this browser.</p>
+        </div>
+        <label className="fsearch" style={{ minWidth: 340 }}>
+          <Search className="ico" />
+          <input
+            ref={search}
+            data-search
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                if (q) setQ("");
+                else (e.target as HTMLInputElement).blur();
+              }
+            }}
+            placeholder="Search every setting and shortcut"
+            aria-label="Search every setting and shortcut"
+            {...ATTRS}
+          />
+          <ClearX
+            show={!!q}
+            onClear={() => {
+              setQ("");
+              search.current?.focus();
+            }}
+          />
+          <span className="kbd">⌘F</span>
+        </label>
+      </header>
+      <div className="rule" />
+      <div className="set">
+        <nav className="snav" aria-label="Settings sections">
+          {GROUPS.map((g) => (
+            <div key={g} style={{ display: "contents" }}>
+              <div className="grp">{g}</div>
+              {SECTIONS.filter((s) => s.group === g).map((s) => (
+                <a
+                  key={s.id}
+                  href={`/settings?s=${s.id}`}
+                  className={s.id === sec && !hits ? "on" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSec(s.id);
+                    setQ("");
+                    window.history.replaceState(null, "", `/settings?s=${s.id}`);
+                  }}
+                  title={badge(s.id) ? `${badge(s.id)} need you` : `Open ${s.label} (⌃${s.key.toUpperCase()})`}
+                >
+                  {s.label}
+                  {badge(s.id) ? <span className="badge2">{badge(s.id)}</span> : <span className="k">⌃{s.key.toUpperCase()}</span>}
+                </a>
+              ))}
+            </div>
+          ))}
+        </nav>
+        <div className="pane">
+          {hits ? (
+            <>
+              <h2>Search Results</h2>
+              {!hits.secs.length && !hits.keys.length && <p className="sub">Nothing matches &quot;{q}&quot;.</p>}
+              {hits.secs.map((s) => (
+                <Card key={s.id} title={s.label} note={s.group === "Yours" ? "Yours · This Browser" : "Shared"}>
+                  <button className="btn" onClick={() => (setSec(s.id), setQ(""))} title={`Open ${s.label}`}>
+                    Open {s.label}
+                  </button>
+                </Card>
+              ))}
+              {hits.keys.length > 0 && (
+                <Card title="Shortcuts">
+                  <ShortcutRows filter={q} />
+                </Card>
+              )}
+            </>
+          ) : (
+            <>
+              <h2>
+                {cur.label}
+                <span className="scope">{cur.group === "Yours" ? "Yours · This Browser" : cur.group === "Record" ? "Shared · The Record" : "Shared · Everyone Sees Changes"}</span>
+              </h2>
+              <Pane id={cur.id} data={data} refresh={() => router.refresh()} />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Pane({ id, data, refresh }: { id: string; data: Data; refresh: () => void }) {
+  switch (id) {
+    case "appearance":
+      return <Appearance />;
+    case "shortcuts":
+      return (
+        <>
+          <p className="sub">Every shortcut can be changed, and each action can have several keys. Shortcuts never fire while you type in a field.</p>
+          <Card title="Shortcuts">
+            <ShortcutRows filter="" />
+          </Card>
+        </>
+      );
+    case "hidden":
+      return <HiddenStartups />;
+    case "thesis":
+      return <ThesisPane data={data} refresh={refresh} />;
+    case "scoring":
+      return <Scoring data={data} refresh={refresh} />;
+    case "sources":
+      return <Sources data={data} refresh={refresh} />;
+    case "jobs":
+      return <Jobs data={data} />;
+    case "voices":
+      return <Voices data={data} refresh={refresh} />;
+    case "funds":
+      return <Funds data={data} refresh={refresh} />;
+    case "trackers":
+      return <Trackers data={data} refresh={refresh} />;
+    case "alerts":
+      return (
+        <>
+          <p className="sub">Each alert is checked once a day, around 8 AM ET, against everything new.</p>
+          <Card title="Alerts" note={<Link href="/tracking#configure">Configure Alerts</Link>}>
+            {data.alerts.map((a: any) => (
+              <div className="trow" key={a.id}>
+                <span className="lbl">{a.title}</span>
+                <span className="mono" style={{ fontSize: 13 }}>{a.active ? "On" : "Off"}</span>
+              </div>
+            ))}
+          </Card>
+        </>
+      );
+    case "slack":
+      return <SlackPane data={data} refresh={refresh} />;
+    case "ai":
+      return <AiPane data={data} refresh={refresh} />;
+    case "phase2":
+      return <Phase2Pane />;
+    case "log":
+      return <LogPane data={data} refresh={refresh} />;
+  }
+  return null;
+}
+
+/* ---------- Yours ---------- */
+function Appearance() {
+  const [theme, setTheme] = useState("dark");
+  const [density, setDensity] = useState("roomy");
+  const [text, setText] = useState("normal");
+  const [motion, setMotion] = useState(true);
+  useEffect(() => {
+    setTheme(document.documentElement.dataset.theme || "dark");
+    setDensity(document.documentElement.dataset.density || "roomy");
+    setText(document.documentElement.dataset.text || "normal");
+    setMotion(document.documentElement.dataset.motion !== "off");
+  }, []);
+  const save = (k: string, v: string) => {
+    try {
+      localStorage.setItem(`scout.${k}`, v);
+    } catch {
+      /* private window */
+    }
+    document.documentElement.dataset[k] = v;
+  };
+  return (
+    <>
+      <p className="sub">These stay in this browser.</p>
+      <Card title="Look">
+        <div className="trow">
+          <span className="lbl">
+            Theme<small>Follows your device until you pick one here. Shift+T flips it anywhere.</small>
+          </span>
+          <Seg
+            label="Theme"
+            value={theme}
+            opts={[
+              ["light", NAMES.lightLook],
+              ["dark", NAMES.darkLook],
+            ]}
+            onChange={(v) => {
+              if (v !== theme) toggleTheme();
+              setTheme(v);
+            }}
+          />
+        </div>
+        <div className="trow">
+          <span className="lbl">Density</span>
+          <Seg label="Density" value={density} opts={[["roomy", "Roomy"], ["compact", "Compact"]]} onChange={(v) => (setDensity(v), save("density", v))} />
+        </div>
+        <div className="trow">
+          <span className="lbl">Text size</span>
+          <Seg label="Text size" value={text} opts={[["normal", "Normal"], ["large", "Large"]]} onChange={(v) => (setText(v), save("text", v))} />
+        </div>
+        <div className="trow">
+          <span className="lbl">
+            Motion<small>The ticker, the live light, the sweeps and the glows. On by default.</small>
+          </span>
+          <Toggle label="Motion" on={motion} onChange={(v) => (setMotion(v), save("motion", v ? "on" : "off"))} />
+        </div>
+      </Card>
+    </>
+  );
+}
+
+/** The startup filter's list (V2, 10-26-26): blogs, big companies' products and placeholder names stay off Today,
+ *  the Pipeline and the IC Meeting. Restore puts one back for good; the filter never drops it again. */
+function HiddenStartups() {
+  const ui = useUI();
+  const [rows, setRows] = useState<{ id: number; name: string; domain: string | null; why: string | null; keep: boolean; area: string | null; score: number }[] | null>(null);
+  useEffect(() => {
+    getJSON<{ rows: NonNullable<typeof rows> }>("/api/hidden").then((r) => setRows(r.ok && r.data ? r.data.rows : []));
+  }, []);
+  async function set(id: number, keep: boolean, quiet = false): Promise<void> {
+    const save = postJSON<{ keep: boolean; why: string | null }>("/api/hidden", { id, keep });
+    const r = await (quiet ? save : ui.undoable(keep ? "Restore" : "Hide", save, () => set(id, !keep, true)));
+    if (!r.ok) return ui.error("That didn't save", r.error || "The server did not answer.");
+    setRows((xs) => (xs || []).map((x) => (x.id === id ? { ...x, keep, why: r.data!.why } : x)));
+    if (quiet) return;
+    const name = rows?.find((x) => x.id === id)?.name || "Company";
+    ui.toast(`${name} ${keep ? "Restored" : "Hidden"}`);
+  }
+  return (
+    <>
+      <p className="sub">Off Scout&apos;s recommendations: blogs, big companies&apos; products, placeholder names, startups the AI check found outside the thesis, and anything the team marked Not a Fit. Restore one and it&apos;s back for good.</p>
+      <Card title="Hidden Startups" note={rows ? `${rows.filter((x) => !x.keep).length} hidden` : undefined}>
+        {rows === null && <p className="sub">Loading the list</p>}
+        {rows && !rows.length && <p className="sub">Nothing is hidden right now.</p>}
+        {rows?.map((x) => (
+          <div className="trow" key={x.id}>
+            <span className="lbl">
+              <a href={`/company/${x.id}`} title={`Open ${x.name} in Scout`}>
+                {x.name}
+              </a>{" "}
+              <span className="mono" style={{ fontSize: 13, color: "var(--text-3)" }}>
+                {x.keep ? "Restored by the team" : x.why}
+              </span>
+            </span>
+            <button className="btn" onClick={() => set(x.id, !x.keep)} title={x.keep ? `Hand ${x.name} back to the startup filter` : `Put ${x.name} back on Today and the Pipeline for good`}>
+              {x.keep ? "Hide Again" : "Restore"}
+            </button>
+          </div>
+        ))}
+      </Card>
+    </>
+  );
+}
+
+function ShortcutRows({ filter }: { filter: string }) {
+  const ui = useUI();
+  const [b, setB] = useState<Record<string, string[]>>({});
+  const [rec, setRec] = useState<{ id: string; i: number } | null>(null);
+  const [f, setF] = useState("");
+  useEffect(() => setB(loadBindings()), []);
+  const store = useCallback(
+    (next: Record<string, string[]>) => {
+      setB(next);
+      saveBindings(next);
+      window.dispatchEvent(new Event("scout:bindings"));
+      ui.toast("Shortcut Saved");
+    },
+    [ui],
+  );
+  useEffect(() => {
+    if (!rec) return;
+    const onKey = (e: KeyboardEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.key === "Escape") return setRec(null);
+      if (["Shift", "Meta", "Control", "Alt"].includes(e.key)) return;
+      const c = comboOf(e);
+      const list = [...(b[rec.id] || [])];
+      if (rec.i >= list.length) list.push(c);
+      else list[rec.i] = c;
+      setRec(null);
+      store({ ...b, [rec.id]: [...new Set(list)] });
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, [rec, b, store]);
+  const needle = (filter || f).toLowerCase();
+  const rows = ACTIONS.filter((a) => !needle || `${a.label} ${(b[a.id] || a.keys).join(" ")} ${(b[a.id] || a.keys).map(prettyCombo).join(" ")}`.toLowerCase().includes(needle));
+  const conflicts = (c: string, id: string) => ACTIONS.filter((a) => a.id !== id && (b[a.id] || a.keys).includes(c)).map((a) => a.label);
+  return (
+    <>
+      {!filter && (
+        <div className="frow">
+          <label className="fsearch" style={{ flex: "1 1 auto" }}>
+            <Search className="ico" />
+            <input value={f} onChange={(e) => setF(e.target.value)} placeholder="Filter shortcuts by name or key" aria-label="Filter shortcuts" {...ATTRS} />
+            <ClearX show={!!f} onClear={() => setF("")} />
+          </label>
+          <span className="mono" style={{ fontSize: 13, color: "var(--text-3)", whiteSpace: "nowrap" }}>
+            {rows.length} of {ACTIONS.length} shown
+          </span>
+        </div>
+      )}
+      {rows.map((a) => {
+        const keys = b[a.id] || a.keys;
+        const changed = JSON.stringify(keys) !== JSON.stringify(a.keys);
+        return (
+          <div className="trow" key={a.id}>
+            <span className="lbl">
+              {a.label}
+              {keys.some((k) => conflicts(k, a.id).length) && <small style={{ color: "var(--red-ink)" }}>Also used by {keys.flatMap((k) => conflicts(k, a.id)).join(", ")}</small>}
+            </span>
+            <span style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              {keys.map((k, i) => (
+                <span key={k + i} style={{ display: "inline-flex", gap: 2 }}>
+                  <button className={"btn" + (rec?.id === a.id && rec.i === i ? " on" : "")} onClick={() => setRec({ id: a.id, i })} title="Press to record a new key for this slot" data-keys>
+                    {rec?.id === a.id && rec.i === i ? "Press Keys" : prettyCombo(k)}
+                  </button>
+                  {keys.length > 1 && (
+                    <button className="btn" onClick={() => store({ ...b, [a.id]: keys.filter((_, j) => j !== i) })} title={`Remove ${prettyCombo(k)}`}>
+                      Remove
+                    </button>
+                  )}
+                </span>
+              ))}
+              <button className="btn" onClick={() => setRec({ id: a.id, i: keys.length })} title="Add another key for this action">
+                <Plus className="ico" />
+              </button>
+              {changed && (
+                <button className="btn" onClick={() => store({ ...b, [a.id]: a.keys })} title="Back to the default keys">
+                  Reset
+                </button>
+              )}
+            </span>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+/* ---------- Shared ---------- */
+function SaveBar({ count, onSave, onDiscard, savedAt, busy, disabled }: { count: number; onSave: () => void; onDiscard: () => void; savedAt: number | null; busy: boolean; disabled?: boolean }) {
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && count && !disabled) {
+        e.preventDefault();
+        onSave();
+      }
+    };
+    document.addEventListener("keydown", k);
+    return () => document.removeEventListener("keydown", k);
+  }, [count, disabled, onSave]);
+  return (
+    <div className="savebar" data-testid="savebar">
+      <span className="who">
+        {count ? (
+          <>
+            <b>
+              {count} {count === 1 ? "change" : "changes"}
+            </b>{" "}
+            · saved for everyone, logged with Undo
+          </>
+        ) : savedAt ? (
+          <>
+            Saved <Ago date={savedAt} ch={8} /> · the next morning run re-scores at 6 AM ET, <Until date={nextRun(10)} ch={9} />
+          </>
+        ) : (
+          "No unsaved changes"
+        )}
+      </span>
+      <button className="btn" onClick={onDiscard} disabled={!count || busy} title="Throw away the unsaved changes">
+        Discard
+      </button>
+      <button className="btn red" onClick={onSave} disabled={!count || busy || disabled} title="Save for everyone (⌘↩)">
+        Save Changes<Kbd>⌘↩</Kbd>
+      </button>
+    </div>
+  );
+}
+
+function useShared(initial: Record<string, unknown>, refresh: () => void) {
+  const ui = useUI();
+  const [draft, setDraft] = useState(initial);
+  const [base, setBase] = useState(initial);
+  const [busy, setBusy] = useState(false);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const changed = Object.keys(draft).filter((k) => JSON.stringify(draft[k]) !== JSON.stringify(base[k]));
+  const count = changed.reduce((n, k) => n + (typeof draft[k] === "object" && draft[k] && !Array.isArray(draft[k]) ? Object.keys(draft[k] as object).filter((x) => (draft[k] as any)[x] !== (base[k] as any)?.[x]).length : 1), 0);
+  async function save() {
+    setBusy(true);
+    const prev = base;
+    // ⌘Z puts a save back: each setting it changed, newest first, then the panel as it was (user, 11-03-26: no Change Log for Sidekick)
+    const r = await ui.undoable("Save", postJSON<{ logIds: number[] }>("/api/settings", { changes: Object.fromEntries(changed.map((k) => [k, draft[k]])) }), async (r) => {
+      for (const id of [...(r.data?.logIds || [])].reverse()) await postJSON("/api/undo", { id });
+      setBase(prev);
+      setDraft(prev);
+      refresh();
+    });
+    setBusy(false);
+    if (!r.ok) return ui.error("Settings didn't save", r.error || "The server did not answer.");
+    setBase(draft);
+    setSavedAt(Date.now());
+    ui.toast(`${count} ${count === 1 ? "Change" : "Changes"} Saved`);
+    refresh();
+  }
+  return { draft, setDraft, count, save, discard: () => setDraft(base), busy, savedAt };
+}
+
+/** Set one weight and scale the other five so the six still add up to 100 (each stays within 0 to 60). */
+/** Sets one weight and spreads the rest of 100 over the other parts shown (a part a firm turned off keeps its value). */
+export function rebalance(w: Record<string, number>, k: string, n: number, parts: string[] = WLABEL.map(([x]) => x)): Record<string, number> {
+  const MAX = 60;
+  n = Math.max(0, Math.min(MAX, Math.round(n)));
+  const others = parts.filter((x) => x !== k);
+  const rest = 100 - n;
+  const cur = others.reduce((a, x) => a + (w[x] || 0), 0);
+  const next: Record<string, number> = { ...w, [k]: n };
+  others.forEach((x) => (next[x] = Math.max(0, Math.min(MAX, Math.round(cur > 0 ? ((w[x] || 0) / cur) * rest : rest / others.length)))));
+  let diff = 100 - [k, ...others].reduce((a, x) => a + next[x], 0);
+  for (const x of [...others].sort((a, b) => next[b] - next[a])) {
+    if (!diff) break;
+    const v = Math.max(0, Math.min(MAX, next[x] + diff));
+    diff -= v - next[x];
+    next[x] = v;
+  }
+  return next;
+}
+
+function Scoring({ data, refresh }: { data: Data; refresh: () => void }) {
+  const s = useShared({ scoreWeights: data.weights, worthThreshold: data.threshold }, refresh);
+  const w = s.draft.scoreWeights as Record<string, number>;
+  const sum = WLABEL.reduce((a, [k]) => a + (w[k] || 0), 0);
+  const setWeight = (k: string, n: number) => s.setDraft({ ...s.draft, scoreWeights: rebalance(w, k, n) });
+  return (
+    <>
+      <p className="sub">The thesis-fit score is computed every morning from these {COUNT[WLABEL.length]} parts, minus penalties. Votes nudge it by at most 15 points.</p>
+      <Card title="Weights" note="Always add up to 100">
+        {WLABEL.map(([k, l, sub]) => (
+          <SliderRow key={k} label={l} sub={sub} value={w[k]} min={0} max={60} onChange={(n) => setWeight(k, n)} />
+        ))}
+        <div className="total" data-testid="weights-total">
+          <span>Total</span>
+          <b className={sum === 100 ? "" : "bad"}>{sum}</b>
+          {sum === 100 ? <Check className="ico" style={{ color: "var(--green)" }} /> : null}
+          <span>Move one weight and the other {COUNT[WLABEL.length - 1]} rebalance to keep 100.</span>
+        </div>
+      </Card>
+      <Card title="Worth a Look">
+        <SliderRow label="Threshold" sub="Companies at or above this score count as Worth a Look" value={s.draft.worthThreshold as number} min={20} max={90} onChange={(n) => s.setDraft({ ...s.draft, worthThreshold: n })} unit="%" />
+      </Card>
+      <Card title="Penalties" note="Fixed">
+        <div className="rules">
+          <div>
+            <span className="pen">−10</span>
+            <span>Competes with a portfolio company</span>
+            <span />
+          </div>
+          <div>
+            <span className="pen">−15</span>
+            <span>Past Series A ({firm.short}&apos;s follow-on territory)</span>
+            <span />
+          </div>
+          <div>
+            <span className="pen">−20</span>
+            <span>Not venture scale: agencies, services, single-location businesses</span>
+            <span />
+          </div>
+          <div>
+            <span className="pen plus">±15</span>
+            <span>Learned from the team&apos;s votes</span>
+            <span />
+          </div>
+        </div>
+      </Card>
+      <SaveBar count={s.count} onSave={s.save} onDiscard={s.discard} savedAt={s.savedAt} busy={s.busy} disabled={sum !== 100} />
+    </>
+  );
+}
+
+function ThesisPane({ data, refresh }: { data: Data; refresh: () => void }) {
+  const s = useShared({ thesisQueries: data.queries, stage: data.stage }, refresh);
+  const qs = s.draft.thesisQueries as string[];
+  const st = s.draft.stage as { minCheck: number; maxCheck: number };
+  return (
+    <>
+      <p className="sub">
+        The thesis covers {firm.thesis.areas.length} industries: {INDUSTRIES}. Each line below is a search Scout runs on funding news every morning to find startups in them. Words in quotes must appear together, and OR means either one.
+      </p>
+      <Card title="Funding News Searches">
+        {qs.map((q, i) => (
+          <div className="trow" key={i}>
+            <input className="sinput" value={q} aria-label={`Search ${i + 1}`} onChange={(e) => s.setDraft({ ...s.draft, thesisQueries: qs.map((x, j) => (j === i ? e.target.value : x)) })} {...ATTRS} />
+            <button className="btn" onClick={() => s.setDraft({ ...s.draft, thesisQueries: qs.filter((_, j) => j !== i) })} title="Remove this search">
+              <Trash2 className="ico" />
+              Remove
+            </button>
+          </div>
+        ))}
+        <button className="btn" onClick={() => s.setDraft({ ...s.draft, thesisQueries: [...qs, ""] })} title="Add a search">
+          <Plus className="ico" />
+          Add a Search
+        </button>
+      </Card>
+      <Card title="Stage and Check">
+        <SliderRow label="Smallest first check" value={Math.round(st.minCheck / 100000) / 10} min={0} max={5} unit="$M" onChange={(n) => s.setDraft({ ...s.draft, stage: { ...st, minCheck: n * 1e6 } })} />
+        <SliderRow label="Largest first check" value={Math.round(st.maxCheck / 100000) / 10} min={1} max={10} unit="$M" onChange={(n) => s.setDraft({ ...s.draft, stage: { ...st, maxCheck: n * 1e6 } })} />
+      </Card>
+      <SaveBar count={s.count} onSave={s.save} onDiscard={s.discard} savedAt={s.savedAt} busy={s.busy} />
+    </>
+  );
+}
+
+// the podcast feeds go with the creator feeds, the firm's own posts with its posts (switches: creatorFeeds, firmPosts)
+const SOURCE_NAMES = ["sec-index", "sec-latest-D", "sec-latest-C", "sec-search", "hn", "yc", "producthunt", "appstore", "google-news", "google-news-links", "google-trends", "youtube", ...(on("creatorFeeds") ? ["podcasts"] : []), ...(on("firmPosts") ? [`${firmSlug}-medium`, "fourth-quarter"] : []), "github", "gdelt"];
+/** The sources with their own switch: listed first in Health (user, 11-04-26). */
+const CAN_SWITCH = /^(youtube|podcasts|google-news|hn|yc|producthunt|appstore)$/;
+const siteName = (h: string) => h.replace(/^www\./, "");
+function Sources({ data, refresh }: { data: Data; refresh: () => void }) {
+  const s = useShared({ extraSources: data.extra, sourcesOff: data.off }, refresh);
+  const off = s.draft.sourcesOff as string[];
+  const all = [...new Set([...SOURCE_NAMES, ...data.health.map((h: any) => h.source)])];
+  const rows = [...all.filter((x) => CAN_SWITCH.test(x)), ...all.filter((x) => !CAN_SWITCH.test(x))];
+  const outlets = [...PROOF_OUTLETS, ...(firm.sources.proofOutlets || [])];
+  return (
+    <>
+      <p className="sub">Every source with its health: when it last answered, when it last failed, and when it is scanned next.</p>
+      <Card title="Extra Sources">
+        <div className="trow">
+          <span className="lbl">
+            GitHub and <a href="https://www.gdeltproject.org/" target="_blank" rel="noopener noreferrer" title="Opens the GDELT Project in a new window">GDELT</a>
+            <small>GDELT is a free index of news from around the world. Both are slow, tightly rate-limited, and add little for consumer deals. Off by default.</small>
+          </span>
+          <Toggle label="Extra sources" on={!!s.draft.extraSources} onChange={(v) => s.setDraft({ ...s.draft, extraSources: v })} />
+        </div>
+      </Card>
+      <Card title="Health">
+        {rows.map((src) => {
+          const h = data.health.find((x: any) => x.source === src);
+          const failing = h?.last_error && (!h.last_ok || h.last_error > h.last_ok);
+          return (
+            <div className="jobrow" key={src}>
+              <b>{src}</b>
+              <span>
+                {h?.last_ok ? (
+                  <>
+                    OK <Ago date={h.last_ok} ch={8} />
+                  </>
+                ) : (
+                  "Not scanned yet"
+                )}
+                {failing && (
+                  <span className="err">
+                    {" "}
+                    · failed <Ago date={h.last_error} ch={8} /> ({h.error_text})
+                  </span>
+                )}
+              </span>
+              <span style={{ display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between" }}>
+                <span>
+                  next scan <Until date={nextRun(9)} ch={9} />
+                </span>
+                {CAN_SWITCH.test(src) && (
+                  <Toggle label={`Scan ${src}`} on={!off.includes(src)} onChange={(v) => s.setDraft({ ...s.draft, sourcesOff: v ? off.filter((x) => x !== src) : [...off, src] })} />
+                )}
+              </span>
+            </div>
+          );
+        })}
+      </Card>
+      <Card title="Funding Proof">
+        <p className="sub">
+          How Scout finds the round {firm.short} joined in each portfolio company: a reputable page that names the company, {firm.name} and the round. It tries these in order; the costly last one runs only when the others found nothing.
+        </p>
+        {(data.proof || []).map((r: { key: string; label: string; tried: number; found: number }) => (
+          <div className="jobrow" key={r.key}>
+            <b>
+              {r.label}
+              {r.key === "outlet-search" && (
+                <small>
+                  Scout types the company and {firm.name} into each site&apos;s own search box:{" "}
+                  {outlets.map((h, i) => (
+                    <span key={h}>
+                      {i ? ", " : ""}
+                      <a href={`https://${h}`} target="_blank" rel="noopener noreferrer" title={`Opens ${siteName(h)} in a new window`}>
+                        {siteName(h)}
+                      </a>
+                    </span>
+                  ))}
+                </small>
+              )}
+            </b>
+            <span>{r.tried ? `Found a round for ${r.found} of ${r.tried} companies (${Math.round((100 * r.found) / r.tried)}%)` : "Not tried yet"}</span>
+            <span />
+          </div>
+        ))}
+      </Card>
+      <SaveBar count={s.count} onSave={s.save} onDiscard={s.discard} savedAt={s.savedAt} busy={s.busy} />
+    </>
+  );
+}
+
+const JOB_LIST: [string, string, number, number?][] = (
+  [
+    ["funds-neighborhood", "Co-investor watch", 6],
+    ["funds-synergistic", NAMES.peerFundWatch, 7],
+    ["collect-media", on("creatorFeeds") ? "Creators and shows" : "People tracked", 8],
+    ["collect-signals", "Startup signals", 9],
+    ["score", "Scoring", 10],
+    ["alerts", "Alerts", 11],
+    ["culture", "Culture", 12],
+    ["trends", "Trends", 13],
+    ["sponsors", "Sponsor Radar", 14],
+    ["monday-brief", "Monday brief", 15, 1],
+    ["weekly", "Weekly upkeep", 6, 0],
+    ["refresh", "Refresh Now", -1],
+  ] as [string, string, number, number?][]
+).filter(([k]) => jobOn(k)); // a job whose feature is off never runs (JOB_FEATURE in src/firm/features.ts)
+function Jobs({ data }: { data: Data }) {
+  const [runs, setRuns] = useState<any[]>(data.runs);
+  const running = runs.some((r) => !r.finished_at && Date.now() - new Date(r.started_at).getTime() < 10 * 60 * 1000);
+  useEffect(() => {
+    if (!running) return;
+    const t = setInterval(async () => {
+      const r = await getJSON<{ runs: any[] }>("/api/jobs");
+      if (r.ok && r.data) setRuns(r.data.runs);
+    }, 15_000);
+    return () => clearInterval(t);
+  }, [running]);
+  return (
+    <>
+      <p className="sub">Every job runs once a day on Vercel&apos;s free plan (timing within the hour), time-boxed and resumable. This page updates every 15 seconds while a job runs.</p>
+      <Card title="Jobs">
+        {JOB_LIST.map(([id, label, h, wd]) => {
+          const r = runs.find((x: any) => x.job === id);
+          const live = r && !r.finished_at && Date.now() - new Date(r.started_at).getTime() < 10 * 60 * 1000;
+          return (
+            <div className="jobrow" key={id} data-job={id}>
+              <b>{label}</b>
+              <span>
+                {live ? (
+                  <span className="run">
+                    running · <Clock since={r.started_at} /> · {r.stage}
+                    {r.total ? ` · ${r.done} of ${r.total}` : ""}
+                  </span>
+                ) : r ? (
+                  <>
+                    last run <Ago date={r.finished_at || r.started_at} ch={8} /> · {r.items} items
+                    {r.errors ? <span className="err"> · {r.errors} errors</span> : ""}
+                  </>
+                ) : (
+                  "Not run yet"
+                )}
+              </span>
+              <span>{h >= 0 ? <>next <Until date={nextRun(h, new Date(), wd)} ch={9} /></> : "on demand, once an hour"}</span>
+            </div>
+          );
+        })}
+      </Card>
+    </>
+  );
+}
+
+function Voices({ data, refresh }: { data: Data; refresh: () => void }) {
+  const ui = useUI();
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [list, setList] = useState<any[]>(data.voices);
+  useEffect(() => setList(data.voices), [data.voices]);
+  async function add() {
+    setBusy(true);
+    const r = await postJSON<{ voice: any }>("/api/voices", { input });
+    setBusy(false);
+    if (!r.ok) return ui.error("That source wasn't added", r.error || "The server did not answer.");
+    ui.toast(`${r.data!.voice.name} Added`);
+    setInput("");
+    refresh();
+  }
+  async function remove(v: any) {
+    const ok = await ui.confirm({
+      title: `Remove ${v.name}?`,
+      facts: [
+        ["Source", v.name],
+        ["Stops", "reading its new episodes and videos"],
+        ["Keeps", "everything already found from it"],
+      ],
+      consequence: `Everyone sees this change. ${UNDO_LINE}`,
+      verb: "Remove",
+      danger: true,
+      icon: <Trash2 className="ico" />,
+    });
+    if (!ok) return;
+    setList((l) => l.filter((x) => x.id !== v.id));
+    const r = await sendJSON("DELETE", "/api/voices", { id: v.id });
+    if (!r.ok) {
+      setList(data.voices);
+      return ui.error(`${v.name} wasn't removed`, r.error || `${r.status}`);
+    }
+    ui.toast(`${v.name} Removed`);
+  }
+  return (
+    <>
+      <p className="sub">Paste a YouTube channel URL that contains /channel/UC…, a podcast name (looked up on Apple Podcasts) or any RSS URL. A show with no episode in the last 90 days can&apos;t be a source.</p>
+      <Card title="Add a Creator or Show">
+        <div className="trow">
+          <input className="sinput" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && input && add()} placeholder="YouTube channel URL, podcast name or RSS URL" aria-label="New creator or show" {...ATTRS} />
+          <button className="btn red" onClick={add} disabled={!input.trim() || busy} title="Check the source and add it for everyone">
+            <Plus className="ico" />
+            Add
+          </button>
+        </div>
+      </Card>
+      <Card title="Sources" note={`${list.filter((v) => v.status === "active").length} active`}>
+        {list.map((v) => (
+          <div className="trow" key={v.id}>
+            <span className="lbl">
+              {v.name}
+              <small>
+                {v.kind === "named" ? "Tracked by name" : v.status === "quiet" ? "Quiet: no episode in 90 days" : v.kind === "podcast" ? "Podcast" : "Creator"}
+                {v.exempt ? " · always stays" : ""}
+              </small>
+            </span>
+            {!v.exempt && (
+              <button className="btn" onClick={() => remove(v)} title={`Remove ${v.name} from the sources`}>
+                <Trash2 className="ico" />
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+      </Card>
+    </>
+  );
+}
+
+function Funds({ data, refresh }: { data: Data; refresh: () => void }) {
+  const ui = useUI();
+  const [f, setF] = useState({ name: "", kind: "synergistic", focus: "broad" });
+  const [list, setList] = useState<any[]>(data.funds);
+  async function add() {
+    const r = await ui.undoable("Add", postJSON<{ logId: number }>("/api/funds", f), async (r) => {
+      await postJSON("/api/undo", { id: r.data!.logId });
+      refresh();
+    });
+    if (!r.ok) return ui.error("That fund wasn't added", r.error || "The server did not answer.");
+    ui.toast(`${f.name} Added`);
+    setF({ ...f, name: "" });
+    refresh();
+  }
+  async function focus(x: any, v: string) {
+    setList((l) => l.map((y) => (y.id === x.id ? { ...y, focus: v } : y)));
+    const r = await ui.undoable("Focus", sendJSON<{ logId: number }>("PATCH", "/api/funds", { id: x.id, focus: v }), async (r) => {
+      setList((l) => l.map((y) => (y.id === x.id ? { ...y, focus: x.focus } : y)));
+      await postJSON("/api/undo", { id: r.data!.logId });
+    });
+    if (!r.ok) return ui.error("The focus tag didn't change", r.error || "The server did not answer.");
+    ui.toast(`${x.name} Is ${v === "specialist" ? "Specialist" : "Broad"}`);
+  }
+  async function remove(x: any) {
+    const ok = await ui.confirm({ title: `Remove ${x.name}?`, facts: [["Fund", x.name], ["List", x.kind === "neighborhood" ? NAMES.coInvestors : NAMES.peerFunds]], consequence: UNDO_LINE, verb: "Remove", danger: true, icon: <Trash2 className="ico" /> });
+    if (!ok) return;
+    setList((l) => l.filter((y) => y.id !== x.id));
+    const r = await ui.undoable("Remove", sendJSON<{ logId: number }>("DELETE", "/api/funds", { id: x.id }), async (r) => {
+      await postJSON("/api/undo", { id: r.data!.logId });
+      setList(data.funds);
+      refresh();
+    });
+    if (!r.ok) {
+      setList(data.funds);
+      return ui.error(`${x.name} wasn't removed`, r.error || "The server did not answer.");
+    }
+    ui.toast(`${x.name} Removed`);
+  }
+  return (
+    <>
+      <p className="sub">Specialist funds ({firm.copy.specialistFocus}) show every deal; broad funds only deals inside the thesis. When unsure, tag a fund broad.</p>
+      <Card title="Add a Fund">
+        <div className="trow" style={{ gridTemplateColumns: "minmax(0,1fr) auto auto auto" }}>
+          <input className="sinput" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Fund name" aria-label="Fund name" {...ATTRS} />
+          <Seg label="List" value={f.kind} opts={[["neighborhood", NAMES.coInvestor], ["synergistic", NAMES.peerFund]]} onChange={(v) => setF({ ...f, kind: v })} />
+          <Seg label="Focus" value={f.focus} opts={[["specialist", "Specialist"], ["broad", "Broad"]]} onChange={(v) => setF({ ...f, focus: v })} />
+          <button className="btn red" disabled={!f.name.trim()} onClick={add} title="Add this fund for everyone">
+            <Plus className="ico" />
+            Add
+          </button>
+        </div>
+      </Card>
+      {(["neighborhood", "synergistic"] as const).map((k) => (
+        <Card key={k} title={k === "neighborhood" ? NAMES.coInvestors : NAMES.peerFunds} note={`${list.filter((x) => x.kind === k).length} funds`}>
+          {list
+            .filter((x) => x.kind === k)
+            .map((x) => (
+              <div className="trow" key={x.id}>
+                <span className="lbl">{x.name}</span>
+                <span style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+                  <Seg label={`${x.name} focus`} value={x.focus} opts={[["specialist", "Specialist"], ["broad", "Broad"]]} onChange={(v) => focus(x, v)} />
+                  <button className="btn" onClick={() => remove(x)} title={`Remove ${x.name}`}>
+                    <Trash2 className="ico" />
+                    Remove
+                  </button>
+                </span>
+              </div>
+            ))}
+        </Card>
+      ))}
+    </>
+  );
+}
+
+function Trackers({ data, refresh }: { data: Data; refresh: () => void }) {
+  const ui = useUI();
+  async function untrack(kind: string, id: number, name: string) {
+    const r = await postJSON("/api/track", { kind, id, on: false });
+    if (!r.ok) return ui.error("Untrack didn't save", r.error || "The server did not answer.");
+    ui.toast(`${name.slice(0, 40)} Untracked`);
+    refresh();
+  }
+  const Row = ({ kind, id, name, href }: { kind: string; id: number; name: string; href: string }) => (
+    <div className="trow">
+      <span className="lbl">
+        <Link href={href}>{name}</Link>
+      </span>
+      <button className="btn" onClick={() => untrack(kind, id, name)} title={`Stop tracking ${name}`}>
+        Untrack
+      </button>
+    </div>
+  );
+  return (
+    <>
+      <p className="sub">Tracked companies, trends (up to 30) and people get a daily check and a timeline.</p>
+      <Card title="Companies" note={`${data.trackedCompanies.length} tracked`}>
+        {data.trackedCompanies.length ? data.trackedCompanies.map((c: any) => <Row key={c.id} kind="company" id={c.id} name={c.name} href={`/company/${c.id}`} />) : <p className="sub">Press Track on any company to follow it here.</p>}
+      </Card>
+      <Card title="Trends" note={`${data.trackedTrends.length} of 30 tracked`}>
+        {data.trackedTrends.length ? data.trackedTrends.map((t: any) => <Row key={t.id} kind="trend" id={t.id} name={t.headline} href="/trends" />) : <p className="sub">Press Track on any trend to follow it here.</p>}
+      </Card>
+      <Card title="People" note={<Link href="/tracking#people">Open Tracking</Link>}>
+        {data.people.map((p: any) => (
+          <div className="trow" key={p.id}>
+            <span className="lbl">{p.name}</span>
+          </div>
+        ))}
+      </Card>
+    </>
+  );
+}
+
+function SlackPane({ data, refresh }: { data: Data; refresh: () => void }) {
+  const ui = useUI();
+  async function test() {
+    const r = await readJSON("/api/slack/test", {});
+    if (!r.ok) return ui.error("Slack didn't take the test message", r.error || "The server did not answer.", { label: "Reconnect Slack", href: "/api/slack/start" });
+    ui.toast("Test Message Sent");
+  }
+  async function disconnect() {
+    const ok = await ui.confirm({ title: "Disconnect Slack?", facts: [["Channel", data.slack?.channel || ""], ["Stops", "alert hits, the Monday brief and shared pages in Slack"]], consequence: "You can connect again any time.", verb: "Disconnect", danger: true });
+    if (!ok) return;
+    await postJSON("/api/slack/disconnect", {});
+    ui.toast("Slack Disconnected");
+    refresh();
+  }
+  return (
+    <>
+      <p className="sub">Optional. Alert hits, the Monday brief and UI problem reports can post to one Slack channel, plain and short, with links back to Scout.</p>
+      <Card title="Slack">
+        {data.slack ? (
+          <>
+            <p>
+              Connected to <b>{data.slack.channel}</b>
+              {data.slack.team ? ` in ${data.slack.team}` : ""} · <Ago date={data.slack.connectedAt} ch={8} />
+            </p>
+            <div className="acts2" style={{ justifyContent: "flex-start" }}>
+              <button className="btn" onClick={test} title="Post a test message to the channel">
+                <Send className="ico" />
+                Send a Test Message
+              </button>
+              <button className="btn" onClick={disconnect} title="Remove the Slack connection">
+                Disconnect
+              </button>
+            </div>
+          </>
+        ) : data.slackReady ? (
+          // an API route that sends the browser on to Slack: a full page load, never a client-side page change
+          // eslint-disable-next-line @next/next/no-html-link-for-pages
+          <a className="btn red" href="/api/slack/start" title="Pick a channel in Slack and click Allow" style={{ width: "fit-content" }}>
+            Add to Slack
+          </a>
+        ) : (
+          // not set up on this site yet: what it would post, and the setup in order, with who does each step (user,
+          // 11-04-26: "It doesn't communicate how to set up Slack")
+          <div className="x-slacksetup" data-testid="slack-setup">
+            <p>
+              <b>Not set up on this site yet.</b> Once it is, {firm.product} posts to one channel you pick: every alert hit, the Monday brief, and any page a teammate shares, each with a link back to {firm.product}.
+            </p>
+            <ol>
+              <li>
+                <b>{BUILDER.name ? `${builderFirst()} creates` : "The site's owner creates"} the Slack app, once.</b> At{" "}
+                <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer" title="Opens Slack's app page in a new window">
+                  api.slack.com/apps
+                </a>
+                , with one permission: post to a channel you pick (an incoming webhook). Its two keys go into the site&apos;s settings on Vercel. About 5 minutes.
+              </li>
+              <li>
+                <b>Anyone on the team clicks Add to Slack</b>, here, on this page. The button shows up once step 1 is done.
+              </li>
+              <li>
+                <b>In Slack, pick the channel and click Allow.</b> {firm.product} posts a first message there, and this page shows the channel with Send a Test Message and Disconnect.
+              </li>
+            </ol>
+            <TalkLink className="btn" label={`Ask ${builderFirst()} to Set It Up`} style={{ width: "fit-content" }} />
+          </div>
+        )}
+      </Card>
+    </>
+  );
+}
+
+function AiPane({ data, refresh }: { data: Data; refresh: () => void }) {
+  const ui = useUI();
+  const s = useShared({ memoDailyCap: data.cap.memo, thesisCheckDailyCap: data.cap.check }, refresh);
+  return (
+    <>
+      <p className="sub">AI is a bonus, never a requirement: every section of Today works without it.</p>
+      <Card title={`AI Drafting · ${data.ai ? "On" : "Off"} · Optional`}>
+        <p>Memo drafts (GPT-5) and the thesis check on new startups (GPT-5 mini) run on Vercel&apos;s free AI credit of $5 a month. At the defaults, even a month that uses every draft and check stays under it. Vercel asks for a card on file to switch it on; nothing is charged on the free credit. Everything else already works without it.</p>
+        {!data.ai && (
+          <button className="btn red" onClick={ui.aiCard} title="See what turning on AI drafting involves" style={{ width: "fit-content" }}>
+            <Sparkles className="ico" />
+            Turn On AI Drafting
+          </button>
+        )}
+        <SliderRow label="Memo drafts a day" sub="About $0.03 each: 4 a day keeps a month under the free $5" value={s.draft.memoDailyCap as number} min={1} max={10} onChange={(n) => s.setDraft({ memoDailyCap: n })} />
+        <SliderRow label="Thesis checks a day" sub="About $0.0005 each, counted apart from memo drafts: 60 a day is under $1 a month" value={s.draft.thesisCheckDailyCap as number} min={10} max={100} onChange={(n) => s.setDraft({ thesisCheckDailyCap: n })} />
+      </Card>
+      <SaveBar count={s.count} onSave={s.save} onDiscard={s.discard} savedAt={s.savedAt} busy={s.busy} />
+    </>
+  );
+}
+
+function Phase2Pane() {
+  const ui = useUI();
+  return (
+    <>
+      <p className="sub">
+        {BUILDER.name
+          ? `Phase I is this prototype: built by ${builderFirst()} alone, on free public sources, to start a conversation with ${firm.short}. Phase II is the production-ready version ${builderFirst()} and ${firm.short} build together, should they decide to.`
+          : "Phase I is this prototype, built on free public sources. Phase II is the production-ready version."}
+      </p>
+      <Card title="Phase II · Built Together">
+        {PHASE2_ITEMS.map(([door, text], i) => (
+          <div className="trow" key={i}>
+            <span className="lbl">{text}</span>
+            <button className="lock-chip" onClick={() => ui.door(door)} title={phase2Tip()}>
+              <Lock className="ico" style={{ width: 13, height: 13 }} />
+              Phase II
+            </button>
+          </div>
+        ))}
+        <TalkLink style={{ width: "fit-content" }} />
+      </Card>
+    </>
+  );
+}
+
+function LogPane({ data, refresh }: { data: Data; refresh: () => void }) {
+  const ui = useUI();
+  async function undo(id: number) {
+    const r = await postJSON<{ summary: string }>("/api/undo", { id });
+    if (!r.ok) return ui.error("Undo didn't work", r.error || "The server did not answer.");
+    ui.toast("Change Undone");
+    refresh();
+  }
+  return (
+    <>
+      <p className="sub">Every shared change, newest first. Scout has no sign-in, so the log names the change and the time, never a person.</p>
+      <Card title="Change Log">
+        <div className="log">
+          {data.log.map((l: any) => (
+            <div key={l.id}>
+              <span className="ago2">
+                <Ago date={l.createdAt} ch={8} />
+              </span>
+              <span>{l.summary}</span>
+              {l.undone ? (
+                <span className="mono" style={{ fontSize: 12, color: "var(--text-3)" }}>
+                  Undone
+                </span>
+              ) : (
+                <button className="undo" onClick={() => undo(l.id)} title="Put this back the way it was">
+                  <Undo2 className="ico" style={{ width: 12, height: 12 }} /> Undo
+                </button>
+              )}
+            </div>
+          ))}
+          {!data.log.length && <p className="sub">No shared changes yet.</p>}
+        </div>
+      </Card>
+    </>
+  );
+}

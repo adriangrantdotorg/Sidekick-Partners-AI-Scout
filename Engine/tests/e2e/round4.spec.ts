@@ -1,0 +1,97 @@
+import { test, expect } from "@playwright/test";
+import { HOME } from "./pages";
+
+// The Tracking page (user's pick A, 10-14-26) and the two nav fixes from the same note.
+
+test("Tracking replaces Alerts and People in the menu, and the old addresses land on their tab", async ({ page }) => {
+  await page.goto(HOME);
+  const labels = (await page.locator("nav.nav a").allInnerTexts()).map((t) => t.trim().toLowerCase());
+  expect(labels).toContain("tracking");
+  expect(labels).not.toContain("alerts");
+  expect(labels).not.toContain("people");
+  await page.goto("/alerts");
+  await expect(page).toHaveURL(/\/tracking#configure$/);
+  await expect(page.locator("#panel-configure")).toBeVisible();
+  await page.goto("/people");
+  await expect(page).toHaveURL(/\/tracking#people$/);
+});
+
+test("Tracking: five tabs with counts, the Add row right under the tabs, the hits count in the header", async ({ page }) => {
+  await page.goto("/tracking");
+  const tabs = page.locator('.tabs [role="tab"]');
+  expect(await tabs.count()).toBe(5);
+  expect((await tabs.allInnerTexts()).map((t) => t.replace(/\d+/g, "").trim().toLowerCase())).toEqual(["companies", "trends", "people", "alerts", "configure alerts"]);
+  const tabsBottom = await page.locator(".tabs").evaluate((el) => el.getBoundingClientRect().bottom);
+  const addTop = await page.locator("#panel-companies .tabadd").evaluate((el) => el.getBoundingClientRect().top);
+  expect(addTop - tabsBottom).toBeLessThan(40);
+  await expect(page.locator(".ph .count")).toContainText(/alerts? this week/);
+  await expect(page.locator("body")).not.toContainText("Each tab is one list");
+  await expect(page.locator('#panel-companies .tabadd button[data-act="add"]')).toBeVisible();
+  await expect(page.locator('#panel-companies .tabadd button[data-act="add"]')).toBeDisabled();
+  await tabs.nth(4).click();
+  await expect(page.locator("#panel-configure")).toBeVisible();
+});
+
+test("a nav click on Pipeline lands with nothing preselected", async ({ page }) => {
+  await page.goto("/pipeline?q=prediction");
+  await expect(page.locator('input[aria-label="Search the Pipeline"]')).toHaveValue("prediction");
+  await page.locator("nav.nav a", { hasText: "Pipeline" }).click();
+  await expect(page.locator('input[aria-label="Search the Pipeline"]')).toHaveValue("");
+  await page.reload();
+  await expect(page.locator('input[aria-label="Search the Pipeline"]')).toHaveValue("");
+});
+
+test("Add on the Tracking page tracks a typed name", async ({ page }) => {
+  test.skip(!!process.env.LIVE_URL, "writes run locally only");
+  await page.goto("/tracking");
+  const name = `Test Co ${Date.now()}`;
+  await page.locator("#panel-companies .tabadd input").fill(name);
+  const before = Number((await page.locator('.tabs [role="tab"]').first().locator("b").innerText()) || 0);
+  await page.locator('#panel-companies .tabadd button[data-act="add"]').click();
+  await expect(page.locator('#panel-companies [data-added-item]').first()).toContainText(name);
+  await expect(page.locator('.tabs [role="tab"]').first().locator("b")).toHaveText(String(before + 1));
+});
+
+test("a new person and a new rule appear at once, with the tab counts moving", async ({ page }) => {
+  test.skip(!!process.env.LIVE_URL, "writes run locally only");
+  await page.goto("/tracking#people");
+  const who = `Test Person ${Date.now()}`;
+  await page.locator('#panel-people input[aria-label="Name"]').fill(who);
+  await page.locator("#panel-people button", { hasText: "Track Person" }).click();
+  await expect(page.locator('#panel-people [data-added-item]').first()).toContainText(who);
+  await page.locator('.tabs [role="tab"]', { hasText: "Configure Alerts" }).click();
+  const n = Number(await page.locator('.tabs [role="tab"]', { hasText: "Configure Alerts" }).locator("b").innerText());
+  await page.locator('#panel-configure input[aria-label="Who or what"]').fill(`Test rule ${Date.now()}`);
+  await page.locator('#panel-configure form button.btn.red').click();
+  await expect(page.locator('#panel-configure [data-added-item]').first()).toBeVisible();
+  await expect(page.locator('.tabs [role="tab"]', { hasText: "Configure Alerts" }).locator("b")).toHaveText(String(n + 1));
+});
+
+
+// user, 11-03-26: "I tracked a company, then went to the tracking page. I had to hit refresh to see that company
+// added to the page." The browser kept its copy of Tracking from before; every save now drops those copies.
+test("a startup tracked on its page shows on Tracking at once, with no reload", async ({ page }) => {
+  test.skip(!!process.env.LIVE_URL, "writes run locally only");
+  await page.goto("/tracking"); // the browser now holds a copy of Tracking from before the save
+  // a startup nobody tracks yet: the first company page whose Track button is off
+  let found = 0;
+  for (let id = 1; id <= 12 && !found; id++) {
+    await page.goto(`/company/${id}`);
+    if ((await page.locator('main button[data-act="track"][aria-pressed="false"]').count()) > 0) found = id;
+  }
+  expect(found, "a company page with Track off").toBeGreaterThan(0);
+  const btn = page.locator('main button[data-act="track"]').first();
+  await expect(btn).toHaveAttribute("aria-pressed", "false");
+  const name = ((await btn.getAttribute("title")) || "").replace(/^Track /, "").split(":")[0];
+  expect(name).not.toBe("");
+  const [saved] = await Promise.all([page.waitForResponse((r) => r.url().includes("/api/track") && r.request().method() === "POST"), btn.click()]);
+  expect(saved.status(), `the Track save answered: ${await saved.text()}`).toBe(200); // a refused save names its reason
+  await expect(btn).toHaveAttribute("aria-pressed", "true");
+  // no grace period (11-04-26): a link clicked while the purge is on its way waits for it (SaveRefresh in Shell.tsx)
+  await page.locator("nav.nav a", { hasText: "Tracking" }).click();
+  await expect(page).toHaveURL(/\/tracking/);
+  await expect(page.locator("#panel-companies")).toContainText(name);
+  // leave the startup as it was: the browser tests share one server, and a test that leaves data changed steers the next
+  await page.request.post("/api/track", { data: { kind: "company", id: found, on: false } });
+});
+

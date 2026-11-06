@@ -1,0 +1,485 @@
+<!doctype html><html lang="en" data-build="v6-2"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sidekick Partners AI Scout · launching</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>:root, html[data-theme="dark"] {
+  --bg:#1a1b1f; --bg-2:#131418; --surface:#23242a; --elevated:#2c2d34;
+  --border:rgba(255,255,255,.1); --text:#f4f4f4; --text-2:#dcdce0; --text-3:#a9aab3; --heading:#ffffff;
+  --red:#cc003d; --red-ink:#ff4d7a; --gold:#ffbe4c; --green:#20d760; --amber:#ffb454; --on-red:#fff;
+  --glow:rgba(204,0,61,.35); --veil:rgba(10,10,12,.14); --shadow:0 30px 80px rgba(0,0,0,.55);
+  --page:#0e0f12; --sw:#fff; --ticker:#0c0c0f;
+  /* the type: a firm's theme.css sets its own (Plan step 11), with its font file named in its profile (brand.fonts) */
+  --font-head:Oswald, sans-serif; --font-body:Montserrat, "Helvetica Neue", sans-serif; --font-mono:"IBM Plex Mono", ui-monospace, monospace; --font-brand:"Bruno Ace", sans-serif;
+  color-scheme:dark;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);padding:40px 16px 100px}
+/* Build progress view: the local progress page and the live Building page share this file. */
+.pg{--pg-bg:#0e0f12;--pg-surface:#1a1b1f;--pg-elev:#24262c;--pg-border:rgba(255,255,255,.12);--pg-text:#f4f4f4;--pg-text2:#dcdce0;--pg-text3:#9a9ba3;--pg-red:#cc003d;--pg-ink:#ff4d7a;--pg-green:#3ddc84;--pg-amber:#ffb454;--pg-head:#fff;--pg-now-glow:rgba(204,0,61,.7);--pg-on-red:#fff;
+  --pg-done:linear-gradient(135deg,#cc003d,#ff4d7a);--pg-on-done:#fff;--pg-done-glow:rgba(204,0,61,.45);--pg-open:#0a0a0c;--pg-on-open:#fff;
+  box-sizing:border-box;max-width:1000px;margin:0 auto;border:1px solid var(--pg-border);border-radius:18px;background:var(--pg-bg);padding:44px 48px 48px;color:var(--pg-text);font:17px/1.55 var(--font-body)}
+.pg *{box-sizing:border-box}
+.pg-eyebrow{font:600 12px/1 var(--font-head);letter-spacing:.24em;text-transform:uppercase;color:var(--pg-ink)}
+.pg-title{margin:8px 0 16px;font:700 40px/1 var(--font-head);text-transform:uppercase;letter-spacing:.04em;color:var(--pg-head)}
+.pg-live{display:inline-block;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-style:normal;text-align:right}
+.pg-note{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--pg-border);background:var(--pg-surface);font:500 14px/1.5 var(--font-mono);color:var(--pg-text);margin-bottom:8px}
+.pg-note[hidden]{display:none}
+.pg-note i{width:8px;height:8px;border-radius:50%;background:var(--pg-green);box-shadow:0 0 8px var(--pg-green);animation:pg-br 2.4s ease-in-out infinite;flex:none}
+.pg-note.wait,.pg-stale{border-color:rgba(255,180,84,.55);color:var(--pg-amber)}
+.pg-note.wait i,.pg-stale i{background:var(--pg-amber);box-shadow:0 0 8px var(--pg-amber)}
+.pg-stale b{font-weight:500}
+@keyframes pg-br{0%,100%{opacity:.5}50%{opacity:1}}
+.pg-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 18px}
+.pg-stat{padding:16px 18px 14px;border:1px solid var(--pg-border);border-radius:14px;background:var(--pg-surface);min-width:0}
+.pg-stat b{display:block;font:700 40px/1 var(--font-head);color:var(--pg-head);letter-spacing:.02em}
+.pg-stat b .pg-live{font-weight:600}
+.pg-stat.now b{color:var(--pg-ink)}
+.pg-stat > span{display:block;margin-top:8px;font:600 12px/1 var(--font-head);letter-spacing:.2em;text-transform:uppercase;color:var(--pg-text3)}
+.pg-stat small{display:block;margin-top:6px;font:500 13px/1.4 var(--font-mono);color:var(--pg-text3)}
+.pg-stat small em{font-style:normal}
+.pg-bar{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:0 0 22px}
+.pg-bar i{height:10px;border-radius:5px;background:var(--pg-elev)}
+.pg-bar i.done{background:var(--pg-red)}
+.pg-bar i.now{background:var(--pg-red);box-shadow:0 0 12px var(--pg-now-glow);animation:pg-br 2.4s ease-in-out infinite}
+.pg-list{border:1px solid var(--pg-border);border-radius:14px;overflow:hidden;margin-top:14px}
+.pg-row{display:grid;grid-template-columns:36px 44px minmax(0,1fr) 140px;gap:12px;align-items:center;padding:12px 18px;border-top:1px solid var(--pg-border);background:var(--pg-surface)}
+.pg-row:first-child{border-top:0}
+.pg-row .k{font:600 15px/1 var(--font-mono);color:var(--pg-text3)}
+.pg-row .n{font:500 16px/1.3 var(--font-body);color:var(--pg-text2);overflow-wrap:break-word;min-width:0}
+.pg-row .t{text-align:right;font:500 13.5px/1 var(--font-mono);color:var(--pg-text3)}
+.pg-row.done .mk{color:var(--pg-green)} .pg-row.done .n{color:var(--pg-text)} .pg-row.done .t{color:var(--pg-text2)}
+.pg-row.now{background:var(--pg-elev);box-shadow:inset 3px 0 0 var(--pg-red)} .pg-row.now .n{color:var(--pg-head);font-weight:600} .pg-row.now .mk{color:var(--pg-ink)}
+.pg-row.todo .n{color:var(--pg-text3)}
+.pg-foot{margin:16px 0 0;font:500 14px/1.5 var(--font-mono);color:var(--pg-text2)}
+.pg-foot:empty{display:none}
+@media (max-width:640px){.pg{padding:28px 18px}.pg-row{grid-template-columns:24px 32px minmax(0,1fr) 92px;padding:12px}.pg-stat b{font-size:32px}}
+@media (prefers-reduced-motion:reduce){.pg-note i,.pg-bar i.now{animation:none}}
+
+/* Sidekick Partners AI Scout: the look of record (design/NOTES.md, signed off 10-31-26; Plan step 11).
+   Boardroom's cream cards, brass rules and small-capital Cormorant Garamond headings on Emerald Exchange: a dark
+   emerald trading floor with a slow aurora, a glowing grid floor and thin streaks of light. One look, no Day version
+   (profile brand.oneLook). Engine reads this after its own styles (firm.config.mjs copies it to firm-theme.css).
+   Most of the page is cream cards, so the tokens are the cards' (dark ink); the few things on the green itself (the top
+   bar, the counts, the breadcrumb, the footer) set the wall's light tokens for themselves. */
+
+:root, html[data-theme="dark"], html[data-theme="light"] {
+  /* on the green (the default): light ink, panels a shade lighter than the floor */
+  --bg:#05211a; --bg-2:#0d2c24; --surface:#10261f; --elevated:#163a30;
+  --border:rgba(201,164,92,.32); --text:#f3ead6; --text-2:#d8ccad; --text-3:#b5aa8b; --heading:#ffffff;
+  --red:#c9a45c; --red-ink:#30e1ae; --on-red:#10261f; --gold:#c9a45c; --green:#30e1ae; --amber:#f0c36b;
+  --glow:rgba(201,164,92,.35); --veil:rgba(5,33,26,.18); --shadow:0 18px 44px -18px rgba(0,0,0,.6);
+  --page:#05211a; --sw:#c9a45c; --ticker:#0d2c24;
+  --font-head:"Cormorant Garamond", Georgia, serif; --font-body:"Source Sans 3", system-ui, sans-serif;
+  --font-mono:"Source Sans 3", system-ui, sans-serif; --font-brand:"Bodoni Moda", Georgia, serif;
+  --card:#f6f1e4; --brass:#c9a45c; --mint:#30e1ae; --forest:#1b5d4a; --wall:#f3ead6; --wall-2:#d8ccad; --wall-3:#b5aa8b;
+  --fit-s:45%; --fit-l:34%;
+  color-scheme:dark;
+}
+html { font-size:18px; }
+
+/* ---- the trading floor: fixed behind everything, the cards glide over it; still for reduced motion ---- */
+body { background:#05211a; }
+body::before, body::after { content:""; position:fixed; z-index:-1; pointer-events:none; }
+body::before { inset:-10%; background:
+  linear-gradient(90deg,transparent,rgba(48,225,174,.55),transparent) 0 22%/26% 2px no-repeat,
+  linear-gradient(90deg,transparent,rgba(48,225,174,.40),transparent) 0 47%/18% 2px no-repeat,
+  linear-gradient(90deg,transparent,rgba(201,164,92,.45),transparent) 0 71%/22% 2px no-repeat,
+  radial-gradient(ellipse 60% 42% at 22% 8%,rgba(48,225,174,.34),transparent 70%),
+  radial-gradient(ellipse 55% 50% at 82% 28%,rgba(36,140,104,.55),transparent 70%),
+  radial-gradient(ellipse 40% 30% at 60% 0%,rgba(201,164,92,.16),transparent 70%),
+  radial-gradient(ellipse 120% 90% at 50% 40%,transparent 50%,rgba(0,0,0,.55) 100%),#05211a;
+  animation:sk-streak 40s linear infinite, sk-aurora 60s ease-in-out infinite alternate; }
+/* the grid floor: build_round3.py's perspective_grid(), flat in perspective, fading upward */
+body::after { left:0; right:0; bottom:0; height:58%;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 600' preserveAspectRatio='xMidYMax slice'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.45' stop-color='%23fff' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='%23fff' stop-opacity='0'/%3E%3C/linearGradient%3E%3Cmask id='m'%3E%3Crect width='100%25' height='100%25' fill='url(%23g)'/%3E%3C/mask%3E%3C/defs%3E%3Cg mask='url(%23m)' stroke='%2330e1ae' stroke-opacity='.30' stroke-width='1.2'%3E%3Cline x1='-1600' y1='600' x2='800' y2='0'/%3E%3Cline x1='-1480' y1='600' x2='800' y2='0'/%3E%3Cline x1='-1360' y1='600' x2='800' y2='0'/%3E%3Cline x1='-1240' y1='600' x2='800' y2='0'/%3E%3Cline x1='-1120' y1='600' x2='800' y2='0'/%3E%3Cline x1='-1000' y1='600' x2='800' y2='0'/%3E%3Cline x1='-880' y1='600' x2='800' y2='0'/%3E%3Cline x1='-760' y1='600' x2='800' y2='0'/%3E%3Cline x1='-640' y1='600' x2='800' y2='0'/%3E%3Cline x1='-520' y1='600' x2='800' y2='0'/%3E%3Cline x1='-400' y1='600' x2='800' y2='0'/%3E%3Cline x1='-280' y1='600' x2='800' y2='0'/%3E%3Cline x1='-160' y1='600' x2='800' y2='0'/%3E%3Cline x1='-40' y1='600' x2='800' y2='0'/%3E%3Cline x1='80' y1='600' x2='800' y2='0'/%3E%3Cline x1='200' y1='600' x2='800' y2='0'/%3E%3Cline x1='320' y1='600' x2='800' y2='0'/%3E%3Cline x1='440' y1='600' x2='800' y2='0'/%3E%3Cline x1='560' y1='600' x2='800' y2='0'/%3E%3Cline x1='680' y1='600' x2='800' y2='0'/%3E%3Cline x1='800' y1='600' x2='800' y2='0'/%3E%3Cline x1='920' y1='600' x2='800' y2='0'/%3E%3Cline x1='1040' y1='600' x2='800' y2='0'/%3E%3Cline x1='1160' y1='600' x2='800' y2='0'/%3E%3Cline x1='1280' y1='600' x2='800' y2='0'/%3E%3Cline x1='1400' y1='600' x2='800' y2='0'/%3E%3Cline x1='1520' y1='600' x2='800' y2='0'/%3E%3Cline x1='1640' y1='600' x2='800' y2='0'/%3E%3Cline x1='1760' y1='600' x2='800' y2='0'/%3E%3Cline x1='1880' y1='600' x2='800' y2='0'/%3E%3Cline x1='2000' y1='600' x2='800' y2='0'/%3E%3Cline x1='2120' y1='600' x2='800' y2='0'/%3E%3Cline x1='2240' y1='600' x2='800' y2='0'/%3E%3Cline x1='2360' y1='600' x2='800' y2='0'/%3E%3Cline x1='2480' y1='600' x2='800' y2='0'/%3E%3Cline x1='2600' y1='600' x2='800' y2='0'/%3E%3Cline x1='2720' y1='600' x2='800' y2='0'/%3E%3Cline x1='2840' y1='600' x2='800' y2='0'/%3E%3Cline x1='2960' y1='600' x2='800' y2='0'/%3E%3Cline x1='3080' y1='600' x2='800' y2='0'/%3E%3Cline x1='3200' y1='600' x2='800' y2='0'/%3E%3Cline x1='0' y1='600.0' x2='1600' y2='600.0'/%3E%3Cline x1='0' y1='387.1' x2='1600' y2='387.1'/%3E%3Cline x1='0' y1='285.7' x2='1600' y2='285.7'/%3E%3Cline x1='0' y1='226.4' x2='1600' y2='226.4'/%3E%3Cline x1='0' y1='187.5' x2='1600' y2='187.5'/%3E%3Cline x1='0' y1='160.0' x2='1600' y2='160.0'/%3E%3Cline x1='0' y1='139.5' x2='1600' y2='139.5'/%3E%3Cline x1='0' y1='123.7' x2='1600' y2='123.7'/%3E%3Cline x1='0' y1='111.1' x2='1600' y2='111.1'/%3E%3Cline x1='0' y1='100.8' x2='1600' y2='100.8'/%3E%3Cline x1='0' y1='92.3' x2='1600' y2='92.3'/%3E%3Cline x1='0' y1='85.1' x2='1600' y2='85.1'/%3E%3Cline x1='0' y1='78.9' x2='1600' y2='78.9'/%3E%3Cline x1='0' y1='73.6' x2='1600' y2='73.6'/%3E%3Cline x1='0' y1='69.0' x2='1600' y2='69.0'/%3E%3Cline x1='0' y1='64.9' x2='1600' y2='64.9'/%3E%3Cline x1='0' y1='61.2' x2='1600' y2='61.2'/%3E%3Cline x1='0' y1='58.0' x2='1600' y2='58.0'/%3E%3Cline x1='0' y1='55.0' x2='1600' y2='55.0'/%3E%3Cline x1='0' y1='52.4' x2='1600' y2='52.4'/%3E%3Cline x1='0' y1='50.0' x2='1600' y2='50.0'/%3E%3Cline x1='0' y1='47.8' x2='1600' y2='47.8'/%3E%3Cline x1='0' y1='45.8' x2='1600' y2='45.8'/%3E%3Cline x1='0' y1='44.0' x2='1600' y2='44.0'/%3E%3Cline x1='0' y1='42.3' x2='1600' y2='42.3'/%3E%3Cline x1='0' y1='40.7' x2='1600' y2='40.7'/%3E%3Cline x1='0' y1='39.2' x2='1600' y2='39.2'/%3E%3Cline x1='0' y1='37.9' x2='1600' y2='37.9'/%3E%3Cline x1='0' y1='36.6' x2='1600' y2='36.6'/%3E%3Cline x1='0' y1='35.4' x2='1600' y2='35.4'/%3E%3Cline x1='0' y1='34.3' x2='1600' y2='34.3'/%3E%3Cline x1='0' y1='33.2' x2='1600' y2='33.2'/%3E%3Cline x1='0' y1='32.3' x2='1600' y2='32.3'/%3E%3Cline x1='0' y1='31.3' x2='1600' y2='31.3'/%3E%3Cline x1='0' y1='30.5' x2='1600' y2='30.5'/%3E%3Cline x1='0' y1='29.6' x2='1600' y2='29.6'/%3E%3Cline x1='0' y1='28.8' x2='1600' y2='28.8'/%3E%3Cline x1='0' y1='28.1' x2='1600' y2='28.1'/%3E%3Cline x1='0' y1='27.4' x2='1600' y2='27.4'/%3E%3Cline x1='0' y1='26.7' x2='1600' y2='26.7'/%3E%3Cline x1='0' y1='26.1' x2='1600' y2='26.1'/%3E%3Cline x1='0' y1='25.5' x2='1600' y2='25.5'/%3E%3Cline x1='0' y1='24.9' x2='1600' y2='24.9'/%3E%3Cline x1='0' y1='24.3' x2='1600' y2='24.3'/%3E%3Cline x1='0' y1='23.8' x2='1600' y2='23.8'/%3E%3Cline x1='0' y1='23.3' x2='1600' y2='23.3'/%3E%3Cline x1='0' y1='22.8' x2='1600' y2='22.8'/%3E%3Cline x1='0' y1='22.3' x2='1600' y2='22.3'/%3E%3Cline x1='0' y1='21.9' x2='1600' y2='21.9'/%3E%3Cline x1='0' y1='21.5' x2='1600' y2='21.5'/%3E%3Cline x1='0' y1='21.1' x2='1600' y2='21.1'/%3E%3Cline x1='0' y1='20.7' x2='1600' y2='20.7'/%3E%3Cline x1='0' y1='20.3' x2='1600' y2='20.3'/%3E%3Cline x1='0' y1='19.9' x2='1600' y2='19.9'/%3E%3Cline x1='0' y1='19.5' x2='1600' y2='19.5'/%3E%3Cline x1='0' y1='19.2' x2='1600' y2='19.2'/%3E%3Cline x1='0' y1='18.9' x2='1600' y2='18.9'/%3E%3Cline x1='0' y1='18.5' x2='1600' y2='18.5'/%3E%3Cline x1='0' y1='18.2' x2='1600' y2='18.2'/%3E%3Cline x1='0' y1='17.9' x2='1600' y2='17.9'/%3E%3Cline x1='0' y1='17.6' x2='1600' y2='17.6'/%3E%3Cline x1='0' y1='17.4' x2='1600' y2='17.4'/%3E%3Cline x1='0' y1='17.1' x2='1600' y2='17.1'/%3E%3Cline x1='0' y1='16.8' x2='1600' y2='16.8'/%3E%3Cline x1='0' y1='16.6' x2='1600' y2='16.6'/%3E%3Cline x1='0' y1='16.3' x2='1600' y2='16.3'/%3E%3Cline x1='0' y1='16.1' x2='1600' y2='16.1'/%3E%3Cline x1='0' y1='15.9' x2='1600' y2='15.9'/%3E%3Cline x1='0' y1='15.6' x2='1600' y2='15.6'/%3E%3Cline x1='0' y1='15.4' x2='1600' y2='15.4'/%3E%3Cline x1='0' y1='15.2' x2='1600' y2='15.2'/%3E%3Cline x1='0' y1='15.0' x2='1600' y2='15.0'/%3E%3Cline x1='0' y1='14.8' x2='1600' y2='14.8'/%3E%3Cline x1='0' y1='14.6' x2='1600' y2='14.6'/%3E%3Cline x1='0' y1='14.4' x2='1600' y2='14.4'/%3E%3Cline x1='0' y1='14.2' x2='1600' y2='14.2'/%3E%3Cline x1='0' y1='14.0' x2='1600' y2='14.0'/%3E%3C/g%3E%3C/svg%3E") center bottom/100% 100% no-repeat;
+  animation:sk-grid 14s ease-in-out infinite alternate; }
+@keyframes sk-streak { from { background-position:-30% 22%,130% 47%,-30% 71%,0 0,0 0,0 0,0 0,0 0; } to { background-position:130% 22%,-30% 47%,130% 71%,0 0,0 0,0 0,0 0,0 0; } }
+@keyframes sk-aurora { from { filter:hue-rotate(0deg) brightness(1); } to { filter:hue-rotate(-12deg) brightness(1.12); } }
+@keyframes sk-grid { from { opacity:.7; } to { opacity:1; } }
+@media (prefers-reduced-motion: reduce) { body::before, body::after { animation:none !important; } }
+html[data-motion="off"] body::before, html[data-motion="off"] body::after { animation:none !important; }
+
+
+
+/* ---- the top bar: the logo of record, then the pages ---- */
+.top { background:#0d2c24; border-bottom:1px solid #1d3a37; }
+.brand.own, a.brand.own { background:transparent; gap:13px; padding:0 24px 0 28px; align-items:center; }
+.brand.own img.brand-logo { height:30px; width:auto; }
+.brand-rule { width:2px; height:30px; background:var(--mint); box-shadow:0 0 10px 1px var(--mint); border-radius:2px; flex:none; }
+/* AI SCOUT's capitals as tall as Sidekick's letters: font size = logo height × 300 / 463 / 0.77 (design/NOTES.md) */
+.brand-word { font:600 25.2px/1 var(--font-brand); color:var(--mint); letter-spacing:.05em; white-space:nowrap; }
+.nav > a, .nav .dd > button { font:600 16px/1 var(--font-body); text-transform:none; letter-spacing:0; color:#eaf3f0; }
+.nav > a.on, .nav .dd.on > button { color:#ffffff; }
+.nav > a.on::after, .nav .dd.on > button::after { background:var(--mint); box-shadow:0 0 10px var(--mint); height:2px; }
+.dd .menu { background:#10261f; }
+.dd .menu a { font:600 16px/1.2 var(--font-body); text-transform:none; letter-spacing:0; }
+.chip { font:600 15px/1 var(--font-body); text-transform:none; letter-spacing:0; border-radius:4px; }
+.ticker .lbl { background:var(--brass); color:#10261f; }
+/* the Live label (user, 11-02-26, round 8's A: "use R8-A-today.html for live label"): a mint dot that breathes on
+   the brass tab, Live in Source Sans 3 bold, names fading in from under it. Its glow is mint: Engine's white glow,
+   made for a red tab, vanished on the brass and read as a dead dot. */
+.ticker .lbl { padding:0 18px; gap:10px; font:700 15px/1 var(--font-body); }
+.ticker .lbl::after { content:""; position:absolute; top:0; bottom:0; left:100%; width:30px; background:linear-gradient(90deg, var(--ticker), transparent); pointer-events:none; }
+.ticker .lbl i { width:10px; height:10px; opacity:1; background:var(--mint); box-shadow:0 0 0 1.5px #0d2c24, 0 0 6px 1px rgba(48,225,174,.55); animation:sk-live 3s ease-in-out infinite; }
+@keyframes sk-live { 0%, 100% { box-shadow:0 0 0 1.5px #0d2c24, 0 0 4px 1px rgba(48,225,174,.45); } 50% { box-shadow:0 0 0 1.5px #0d2c24, 0 0 16px 6px rgba(48,225,174,.95); } }
+@media (prefers-reduced-motion: reduce) { .ticker .lbl i { animation:none; } }
+html[data-motion="off"] .ticker .lbl i { animation:none; }
+.ticker .up { color:var(--mint); } .ticker .gd { color:var(--brass); }
+
+/* ---- Today's counts, on the green ---- */
+.mast { background:transparent; }
+.mast .big { font:600 54px/1 var(--font-head); font-variant:small-caps; text-transform:none; letter-spacing:.02em; background:none; -webkit-text-fill-color:var(--wall); color:var(--wall); }
+.mast .right { font:600 15px/1.4 var(--font-body); text-transform:none; letter-spacing:0; }
+
+/* ---- the cream cards: every content section ---- */
+.x-sec, .x-deal, .x-rounds, .dcol .sec, .x-start, .x-already, .x-notrec, .building .pg, .x-row, .memo, .ph, .ph-lede, .filters, .x-ftable,
+.list, .lanes, .pgh, .doc .main, .doc .rail, .snav, .pane, .tabs, .tabadd, .x-rows > .empty, [role="tabpanel"] > div > .explain {
+  --text:#1d2622; --text-2:#2f3833; --text-3:#4f564f; --heading:#1d2622; --border:#d9cdb0; --red-ink:#7a5a1c; --gold:#7a5a1c;
+  --surface:#efe7d3; --elevated:#e6dcc4; --bg-2:#e9dfc6; --green:#1b5d4a; --amber:#8a4b00; --shadow:0 18px 44px -18px rgba(5,33,26,.55);
+  background:var(--card); color:var(--text); color-scheme:light; border:1px solid var(--border); border-radius:4px;
+  box-shadow:inset 0 0 0 1px var(--brass), 0 0 0 1px rgba(48,225,174,.28), 0 26px 60px -30px rgba(48,225,174,.55);
+}
+.x-sec, .x-deal, .x-rounds { margin:0 40px 28px; padding:28px 32px; }
+/* the launch progress page on its cream card: dark ink, forest bars and dots, brass words; Engine's own palette is a
+   dark panel, which put a white title on the cream (found in the screen review, 11-02-26). The two local launch pages
+   (scripts/prestart.sh, scripts/step.ts) wear these same rules through firm.config.mjs launchLook(). */
+.building .pg { --pg-bg:var(--card); --pg-surface:#efe7d3; --pg-elev:#e6dcc4; --pg-border:#d9cdb0; --pg-text:#1d2622; --pg-text2:#2f3833;
+  --pg-text3:#4f564f; --pg-head:#1d2622; --pg-red:#1b5d4a; --pg-ink:#7a5a1c; --pg-green:#1b5d4a; --pg-amber:#8a4b00; --pg-now-glow:rgba(48,225,174,.8);
+  --pg-on-red:#f6f1e4; --pg-done:linear-gradient(135deg,#1b5d4a,#24785f); --pg-on-done:#f6f1e4; --pg-done-glow:rgba(48,225,174,.4); --pg-open:#c9a45c; --pg-on-open:#10261f; }
+.building .pg-title { font:600 42px/1.05 var(--font-head); font-variant:small-caps; text-transform:none; letter-spacing:.02em; }
+.building .pg-eyebrow, .building .pg-stat > span { font:600 15px/1.2 var(--font-body); text-transform:none; letter-spacing:0; }
+.today > .x-sec:first-of-type, main > div > .x-deal { margin-top:8px; }
+.x-start, .x-already, .x-notrec { margin:0 40px 28px; }
+.x-start { margin-top:28px; }
+.dbody { margin:0 40px 28px; gap:28px; }
+.dcol { padding:0; }
+.dcol + .dcol { border-left:0; background:transparent; }
+.dcol .sec { padding:24px 28px; margin:0 0 28px; }
+.rule { display:none; }
+.crumb { padding:24px 40px 16px; font:600 16px/1 var(--font-body); text-transform:none; letter-spacing:0; }
+.crumb a { color:var(--wall); }
+
+/* headings: small capitals over a brass rule */
+.x-sech { padding-bottom:12px; margin-bottom:20px; border-bottom:1px solid var(--brass); }
+.x-h2, .sec .h h2, .sec .h h3, .x-rounds .x-h2 { font:600 32px/1.2 var(--font-head); font-variant:small-caps; text-transform:none; letter-spacing:.04em; color:var(--heading); }
+.x-rounds .x-h2 { padding-bottom:12px; margin:0 0 20px; border-bottom:1px solid var(--brass); }
+.sec .h { padding-bottom:12px; margin-bottom:20px; border-bottom:1px solid var(--brass); }
+.x-count { font:600 17px/1.3 var(--font-body); font-variant:small-caps; text-transform:none; letter-spacing:.06em; color:var(--text-3); }
+.x-flabel { font:700 15px/1.2 var(--font-body); text-transform:none; letter-spacing:.02em; color:var(--text-3); }
+.x-dname { font:600 52px/1.05 var(--font-head); text-transform:none; letter-spacing:0; color:var(--heading); }
+.x-why.big { font-size:20px; color:var(--text-2); }
+.x-ueb h4 { font:600 22px/1.2 var(--font-head); font-variant:small-caps; text-transform:none; letter-spacing:.03em; color:var(--heading); }
+
+/* square corners and hairlines, like letter stock */
+.x-race, .x-kpanel, .x-tile, .x-row, .x-latest, .x-fwrap, .x-ueb, .x-btn, .x-ddbtn, .x-ddmenu, .x-popbox, .x-menu, .x-drop, .x-logo, .x-stack, .x-uel, .x-seg, .x-chip, .x-area, .x-new, .x-stage { border-radius:4px; }
+.x-kpanel, .x-latest { background:var(--surface); }
+.x-fwrap { background:var(--card); top:76px; }
+
+/* the one call to action: brass with a fine inner line (was Scout's red) */
+.x-btn.site.cta, .x-btn.site.tilepill { background:var(--brass); border-color:var(--brass); color:#10261f; box-shadow:inset 0 0 0 1px #10261f, inset 0 0 0 2px var(--brass); }
+.x-btn.site.cta:hover, .x-btn.site.tilepill:hover { background:#d6b571; }
+.x-btn { font:700 17px/1 var(--font-body); }
+.x-btn.ghost { border-color:var(--border); color:var(--text); }
+
+/* chips: Title Case on a parchment tint */
+.x-area { background:#e9dfc6; color:#5a4214; border-color:transparent; font:600 15px/1 var(--font-body); text-transform:none; letter-spacing:0; }
+.x-over .x-area, .x-reveal .x-area { background:rgba(246,241,228,.16); color:#f3ead6; }
+.x-new { background:var(--forest); color:#f3ead6; border-color:transparent; font:700 13px/1 var(--font-body); text-transform:none; letter-spacing:.02em; }
+.x-st { font:700 12px/1.2 var(--font-body); text-transform:none; letter-spacing:.02em; }
+.x-st.verified { background:#e1ecdf; color:var(--forest); border-color:transparent; }
+.x-st.inv, .x-inv { color:#7a5a1c; border-color:var(--brass); }
+
+/* fit: forest on a brass-grey track */
+.x-fit { background:color-mix(in srgb, var(--card) 88%, transparent); }
+.x-fit .trk { stroke:#d9cdb0; }
+.x-fit .val { stroke:var(--forest); filter:none; }
+.x-fit b { font:700 28px/1 var(--font-body); }
+.x-fit b small { color:var(--forest); }
+/* the Deal Sheet's and the Pipeline's ring sits on the card: cream, not Scout's dark disc */
+.x-tl.static .x-fit { background:color-mix(in srgb, var(--card) 88%, transparent); box-shadow:none; }
+.x-tl.static .x-fit b { color:var(--heading); } .x-tl.static .x-fit em { color:var(--text-3); }
+/* on a startup's picture the ring turns to night: mint on dark, like the design's tiles */
+.x-tile .x-tl .x-fit { background:rgba(15,31,30,.82); }
+.x-tile .x-tl .x-fit b { color:#eaf3f0; }
+.x-tile .x-tl .x-fit .trk { stroke:#36524d; }
+.x-tile .x-tl .x-fit .val, .x-tile .x-tl .x-fit b small { stroke:var(--mint); color:var(--mint); }
+.x-bar .tr { background:#d9cdb0; }
+.x-bar .tr i { background:var(--forest); }
+.x-rtrack { background:#e6dcc4; }
+.x-rtrack i { background:linear-gradient(90deg, #2a866d, var(--forest)); }
+.x-rname { font:700 19px/1.1 var(--font-body); text-transform:none; letter-spacing:0; }
+.x-rpos, .x-rtrack b, .x-rfund { font-family:var(--font-body); }
+.x-rhead { font-family:var(--font-body); text-transform:none; letter-spacing:0; }
+
+/* Copy as Markdown and the notices, in the card's colors */
+.x-mdcopy { background:var(--card); border-color:var(--border); color:var(--text-3); }
+.x-mdcopy:hover { color:var(--text); border-color:var(--brass); }
+.toast { background:#10261f; color:#f3ead6; border-color:var(--brass); font:600 17px/1.3 var(--font-body); border-radius:4px; }
+.toast .ico2 { color:var(--mint); }
+
+/* Unit Economics, Likely Acquirers, the Deck Screen */
+.x-uev.deck { color:var(--forest); }
+.x-acqt tr.lead td { background:#efe7d3; }
+.x-already { border-left:4px solid var(--brass); }
+.x-already b { color:#7a5a1c; font-family:var(--font-head); font-variant:small-caps; font-size:24px; letter-spacing:.03em; }
+.x-notsaved b { color:#8a4b00; }
+.x-steps .done .dot { background:var(--forest); border-color:var(--forest); color:#f6f1e4; }
+.x-steps .now .dot { border-color:var(--forest); }
+.x-prog i { background:var(--forest); }
+.x-bottomline { font:600 30px/1.3 var(--font-head); }
+.x-start { border-left:1px solid var(--border); }
+.x-start .x-h2 { font-size:28px; }
+
+/* the footer, on the green */
+.foot { border-top-color:#2c5a4b; }
+.foot button.linkish { color:var(--mint); }
+
+/* names in Title Case, never capitals (the design's company names and table headers) */
+.x-name, .x-over .x-name { text-transform:none; letter-spacing:0; font-weight:600; }
+.x-acqt th, .x-rounds th, .x-rhead, table th { font:700 16px/1.2 var(--font-body); text-transform:none; letter-spacing:0; color:var(--text-3); }
+.x-stage { font:700 13px/1 var(--font-body); letter-spacing:.04em; }
+/* no website yet: a quiet dashed button on the card, never a dark slab */
+.x-dl .x-btn.site.find { background:transparent; border:1px dashed var(--text-3); color:var(--text-2); }
+
+/* a page's title on the green (Pipeline, IC Meeting, Tracking, the Funding pages) */
+.ph h1 { font:600 44px/1 var(--font-head); font-variant:small-caps; text-transform:none; letter-spacing:.03em; color:var(--wall); }
+.ph .count { font:600 16px/1.4 var(--font-body); }
+
+/* the Pipeline's rows: cream cards with a parchment key column; the picture stays night */
+.x-row { border-radius:4px; }
+.x-key { border-radius:4px 0 0 0; background:#e9dfc6; }
+.x-rows { padding:20px 40px 40px; }
+
+/* chips on a picture keep the night style */
+.x-bover .x-area, .x-reveal .x-area, .x-over .x-area { background:rgba(246,241,228,.16); color:#f3ead6; border-color:rgba(246,241,228,.3); }
+.x-over .x-area, .x-over .x-new, .x-over .x-inv { font-size:13px; padding:5px 7px; }
+.x-bover .x-new, .x-over .x-new { background:var(--forest); color:#f3ead6; border-color:transparent; }
+.x-bover .x-new i, .x-over .x-new i { background:var(--mint); }
+.x-btn.site.find { background:transparent; border:1px dashed var(--text-3); color:var(--text-2); box-shadow:none; }
+
+/* filters and toggles in Title Case, never capitals */
+.x-chip, .x-seg, .x-fclear, .fclear, .x-ddbtn, .x-fcount, .fsel, .fsel select, .ph .views a, .ph .views button { font-family:var(--font-body); text-transform:none; letter-spacing:0; }
+.fsel select { font-size:16px; font-weight:600; }
+.fsel, .fsearch, .x-ddbtn, .x-chip { border-radius:4px; }
+
+/* Sidekick's look has no capitals-only labels (user's standard is Title Case, and the design writes labels that way):
+   words show as written; the headings take small capitals. AI SCOUT is written in capitals. */
+body * { text-transform:none !important; letter-spacing:normal !important; }
+.x-h2, .sec .h h2, .sec .h h3, .ph h1, .mast .big, .x-ueb h4, .x-already b { letter-spacing:.04em !important; }
+.brand-word { letter-spacing:.05em !important; }
+.x-count { letter-spacing:.04em !important; }
+
+/* user's review, 11-02-26 (Throwaway/Sidekick Scout Feedback.md) */
+/* the fit ring sits straight on its card: no pale disc behind it (pictures keep their night disc) */
+.x-fit, .x-tl.static .x-fit { background:transparent; box-shadow:none; }
+/* the memo panel is a cream card like the rest of the page (it was green on green) */
+.memo { border-radius:4px; padding:24px 28px; margin:0 0 28px; }
+.memo h3 { font:600 26px/1.2 var(--font-head); font-variant:small-caps; letter-spacing:.04em !important; }
+/* a page's title, line and filters sit together on one cream card, clear of the floor's light streaks */
+.ph, .ph-lede, .filters { margin-left:40px; margin-right:40px; box-shadow:none; border-radius:0; border-top:0; border-bottom:0; }
+.ph { margin-top:24px; padding:22px 28px 10px; border-top:1px solid var(--border); border-radius:4px 4px 0 0; box-shadow:inset 0 1px 0 var(--brass); }
+.ph-lede { padding:0 28px 14px; max-width:none; }
+.filters { padding:6px 28px 22px; border-bottom:1px solid var(--border); border-radius:0 0 4px 4px; box-shadow:inset 0 -1px 0 var(--brass); margin-bottom:24px; }
+.ph:not(:has(+ .ph-lede, + .filters)), .ph-lede:not(:has(+ .ph-lede, + .filters)) { border-bottom:1px solid var(--border); border-radius:0 0 4px 4px; margin-bottom:24px; padding-bottom:22px; }
+.ph-lede:not(:has(+ .ph-lede, + .filters)) { border-radius:0 0 4px 4px; }
+/* a second line under the title stays on the same card (Tracking's next check; it had split off as its own strip) */
+.ph-lede + .ph-lede { margin-top:0; padding-top:0; }
+.ph h1 { color:var(--heading); }
+/* the search boxes on a cream card turn cream */
+.filters .fsel, .filters .fsearch, .pgh .fsearch, .tabadd .fsearch { background:var(--card); }
+
+/* every section sits on a cream card, never straight on the green (the screen review, 11-02-26: Trends, Tracking,
+   Filings, the Funding pages, Settings, About and Backtest were never on a design page, and their rows, tables and
+   text sat on the floor). Only Today's counts and the breadcrumb are drawn on the green. The browser test "no section
+   sits straight on the green" (tests/firms/sidekick-partners/e2e/step11.spec.ts) walks every page's text. */
+.list, .doc, .set { margin:0 40px 28px; }
+.list { padding:6px 28px 14px; }
+.list > .h { padding:20px 0 12px; margin-bottom:16px; border-bottom:1px solid var(--brass); }
+.list > .h h2, .doc .main h2, .pane h2 { font:600 30px/1.2 var(--font-head); font-variant:small-caps; color:var(--heading); letter-spacing:.04em !important; }
+.list > .brands { padding-bottom:12px; }
+/* a filter's area chips join the title's card */
+.filters:has(+ .rule + .lanes) { border-bottom:0; border-radius:0; box-shadow:none; margin-bottom:0; padding-bottom:12px; }
+.lanes { margin:0 40px 24px; padding:0 28px 22px; border-top:0; border-radius:0 0 4px 4px; box-shadow:inset 0 -1px 0 var(--brass); }
+.lane-chip, .lane-chip b { font:600 15px/1 var(--font-body); }
+.lane-chip[aria-pressed="true"] { border-color:var(--forest); color:var(--forest); background:#dfeee6; }
+.lane-chip[aria-pressed="true"] b { color:var(--forest); }
+/* Settings, About and Backtest: the title on its own card, the page beside its rail */
+.pgh { margin:24px 40px 24px; padding:22px 28px; }
+.pgh h1 { font:600 44px/1 var(--font-head); font-variant:small-caps; color:var(--heading); letter-spacing:.03em !important; }
+.pgh .label, .snav .grp { font:600 15px/1.2 var(--font-body); color:var(--text-3); }
+.pgh .label { color:var(--red-ink); }
+.doc, .set { gap:28px; }
+.doc .main, .doc .rail, .snav, .pane { padding:26px 28px 32px; }
+.pane h2 .scope { font:600 14px/1 var(--font-body); }
+.snav a.on { background:#dfeee6; border-left-color:var(--forest); }
+/* Tracking: the tabs and the add box are cards of their own */
+.tabs { margin:0 40px 20px; padding:4px 16px 0; }
+.tabs button, .tabs button b { font:600 16px/1 var(--font-body); }
+.tabs button[aria-selected="true"] { border-bottom-color:var(--forest); }
+.tabadd { margin:0 40px 20px; padding:16px 20px; }
+[role="tabpanel"] > div > .explain { margin:0 40px 20px !important; padding:16px 20px; }
+.x-rows > .empty { border-style:dashed; }
+/* small labels take the body font: the heading serif is for headings (Cormorant at 12px was hard to read on Trends'
+   tags and sources, Settings' toggles, Filings' table head, Backtest's steps, Today's counts and filter values; the browser test "small labels are never in
+   the heading font" checks every page) */
+.tag, .src2, .lock-chip, .kicker, .seg2 button, table.t th, .steps b, .h .note-h, .scard h3 .note-h { font-family:var(--font-body) !important; font-size:14px !important; font-weight:600; }
+.seg span, .x-ddbtn b { font-family:var(--font-body) !important; font-size:15px !important; font-weight:600; }
+@media (max-width:820px) {
+  .list, .lanes, .doc, .set, .pgh, .tabs, .tabadd, [role="tabpanel"] > div > .explain { margin-left:12px !important; margin-right:12px !important; }
+  .list, .lanes, .pgh, .doc .main, .doc .rail, .snav, .pane { padding-left:16px; padding-right:16px; }
+}
+/* the company's line under its name: words, not pills */
+.x-meta { gap:4px 22px !important; align-items:baseline; }
+.x-meta > * { background:none !important; border:0 !important; padding:0 !important; border-radius:0 !important; font:600 17px/1.5 var(--font-body) !important; color:var(--text-2) !important; }
+.x-meta > .x-area:first-child { color:var(--forest) !important; }
+.x-meta > .x-inv { color:#7a5a1c !important; }
+/* anything Scout states from a source links to it, and looks like a link (user, 11-02-26) */
+.x-sec a[href^="http"]:not([class]), .sec a[href^="http"]:not([class]), .x-deal a[href^="http"]:not([class]), .x-rounds a[href^="http"]:not([class]), .x-already a, .x-exitnote a, .x-uefyi a, .x-acqt td a:not([class]), .x-deal a[href^="#"]:not([class]) {
+  color:#7a5a1c !important; text-decoration:underline dotted 1px; text-underline-offset:3px; }
+.note-h { font:600 15px/1.2 var(--font-body); color:var(--text-3); }
+/* Found in days on a picture (the Pipeline's rows) */
+.x-bover .x-found { font:600 15px/1.2 var(--font-body); color:#d8ccad; align-self:center; }
+
+/* the Fit Table (the Pipeline, 11-02-26): a brass rule under its headings, like the cards' headings */
+.x-ftable th { border-bottom-color:var(--brass); }
+
+/* the company page's cover (11-02-26, round 6's B): the industry a forest chip, Buyer Already Invested a brass one */
+.x-tag.ind { background:#1b5d4a; color:#f6f1e4; }
+.x-tag.flag { background:#f1e2bd; color:#5c4210; box-shadow:inset 0 0 0 1px #c9a45c; }
+
+/* the Deck Screen's Status Table (11-02-26, round 9's R9-deck.html): forest for Shown, amber for Partly Shown and
+   Claimed, Not Shown, rust for Not in the Deck; the moat meter amber while it is thin */
+.x-dkey { background:#efe7d3; border-color:#d9cdb0; border-radius:4px; }
+.x-dst.shown { background:#dfeee6; color:#1b5d4a; } .x-dst.shown i { background:#1b5d4a; }
+.x-dst.partial, .x-dst.claimed { background:#f6e6c5; color:#7a4b06; }
+.x-dst.partial i { border-color:#c98a1b; background:linear-gradient(90deg, #c98a1b 50%, transparent 50%); } .x-dst.claimed i { border-color:#c98a1b; }
+.x-dst.absent { background:#f3ddd5; color:#8c3a24; } .x-dst.absent i { border-color:#b4533a; }
+.x-dtable th { border-bottom-color:var(--brass); } .x-dtable td { border-bottom-color:#e6dcc4; }
+.x-meter i { background:#e6dcc4; } .x-meter i.on { background:#c98a1b; } .x-meter.solid i.on, .x-meter.strong i.on { background:#1b5d4a; }
+.x-moatw { color:#7a4b06; font-variant:normal; } .x-moatw.solid, .x-moatw.strong { color:#1b5d4a; }
+
+/* Red Flags as warnings (11-02-26): rust when the deck shows the flag, amber when it doesn't say, forest when it clears it */
+.x-redflags { border-left:4px solid #b4533a; }
+.x-flag.found { border-color:#dba898; background:#f6e3dc; } .x-flag.found svg { color:#b4533a; } .x-flag.found .x-flag-st { background:#b4533a; color:#fff8f0; }
+.x-flag.missing svg { color:#a36a12; } .x-flag.missing .x-flag-st { color:#7a4b06; background:#f6e6c5; box-shadow:inset 0 0 0 1px #c98a1b; }
+.x-flag.clear svg { color:#1b5d4a; } .x-flag.clear .x-flag-st { color:#1b5d4a; background:#dfeee6; box-shadow:none; }
+</style>
+<style>.pg-open{display:inline-flex;align-items:center;min-height:64px;padding:0 36px;border-radius:14px;background:var(--pg-open);color:var(--pg-on-open);font:700 22px/1 var(--font-body);text-decoration:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}.pg-open:hover{filter:brightness(1.12)}
+.pg-done{margin:22px 0 0;padding:34px 36px 30px;border-radius:18px;background:var(--pg-done);color:var(--pg-on-done);box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 20px 60px var(--pg-done-glow)}
+.pg-done[hidden]{display:none}
+.pg-done-k{font:700 15px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px;opacity:.95}
+.pg-done-t{margin:0 0 12px;font:700 clamp(34px,5vw,52px)/1.05 var(--font-head);letter-spacing:.03em;color:inherit}
+.pg-done-u{margin:0 0 20px;font:600 20px/1.4 var(--font-mono);overflow-wrap:anywhere}
+.pg-done-s{margin:18px 0 0;font:500 15px/1.5 var(--font-body);opacity:.95}
+.pg.is-done .pg-title{opacity:.55}</style></head>
+<body><div class="building"><main class="pg" id="pg">
+<div class="pg-eyebrow">Sidekick Partners AI Scout</div>
+<h1 class="pg-title">Scout is launching</h1>
+<div class="pg-note" id="note"><i></i><span id="noteText">Starting</span></div>
+<div class="pg-note pg-stale" id="stale" hidden><i></i><span>No update for <b class="pg-live" style="min-width:5ch" id="staleFor">0:00</b></span></div>
+<div class="pg-stats">
+ <div class="pg-stat now"><b class="pg-live" style="min-width:7ch;text-align:left" id="since">0:00</b><span>Since Start</span><small>step <em id="stepNo">1</em> began <em class="pg-live" style="min-width:5ch;text-align:left" id="stepSince">0:00</em> ago</small></div>
+ <div class="pg-stat" id="togoCard"><b>~<em class="pg-live" id="togo">11</em> min</b><span>Roughly to Go</span><small id="togoSub">learns from the steps so far</small></div>
+</div>
+<div class="pg-bar" id="bar"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="pg-list" id="list"><div class="pg-row todo" data-n="1"><span class="mk">·</span><span class="k">01</span><span class="n">Setup</span><span class="t">about 2 min</span></div><div class="pg-row todo" data-n="2"><span class="mk">·</span><span class="k">02</span><span class="n">Database</span><span class="t">about 1 min</span></div><div class="pg-row todo" data-n="3"><span class="mk">·</span><span class="k">03</span><span class="n">Build and Tests</span><span class="t">about 2 min</span></div><div class="pg-row todo" data-n="4"><span class="mk">·</span><span class="k">04</span><span class="n">Deploy</span><span class="t">about 1 min</span></div><div class="pg-row todo" data-n="5"><span class="mk">·</span><span class="k">05</span><span class="n">Open</span><span class="t">about 1 min</span></div></div>
+<section class="pg-done" id="doneCard" hidden>
+  <div class="pg-done-k">🎉 It is live</div>
+  <h2 class="pg-done-t">Scout is ready for you</h2>
+  <p class="pg-done-u" id="doneUrl"></p>
+  <p><a class="pg-open" id="openBtn" href="#" target="_blank" rel="noopener">Open Scout</a></p>
+  <p class="pg-done-s">Finished in <b class="pg-live" id="doneIn">0:00</b>. The first pull of fresh sources is running behind the site; the daily jobs take over tomorrow.</p>
+</section>
+</main></div>
+<script>
+// One producer for the build-progress view. Used by scripts/step.ts (inlined into the
+// local file:// page) and by the live Building page. Plain JS so both can load it.
+
+// The five steps of `npm run launch` (v6, 10-14-26): the finished site is installed, not rebuilt.
+const STEPS = ["Setup", "Database", "Build and Tests", "Deploy", "Open"];
+const BUDGETS = [2, 1, 2, 1, 1]; // minutes; the 10-14-26 dry run measured 0:04 · 0:16 · 1:54 · 0:14 · 0:40 on a warm machine, so a fresh one gets room
+
+function clock(sec) {
+  sec = Math.max(0, Math.floor(sec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = String(sec % 60).padStart(2, "0");
+  return h ? h + ":" + String(m).padStart(2, "0") + ":" + s : m + ":" + s;
+}
+
+// "Roughly to go", in minutes rounded to 5. Pauses while a "Waiting for you" note is up.
+function minutesToGo(p, now) {
+  if (!p || p.done) return 0;
+  const cur = p.step - 1;
+  const durations = p.durations || {};
+  let actual = 0;
+  let budgeted = 0;
+  for (let i = 0; i < cur; i++) {
+    const d = durations[i + 1];
+    if (typeof d === "number") {
+      actual += d / 60;
+      budgeted += BUDGETS[i];
+    }
+  }
+  let ratio = budgeted > 0 ? actual / budgeted : 1;
+  ratio = Math.min(1.6, Math.max(0.7, ratio));
+  const effectiveNow = p.waiting && p.waitingSince ? p.waitingSince : now;
+  const inStep = Math.max(0, (effectiveNow - (p.stepStartedAt || now)) / 60000);
+  let left = Math.max(0, BUDGETS[cur] * ratio - inStep);
+  for (let i = cur + 1; i < BUDGETS.length; i++) left += BUDGETS[i] * ratio;
+  return Math.max(1, Math.round(left)); // a ten-minute launch is told to the minute
+}
+
+function isStale(p, now) {
+  return !!p && !p.done && now - (p.updatedAt || now) > 10 * 60 * 1000;
+}
+
+function stepRows(p) {
+  const cur = p ? p.step : 1;
+  return STEPS.map((name, i) => {
+    const n = i + 1;
+    const state = p && p.done ? "done" : n < cur ? "done" : n === cur ? "now" : "todo";
+    const d = p && p.durations ? p.durations[n] : undefined;
+    let label = name;
+    // the address appears only once the launch is done, together with the Open Scout button (user, 10-14-26)
+    if (n === STEPS.length - 1 && p && p.done && p.liveUrl) label = name + " · live at " + p.liveUrl.replace(/^https?:\/\//, "");
+    const time = state === "done" && typeof d === "number" ? clock(d) : state === "now" ? "about " + BUDGETS[i] + " min" : "about " + BUDGETS[i] + " min";
+    return { n, num: String(n).padStart(2, "0"), name: label, state, time, mark: state === "done" ? "✓" : state === "now" ? "→" : "·" };
+  });
+}
+
+function noteLine(p) {
+  if (!p) return "Starting";
+  const base = "Step " + p.step + " of " + STEPS.length + " · " + p.name;
+  return p.note ? (p.waiting ? p.note : base + " · " + p.note) : base;
+}
+
+var P = null;
+function set(el, txt){ if (el && el.textContent !== txt) el.textContent = txt; }
+function render(){
+  var p = window.__progress; if (!p) return; P = p;
+  var now = Date.now();
+  set(document.getElementById("noteText"), p.done ? "Done · Scout is live" : noteLine(p));
+  document.getElementById("note").classList.toggle("wait", !!p.waiting);
+  var stale = isStale(p, now); var st = document.getElementById("stale");
+  if (st.hidden === stale) st.hidden = !stale;
+  set(document.getElementById("staleFor"), clock((now - p.updatedAt)/1000));
+  set(document.getElementById("since"), clock(((p.done ? p.updatedAt : now) - p.startedAt)/1000));
+  set(document.getElementById("stepNo"), String(p.step));
+  set(document.getElementById("stepSince"), clock((now - p.stepStartedAt)/1000));
+  set(document.getElementById("togo"), String(minutesToGo(p, now)));
+  var togo = document.getElementById("togoCard"); if (togo.hidden !== !!p.done) togo.hidden = !!p.done; // nothing to go once it is done
+  set(document.getElementById("togoSub"), p.waiting ? "paused while it waits for you" : "learns from the steps so far");
+  var bars = document.getElementById("bar").children;
+  for (var i=0;i<bars.length;i++){ var c = p.done || i < p.step-1 ? "done" : i === p.step-1 ? "now" : ""; if (bars[i].className !== c) bars[i].className = c; }
+  var rows = stepRows(p), els = document.getElementById("list").children;
+  for (var j=0;j<rows.length;j++){ var r = rows[j], e = els[j], cls = "pg-row " + r.state; if (e.className !== cls) e.className = cls;
+    set(e.children[0], r.mark); set(e.children[2], r.name); set(e.children[3], r.time); }
+  /* the address shows only with the Open Scout button, once the launch is done (user, 10-14-26): before that it is not a site yet */
+  var card = document.getElementById("doneCard"), btn = document.getElementById("openBtn");
+  var ready = !!(p.done && p.liveUrl);
+  if (card.hidden === ready) card.hidden = !ready;
+  document.getElementById("pg").classList.toggle("is-done", ready);
+  if (ready){ if (btn.getAttribute("href") !== p.liveUrl) btn.setAttribute("href", p.liveUrl); set(document.getElementById("doneUrl"), p.liveUrl.replace(/^https?:\/\//, "")); set(document.getElementById("doneIn"), clock((p.updatedAt - p.startedAt)/1000)); }
+}
+function pull(){ var s = document.createElement("script"); s.src = "review-launch-full.js?t=" + Date.now(); s.onload = s.onerror = function(){ s.remove(); render(); }; document.head.appendChild(s); }
+pull(); setInterval(pull, 5000); setInterval(render, 1000);
+</script></body></html>

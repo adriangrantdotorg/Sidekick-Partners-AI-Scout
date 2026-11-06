@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Steadfast Health (mostly unknown) · Sidekick Partners AI Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600&family=Cormorant+Garamond:wght@600;700&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>:root{--bg:#05211a;--panel:#f6f1e4;--panel2:#efe7d3;--line:#d9cdb0;--text:#f3ead6;--muted:#d8ccad;--accent:#7a5a1c;--cta:#c9a45c;--ctatext:#10261f;--chip:#e9dfc6;--chiptext:#5a4214;--hdr:#0d2c24;--warn:#8a4b00;--ring:#1b5d4a;--ringbg:#d9cdb0;--edge:inset 0 0 0 1px #c9a45c;--rule:1px solid #c9a45c;--ontext:#f3ead6;--onmuted:#d8ccad;--hfont:"Cormorant Garamond", Georgia, serif;--hw:600}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:18px/1.55 "Source Sans 3",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+.in{max-width:1320px;margin:0 auto;padding:0 40px}
+main.in{padding-top:32px;padding-bottom:56px}
+.top{background:var(--hdr);border-bottom:1px solid #1d3a37}
+.top .in{display:flex;align-items:center;gap:28px;height:76px}
+.brand{display:flex;align-items:baseline;gap:13px;white-space:nowrap}
+.brule{width:2px;height:30px;background:#30e1ae;box-shadow:0 0 10px 1px #30e1ae;border-radius:2px;align-self:center}
+.bname{font-family:"Bodoni Moda",Georgia,serif;font-weight:600;color:#30e1ae;letter-spacing:.05em;line-height:1}
+.top nav{display:flex;gap:24px;margin-left:auto;font-weight:600;color:#eaf3f0;white-space:nowrap}
+.top nav a{padding:6px 0;border-bottom:2px solid transparent}
+.top nav a.on{border-bottom-color:#30e1ae;color:#ffffff}
+.search{border:1px solid #2f5a54;color:#bcd5ce;border-radius:4px;padding:6px 12px;font-size:16px;white-space:nowrap}
+h1,h2,h4{font-family:var(--hfont);font-weight:var(--hw);margin:0}
+h2{font-size:30px;line-height:1.2;padding-bottom:12px;margin-bottom:20px;border-bottom:var(--rule)}
+h2 small{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:17px;color:var(--muted);margin-left:10px}
+.block,.start,.must,.deal,.already{background:var(--panel);border:1px solid var(--line);border-radius:4px;box-shadow:var(--edge);padding:28px 32px;margin:0 0 28px}
+.smp{display:inline-block;font:700 12px/1 "Source Sans 3",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:3px;border:1px dashed var(--muted);color:var(--muted);vertical-align:middle}
+.btn{display:inline-flex;align-items:center;min-height:42px;padding:0 20px;border-radius:4px;font-weight:700;white-space:nowrap}
+.btn.cta{background:var(--cta);color:var(--ctatext)}
+.btn.ghost{border:1px solid var(--line);color:var(--text);background:transparent}
+.btn.sm{min-height:38px;padding:0 14px;font-size:16px}
+.acts{display:flex;gap:12px;flex-wrap:wrap}
+.chip{display:inline-block;background:var(--chip);color:var(--chiptext);border-radius:4px;padding:3px 10px;font-size:16px;font-weight:600;margin:0 8px 6px 0}
+.new{display:inline-block;background:var(--accent);color:var(--bg);font-size:14px;font-weight:700;padding:2px 9px;border-radius:999px}
+.look-L2 .new{color:#fff}.look-L3 .new{background:#1b5d4a;color:#f3ead6}
+.ring{position:relative;display:inline-grid;place-items:center;flex:none}
+.ring svg{position:absolute;inset:0}
+.ring .rb{fill:none;stroke:var(--ringbg);stroke-width:6}
+.ring .rf{fill:none;stroke:var(--ring);stroke-width:6;stroke-linecap:round}
+.ring b{position:relative;font-weight:700;font-size:17px}
+.mono{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:4px;color:#fff;font-weight:700;font-size:15px;flex:none}
+.mono.big{width:96px;height:96px;font-size:36px;font-family:var(--hfont)}
+/* Start Here */
+.start{display:flex;gap:32px;align-items:center;justify-content:space-between}
+.start h2{border:0;padding:0;margin:0 0 6px;font-size:26px}
+.start p{margin:0;max-width:820px;color:var(--muted)}
+.start b{color:var(--text)}
+/* Must See */
+.must{display:grid;grid-template-columns:220px 1fr 220px;gap:36px;align-items:center}
+.mustart,.dealart{height:200px;border-radius:4px;display:grid;place-items:center;background:linear-gradient(135deg,var(--m),#0f1f1e)}
+.kicker{margin:0 0 6px;font-weight:700;color:var(--accent);font-size:16px;letter-spacing:.04em}
+.must h1,.deal h1{font-size:52px;line-height:1.05;margin-bottom:8px}
+.lede{margin:0 0 12px;font-size:20px;color:var(--muted)}
+.news{margin:4px 0 16px;color:var(--muted)}
+.mustfit,.dealfit{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.mustfit span,.dealfit span{font-weight:700;color:var(--muted);font-size:16px}
+.mustfit .ring b,.dealfit .ring b{font-size:30px}
+.raised{margin:6px 0 0;color:var(--muted);font-size:16px}
+.raised b{color:var(--text);font-size:22px}
+/* Shortlist */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:16px;color:var(--muted);font-weight:700;padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line)}
+td a{display:flex;align-items:center;gap:12px;font-weight:700}
+.num{text-align:right;white-space:nowrap}
+.rk{color:var(--muted);width:40px}
+/* Radar */
+.filters{display:flex;gap:12px;align-items:center;margin:0 0 20px;flex-wrap:wrap}
+.dd{border:1px solid var(--line);border-radius:4px;padding:7px 14px;font-weight:600}
+.count{margin-left:auto;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--panel2);display:flex;flex-direction:column}
+.art{position:relative;height:150px;display:grid;place-items:center;background:linear-gradient(135deg,var(--m),#0f1f1e)}
+.art .ring{position:absolute;right:10px;top:10px;background:rgba(15,31,30,.82);border-radius:50%;color:#eaf3f0}
+.art .ring .rb{stroke:#36524d}.art .ring .rf{stroke:#30e1ae}
+.art .new{position:absolute;left:10px;top:10px}
+.cb{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cb h4{font-size:24px}
+.cb .line{margin:0;color:var(--muted);font-size:17px;line-height:1.4}
+.cb .meta{margin:4px 0 0}
+.cb .raised{margin:0 0 8px}
+.cb .btn{align-self:flex-start;margin-top:auto}
+.more{text-align:center;margin-top:24px}
+/* Company */
+.crumb{margin:0 0 16px;color:var(--muted)}
+.deal{display:grid;grid-template-columns:220px 1fr 220px;gap:36px;align-items:center}
+.already{display:flex;gap:18px;align-items:baseline;border-left:4px solid var(--accent)}
+.already b{white-space:nowrap;color:var(--accent);font-size:20px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.why{margin:0 0 18px}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:170px 1fr 80px;gap:12px;align-items:center}
+.bar i{height:10px;background:var(--ringbg);border-radius:5px;overflow:hidden}
+.bar i b{display:block;height:100%;background:var(--ring)}
+.bar em{font-style:normal;color:var(--muted);text-align:right;white-space:nowrap}
+.note{margin:16px 0 0;color:var(--muted);font-size:17px}
+.dropzone{border:2px dashed var(--line);border-radius:4px;padding:28px;display:flex;flex-direction:column;gap:10px;text-align:center}
+.dropzone b{font-size:22px}
+.dropzone span{color:var(--muted)}
+.notsaved{font-weight:700;color:var(--warn)!important}
+.ue{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.ueb{border:1px solid var(--line);border-radius:4px;padding:16px;background:var(--panel2)}
+.ueb h4{font-size:20px;margin-bottom:10px}
+.uel{display:flex;flex-direction:column;padding:10px 0;border-top:1px solid var(--line)}
+.uen{font-weight:700}
+.uev{font-size:20px;font-weight:700}
+.uev.unk{color:var(--muted);font-weight:600}
+.uev.est::after{content:" · estimate";font-size:15px;font-weight:600;color:var(--muted)}
+.uer,.uenote{font-size:16px;color:var(--muted)}
+.st{display:inline-block;font-size:13px;font-weight:700;padding:1px 7px;border-radius:3px;margin-left:4px;white-space:nowrap}
+.st.ok{background:var(--chip);color:var(--chiptext)}
+.st.thumb{border:1px solid var(--line);color:var(--muted)}
+.acq .lead td{background:var(--panel2)}
+.inv{font-weight:700;color:var(--accent)}
+.hist p{margin:0 0 14px}
+.hist small,.simrow small{color:var(--muted);font-size:16px}
+.simrow{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid var(--line)}
+.simrow em{margin-left:auto;font-style:normal;font-weight:700}
+.empty{color:var(--muted);margin:0}
+.foot{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);font-size:16px}
+/* Copy as Markdown */
+.block{position:relative}
+.block>h2{padding-right:56px}
+.mdcopy{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:4px;border:1px solid var(--line);background:var(--panel);
+ color:var(--muted);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .18s;z-index:2;padding:0}
+.block:hover>.mdcopy,.mdcopy:focus-visible{opacity:1}
+.mdcopy:hover{color:var(--text);border-color:var(--accent)}
+.mdcopy::after{content:attr(data-tip);position:absolute;right:0;top:calc(100% + 8px);white-space:nowrap;background:#10261f;color:#f3ead6;
+ font:600 15px/1.2 "Source Sans 3",sans-serif;padding:7px 10px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .15s}
+.mdcopy:hover::after,.mdcopy:focus-visible::after{opacity:1}
+.mdtoast{position:fixed;top:20px;right:20px;z-index:50;background:#10261f;color:#f3ead6;border:1px solid #c9a45c;border-radius:4px;
+ padding:10px 14px;font:600 17px "Source Sans 3",sans-serif;opacity:0;transform:translateY(-6px);transition:opacity .18s,transform .18s;pointer-events:none}
+.mdtoast.on{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.mdcopy,.mdcopy::after,.mdtoast{transition:none}}
+.foot .in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+.block,.start,.must,.deal,.already{--text:#1d2622;--muted:#4f564f;color:var(--text)}
+.crumb,.foot{color:var(--onmuted)}.crumb a{color:var(--ontext)}
+.foot{border-top-color:#2c5a4b}
+h2{font-variant:small-caps;letter-spacing:.04em;font-size:32px}
+.kicker{font-variant:small-caps;letter-spacing:.08em;font-size:18px}
+.btn.cta{box-shadow:inset 0 0 0 1px #10261f,inset 0 0 0 2px #c9a45c}
+.smp{border-color:#8a7a55;color:#5a4f37}
+.foot .smp{border-color:#d8ccad;color:#d8ccad}
+
+.new{background:#1b5d4a;color:#f3ead6}
+body::before,body::after{content:"";position:fixed;z-index:-1;pointer-events:none}
+@media (prefers-reduced-motion: reduce){body::before,body::after{animation:none!important}}
+
+body{background:#05211a}
+body::before{inset:-10%;background:
+ linear-gradient(90deg,transparent,rgba(48,225,174,.55),transparent) 0 22%/26% 2px no-repeat,
+ linear-gradient(90deg,transparent,rgba(48,225,174,.40),transparent) 0 47%/18% 2px no-repeat,
+ linear-gradient(90deg,transparent,rgba(201,164,92,.45),transparent) 0 71%/22% 2px no-repeat,
+ radial-gradient(ellipse 60% 42% at 22% 8%,rgba(48,225,174,.34),transparent 70%),
+ radial-gradient(ellipse 55% 50% at 82% 28%,rgba(36,140,104,.55),transparent 70%),
+ radial-gradient(ellipse 40% 30% at 60% 0%,rgba(201,164,92,.16),transparent 70%),
+ radial-gradient(ellipse 120% 90% at 50% 40%,transparent 50%,rgba(0,0,0,.55) 100%),#05211a;
+ animation:v5streak 40s linear infinite,v5aurora 60s ease-in-out infinite alternate}
+body::after{left:0;right:0;bottom:0;height:58%;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201600%20600'%20preserveAspectRatio='xMidYMax%20slice'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='1'%20x2='0'%20y2='0'%3E%3Cstop%20offset='0'%20stop-color='%23fff'/%3E%3Cstop%20offset='.45'%20stop-color='%23fff'%20stop-opacity='.45'/%3E%3Cstop%20offset='1'%20stop-color='%23fff'%20stop-opacity='0'/%3E%3C/linearGradient%3E%3Cmask%20id='m'%3E%3Crect%20width='100%25'%20height='100%25'%20fill='url%28%23g%29'/%3E%3C/mask%3E%3C/defs%3E%3Cg%20mask='url%28%23m%29'%20stroke='%2330e1ae'%20stroke-opacity='.30'%20stroke-width='1.2'%3E%3Cline%20x1='-1600'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-1480'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-1360'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-1240'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-1120'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-1000'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-880'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-760'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-640'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-520'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-400'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-280'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-160'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='-40'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='80'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='200'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='320'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='440'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='560'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='680'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='800'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='920'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1040'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1160'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1280'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1400'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1520'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1640'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1760'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='1880'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2000'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2120'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2240'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2360'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2480'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2600'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2720'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2840'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='2960'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='3080'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='3200'%20y1='600'%20x2='800'%20y2='0'/%3E%3Cline%20x1='0'%20y1='600.0'%20x2='1600'%20y2='600.0'/%3E%3Cline%20x1='0'%20y1='387.1'%20x2='1600'%20y2='387.1'/%3E%3Cline%20x1='0'%20y1='285.7'%20x2='1600'%20y2='285.7'/%3E%3Cline%20x1='0'%20y1='226.4'%20x2='1600'%20y2='226.4'/%3E%3Cline%20x1='0'%20y1='187.5'%20x2='1600'%20y2='187.5'/%3E%3Cline%20x1='0'%20y1='160.0'%20x2='1600'%20y2='160.0'/%3E%3Cline%20x1='0'%20y1='139.5'%20x2='1600'%20y2='139.5'/%3E%3Cline%20x1='0'%20y1='123.7'%20x2='1600'%20y2='123.7'/%3E%3Cline%20x1='0'%20y1='111.1'%20x2='1600'%20y2='111.1'/%3E%3Cline%20x1='0'%20y1='100.8'%20x2='1600'%20y2='100.8'/%3E%3Cline%20x1='0'%20y1='92.3'%20x2='1600'%20y2='92.3'/%3E%3Cline%20x1='0'%20y1='85.1'%20x2='1600'%20y2='85.1'/%3E%3Cline%20x1='0'%20y1='78.9'%20x2='1600'%20y2='78.9'/%3E%3Cline%20x1='0'%20y1='73.6'%20x2='1600'%20y2='73.6'/%3E%3Cline%20x1='0'%20y1='69.0'%20x2='1600'%20y2='69.0'/%3E%3Cline%20x1='0'%20y1='64.9'%20x2='1600'%20y2='64.9'/%3E%3Cline%20x1='0'%20y1='61.2'%20x2='1600'%20y2='61.2'/%3E%3Cline%20x1='0'%20y1='58.0'%20x2='1600'%20y2='58.0'/%3E%3Cline%20x1='0'%20y1='55.0'%20x2='1600'%20y2='55.0'/%3E%3Cline%20x1='0'%20y1='52.4'%20x2='1600'%20y2='52.4'/%3E%3Cline%20x1='0'%20y1='50.0'%20x2='1600'%20y2='50.0'/%3E%3Cline%20x1='0'%20y1='47.8'%20x2='1600'%20y2='47.8'/%3E%3Cline%20x1='0'%20y1='45.8'%20x2='1600'%20y2='45.8'/%3E%3Cline%20x1='0'%20y1='44.0'%20x2='1600'%20y2='44.0'/%3E%3Cline%20x1='0'%20y1='42.3'%20x2='1600'%20y2='42.3'/%3E%3Cline%20x1='0'%20y1='40.7'%20x2='1600'%20y2='40.7'/%3E%3Cline%20x1='0'%20y1='39.2'%20x2='1600'%20y2='39.2'/%3E%3Cline%20x1='0'%20y1='37.9'%20x2='1600'%20y2='37.9'/%3E%3Cline%20x1='0'%20y1='36.6'%20x2='1600'%20y2='36.6'/%3E%3Cline%20x1='0'%20y1='35.4'%20x2='1600'%20y2='35.4'/%3E%3Cline%20x1='0'%20y1='34.3'%20x2='1600'%20y2='34.3'/%3E%3Cline%20x1='0'%20y1='33.2'%20x2='1600'%20y2='33.2'/%3E%3Cline%20x1='0'%20y1='32.3'%20x2='1600'%20y2='32.3'/%3E%3Cline%20x1='0'%20y1='31.3'%20x2='1600'%20y2='31.3'/%3E%3Cline%20x1='0'%20y1='30.5'%20x2='1600'%20y2='30.5'/%3E%3Cline%20x1='0'%20y1='29.6'%20x2='1600'%20y2='29.6'/%3E%3Cline%20x1='0'%20y1='28.8'%20x2='1600'%20y2='28.8'/%3E%3Cline%20x1='0'%20y1='28.1'%20x2='1600'%20y2='28.1'/%3E%3Cline%20x1='0'%20y1='27.4'%20x2='1600'%20y2='27.4'/%3E%3Cline%20x1='0'%20y1='26.7'%20x2='1600'%20y2='26.7'/%3E%3Cline%20x1='0'%20y1='26.1'%20x2='1600'%20y2='26.1'/%3E%3Cline%20x1='0'%20y1='25.5'%20x2='1600'%20y2='25.5'/%3E%3Cline%20x1='0'%20y1='24.9'%20x2='1600'%20y2='24.9'/%3E%3Cline%20x1='0'%20y1='24.3'%20x2='1600'%20y2='24.3'/%3E%3Cline%20x1='0'%20y1='23.8'%20x2='1600'%20y2='23.8'/%3E%3Cline%20x1='0'%20y1='23.3'%20x2='1600'%20y2='23.3'/%3E%3Cline%20x1='0'%20y1='22.8'%20x2='1600'%20y2='22.8'/%3E%3Cline%20x1='0'%20y1='22.3'%20x2='1600'%20y2='22.3'/%3E%3Cline%20x1='0'%20y1='21.9'%20x2='1600'%20y2='21.9'/%3E%3Cline%20x1='0'%20y1='21.5'%20x2='1600'%20y2='21.5'/%3E%3Cline%20x1='0'%20y1='21.1'%20x2='1600'%20y2='21.1'/%3E%3Cline%20x1='0'%20y1='20.7'%20x2='1600'%20y2='20.7'/%3E%3Cline%20x1='0'%20y1='20.3'%20x2='1600'%20y2='20.3'/%3E%3Cline%20x1='0'%20y1='19.9'%20x2='1600'%20y2='19.9'/%3E%3Cline%20x1='0'%20y1='19.5'%20x2='1600'%20y2='19.5'/%3E%3Cline%20x1='0'%20y1='19.2'%20x2='1600'%20y2='19.2'/%3E%3Cline%20x1='0'%20y1='18.9'%20x2='1600'%20y2='18.9'/%3E%3Cline%20x1='0'%20y1='18.5'%20x2='1600'%20y2='18.5'/%3E%3Cline%20x1='0'%20y1='18.2'%20x2='1600'%20y2='18.2'/%3E%3Cline%20x1='0'%20y1='17.9'%20x2='1600'%20y2='17.9'/%3E%3Cline%20x1='0'%20y1='17.6'%20x2='1600'%20y2='17.6'/%3E%3Cline%20x1='0'%20y1='17.4'%20x2='1600'%20y2='17.4'/%3E%3Cline%20x1='0'%20y1='17.1'%20x2='1600'%20y2='17.1'/%3E%3Cline%20x1='0'%20y1='16.8'%20x2='1600'%20y2='16.8'/%3E%3Cline%20x1='0'%20y1='16.6'%20x2='1600'%20y2='16.6'/%3E%3Cline%20x1='0'%20y1='16.3'%20x2='1600'%20y2='16.3'/%3E%3Cline%20x1='0'%20y1='16.1'%20x2='1600'%20y2='16.1'/%3E%3Cline%20x1='0'%20y1='15.9'%20x2='1600'%20y2='15.9'/%3E%3Cline%20x1='0'%20y1='15.6'%20x2='1600'%20y2='15.6'/%3E%3Cline%20x1='0'%20y1='15.4'%20x2='1600'%20y2='15.4'/%3E%3Cline%20x1='0'%20y1='15.2'%20x2='1600'%20y2='15.2'/%3E%3Cline%20x1='0'%20y1='15.0'%20x2='1600'%20y2='15.0'/%3E%3Cline%20x1='0'%20y1='14.8'%20x2='1600'%20y2='14.8'/%3E%3Cline%20x1='0'%20y1='14.6'%20x2='1600'%20y2='14.6'/%3E%3Cline%20x1='0'%20y1='14.4'%20x2='1600'%20y2='14.4'/%3E%3Cline%20x1='0'%20y1='14.2'%20x2='1600'%20y2='14.2'/%3E%3Cline%20x1='0'%20y1='14.0'%20x2='1600'%20y2='14.0'/%3E%3C/g%3E%3C/svg%3E") center bottom/100% 100% no-repeat;
+ animation:v5grid 14s ease-in-out infinite alternate}
+@keyframes v5streak{from{background-position:-30% 22%,130% 47%,-30% 71%,0 0,0 0,0 0,0 0,0 0}to{background-position:130% 22%,-30% 47%,130% 71%,0 0,0 0,0 0,0 0,0 0}}
+@keyframes v5aurora{from{filter:hue-rotate(0deg) brightness(1)}to{filter:hue-rotate(-12deg) brightness(1.12)}}
+@keyframes v5grid{from{opacity:.7}to{opacity:1}}
+.block,.start,.must,.deal,.already{box-shadow:inset 0 0 0 1px #c9a45c,0 0 0 1px rgba(48,225,174,.28),0 26px 60px -30px rgba(48,225,174,.55)}
+
+.prog{height:10px;border-radius:5px;background:var(--ringbg);overflow:hidden;margin:16px 0 8px}
+.prog i{display:block;height:100%;background:var(--ring);border-radius:5px}
+.progline{display:flex;justify-content:space-between;gap:16px;color:var(--muted)}
+.sk{display:block;background:#e6dcc6;border-radius:4px}
+.skrow{display:grid;grid-template-columns:40px 36px 1fr 1fr 80px 140px;gap:14px;align-items:center;padding:14px 12px;border-bottom:1px solid var(--line)}
+.waitnote{margin:12px 0 0;color:var(--muted)}
+.steps{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 28px}
+.steps li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.steps li>span:last-child{display:flex;flex-direction:column;gap:2px}
+.steps small{font-size:16px;color:var(--muted)}
+.steps .dot{margin-top:2px}
+.steps .dot{width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.steps .done .dot{background:var(--ring);color:#f6f1e4}
+.steps .now .dot{border:2px solid var(--ring);animation:dotbreathe 6s ease-in-out infinite}
+.steps .todo .dot{border:2px solid var(--line)}
+.steps .todo{color:var(--muted)}
+.steps .now b{color:var(--text)}
+@keyframes dotbreathe{0%,100%{box-shadow:0 0 0 0 rgba(27,93,74,.0)}50%{box-shadow:0 0 0 6px rgba(27,93,74,.18)}}
+@media (prefers-reduced-motion: reduce){.steps .now .dot{animation:none}}
+.notsavedbar{display:flex;gap:16px;align-items:baseline;border-left:4px solid #c9a45c}
+.notsavedbar b{white-space:nowrap;color:var(--warn);font-size:20px}
+.bottomline{font-family:var(--hfont);font-size:30px;line-height:1.3;margin:0}
+.screen dt{font-weight:700;margin-top:14px}
+.screen dd{margin:4px 0 0;color:var(--text)}
+.flags li{margin:8px 0}
+.flags .st{margin-left:8px}
+.thin{color:var(--muted);margin:0}
+</style></head>
+<body class="look-S" data-variation="S"><header class="top"><div class="in"><a class="brand" href="#"><svg class="logo" viewBox="0 0 1817 463" height="30" width="118" role="img" aria-label="Sidekick"><defs><mask id="m4" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w4"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a4"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g4" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m4)"><rect clip-path="url(#w4)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g4)"><g mask="url(#m4)"><rect clip-path="url(#a4)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="brule"></span><span class="bname" style="font-size:25.2px">AI SCOUT</span></a><nav><a class="" href="#">Today</a><a class="on" href="#">Pipeline</a><a class="" href="#">IC Meeting</a><a class="" href="#">Trends</a><a class="" href="#">Tracking</a><a class="" href="#">Backtest</a><a class="" href="#">Funding ▾</a></nav><span class="search">Search ⌘K</span></div></header><main class="in">
+<p class="crumb"><a href="#">Pipeline</a> › Steadfast Health</p>
+<section class="deal"><div class="dealart" style="--m:#7a8c47"><span class="mono big" style="background:#7a8c47">SH</span></div>
+<div class="dealbody"><h1>Steadfast Health</h1><p class="lede">Menopause care paid for by employers.</p>
+<p class="meta"><span class="chip">Industry 2 · Consumer Health</span><span class="chip">Seed</span><span class="chip">Boston</span></p>
+<div class="acts"><a class="btn cta" href="#">Visit Website</a><a class="btn ghost" href="#">Track</a><a class="btn ghost" href="#">Draft Memo</a></div></div>
+<div class="dealfit"><span class="ring" style="width:120px;height:120px"><svg viewBox="0 0 64 64" width="120" height="120"><circle cx="32" cy="32" r="26" class="rb"/><circle cx="32" cy="32" r="26" class="rf" stroke-dasharray="112.7 163.4" transform="rotate(-90 32 32)"/></svg><b>69%</b></span><span>Thesis Fit</span><p class="raised">Funds Raised<br><b>$5.2M</b> <span class="smp" title="Made-up number for the design">Sample</span></p></div></section>
+
+<div class="two">
+<section class="block"><button class="mdcopy" type="button" aria-label="Copy this section as Markdown" data-tip="Copy this section as Markdown"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><h2>Why It Fits</h2>
+<p class="why">Menopause care sold through employers' benefits. Public data is thin: Scout knows its price and its partners,
+little else.</p><div class="bars"><div class="bar"><span>Thesis Fit</span><i><b style="width:83%"></b></i><em>25 of 30</em></div><div class="bar"><span>Stage and Check</span><i><b style="width:100%"></b></i><em>20 of 20</em></div><div class="bar"><span>Unit Economics</span><i><b style="width:0%"></b></i><em>0 of 20</em></div><div class="bar"><span>Signal Strength</span><i><b style="width:73%"></b></i><em>11 of 15</em></div><div class="bar"><span>Team</span><i><b style="width:80%"></b></i><em>8 of 10</em></div><div class="bar"><span>Geography</span><i><b style="width:100%"></b></i><em>5 of 5</em></div></div>
+<p class="note">Unit Economics: 1 line estimated, 5 unknown, so it scores 0 of 20. An unknown line costs nothing.</p></section>
+<section class="block drop"><h2>Deck Screen</h2><div class="dropzone"><b>Drop Steadfast Health's Pitch Deck</b>
+<span>We'll crunch the numbers to see how they align.</span><span class="notsaved">No data is saved on our servers.</span></div></section>
+</div>
+
+<section class="block"><button class="mdcopy" type="button" aria-label="Copy this section as Markdown" data-tip="Copy this section as Markdown"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><h2>Unit Economics <small>Industry 2 · Consumer Health · Thin Public Data</small></h2><div class="ue"><div class="ueb"><h4>Price and Revenue</h4><div class="uel"><span class="uen">Price Per Month</span><span class="uev est">$79 a month <span class="smp" title="Made-up number for the design">Sample</span></span><span class="uer">Hims $83 a month (a public company, not a startup bar) <span class="st ok">Verified</span></span><span class=uenote>Estimate: its pricing page</span></div><div class="uel"><span class="uen">Gross Margin</span><span class="uev unk">Unknown</span><span class="uer">Hims 74%; employer channel: Hinge Health 80% <span class="st ok">Verified</span></span></div></div><div class="ueb"><h4>Cost to Win a Customer</h4><div class="uel"><span class="uen">Marketing As % of Revenue</span><span class="uev unk">Unknown</span><span class="uer">Hims about 39% <span class="st ok">Verified</span></span></div><div class="uel"><span class="uen">Employer Channel</span><span class="uev est">2 employer partners announced <span class="smp" title="Made-up number for the design">Sample</span></span><span class="uer">Employer CAC about $11K vs. about $170 to consumers (2023) <span class="st thumb">FYI</span></span><span class=uenote>Signal: partnership news</span></div></div><div class="ueb"><h4>What a Customer Is Worth</h4><div class="uel"><span class="uen">Net Dollar Retention</span><span class="uev unk">Unknown</span><span class="uer">Hinge Health 117% <span class="st ok">Verified</span></span></div></div><div class="ueb"><h4>Months to Pay Back</h4><div class="uel"><span class="uen">Churn and Payback</span><span class="uev unk">Unknown</span><span class="uer">No independent Seed or A benchmark </span></div></div></div></section>
+
+<section class="block"><button class="mdcopy" type="button" aria-label="Copy this section as Markdown" data-tip="Copy this section as Markdown"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><h2>Likely Acquirers <small>Strategic Buyers and What They Paid</small></h2>
+<p class="thin">No checked deals yet for employer-paid women's health, so Scout names no buyers rather than guess. Exit pace for
+the industry: 164 digital health acquisitions through Q3 2026, against 172 by the same point of 2025 (Rock Health).</p></section></main><footer class="foot"><div class="in"><span>Sidekick Partners AI Scout · An independent prototype. Not affiliated with or endorsed by Sidekick Partners.</span><span>Design sample: startups are made up; every made-up number says <span class="smp" title="Made-up number for the design">Sample</span></span></div></footer>
+<div class="mdtoast" role="status" aria-live="polite">✅ Copied as Markdown</div>
+<script>// Copy as Markdown: hover a section, press its button, and the section's words land on the clipboard as Markdown
+// (user, 10-31-26). The buttons are written into the page by build.py; this file only gives them behavior.
+(function () {
+  var MD_SKIP = ["mdcopy", "dropzone", "filters", "more", "prog", "skrow", "sk"];
+  function txt(el) {
+    var c = el.cloneNode(true);
+    c.querySelectorAll(".mdcopy, .sk").forEach(function (n) { n.remove(); });
+    c.querySelectorAll(".smp").forEach(function (n) { n.textContent = "(Sample)"; });
+    c.querySelectorAll(".st").forEach(function (n) { n.textContent = "(" + n.textContent.trim() + ")"; });
+    c.querySelectorAll("br").forEach(function (n) { n.replaceWith(" · "); });
+    return c.textContent.replace(/\s+/g, " ").replace(/ · · /g, " · ").trim();
+  }
+  function cells(tr) { return Array.prototype.map.call(tr.children, function (c) { return txt(c).replace(/\|/g, "\\|"); }); }
+  function md(el) {
+    var out = [];
+    Array.prototype.forEach.call(el.children, function (n) {
+      var cl = n.classList, t = n.tagName;
+      if (MD_SKIP.some(function (k) { return cl.contains(k); })) return;
+      if (t === "H2") {
+        var h = n.cloneNode(true), sm = h.querySelector("small");
+        if (sm) sm.remove();
+        out.push("## " + txt(h));
+        if (n.querySelector("small")) out.push("_" + txt(n.querySelector("small")) + "_");
+      } else if (t === "H4") out.push("### " + txt(n));
+      else if (t === "P") { if (txt(n)) out.push(txt(n)); }
+      else if (t === "DL") n.querySelectorAll("dt").forEach(function (dt) {
+        var dd = dt.nextElementSibling; out.push("- **" + txt(dt) + ":** " + (dd ? txt(dd) : ""));
+      });
+      else if (t === "UL" || t === "OL") Array.prototype.forEach.call(n.children, function (li) { out.push("- " + txt(li)); });
+      else if (t === "TABLE") {
+        var head = n.querySelector("thead tr"), rows = n.querySelectorAll("tbody tr"), lines = [];
+        if (head) { var h1 = cells(head); lines.push("| " + h1.join(" | ") + " |", "|" + h1.map(function () { return "---"; }).join("|") + "|"); }
+        rows.forEach(function (r) { lines.push("| " + cells(r).join(" | ") + " |"); });
+        out.push(lines.join("\n"));
+      } else if (cl.contains("uel")) {
+        var v = n.querySelector(".uev"), note = n.querySelector(".uenote");
+        out.push("- **" + txt(n.querySelector(".uen")) + ":** " + txt(v) + (v.classList.contains("est") ? " (estimate)" : "") +
+          " · " + txt(n.querySelector(".uer")) + (note ? " · " + txt(note) : ""));
+      } else if (cl.contains("bar")) out.push("- " + txt(n.querySelector("span")) + ": " + txt(n.querySelector("em")));
+      else if (cl.contains("simrow")) out.push("- **" + txt(n.querySelector("b")) + "** — " + txt(n.querySelector("small")) + " (fit " + txt(n.querySelector("em")) + ")");
+      else if (cl.contains("card")) out.push("- **" + txt(n.querySelector("h4")) + "** — " + txt(n.querySelector(".line")) + " · " + txt(n.querySelector(".raised")));
+      else { var inner = md(n); if (inner) out.push(inner); }
+    });
+    return out.reduce(function (acc, chunk, i) {
+      var list = /^- /.test(chunk) && i > 0 && /(^|\n)- [^\n]*$/.test(out[i - 1]);
+      return acc + (i === 0 ? "" : list ? "\n" : "\n\n") + chunk;
+    }, "");
+  }
+  function copy(text) {
+    window.__lastCopied = text;
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.left = "-9999px";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(fallback);
+    else fallback();
+  }
+  var timer;
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".mdcopy");
+    if (!b) return;
+    copy(md(b.closest("section")));
+    var toast = document.querySelector(".mdtoast");
+    toast.classList.add("on");
+    clearTimeout(timer);
+    timer = setTimeout(function () { toast.classList.remove("on"); }, 1800);
+  });
+  window.__sectionMarkdown = md;
+})();
+</script></body></html>

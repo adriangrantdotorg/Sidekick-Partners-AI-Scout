@@ -1,0 +1,20 @@
+<!doctype html>
+<!-- The screen review's phone width (Plan step 12b, 11-03-26): the made-up local Scout on :4702, live, at 390 px, the
+     width the browser tests check. A desktop tab can't draw a page at phone width, so each page sits in a 390 px
+     frame: a frame is a viewport, so the site's phone rules apply inside it. Needs the review server running:
+     in Engine, SCOUT_PGLITE=.local-db/sidekick-fixture.tar.gz npx next start -p 4702 -->
+<html lang="en"><head><meta charset="utf-8"><title>Scout on a Phone</title>
+<style>
+  html, body { margin:0; background:#06140f; }
+  body { display:flex; gap:28px; padding:28px; overflow-x:auto; align-items:flex-start; }
+  iframe { flex:0 0 390px; width:390px; height:844px; border:0; border-radius:28px; box-shadow:0 0 0 10px #0f231c, 0 0 0 11px #2a4a3e; background:#0b2a22; }
+</style></head><body>
+<iframe src="http://localhost:4702/" title="Today"></iframe>
+<iframe src="http://localhost:4702/pipeline" title="Pipeline"></iframe>
+<iframe src="http://localhost:4702/company/1" title="A company page"></iframe>
+<iframe src="http://localhost:4702/filings" title="Filings"></iframe>
+<iframe src="http://localhost:4702/co-investors" title="Co-Investors"></iframe>
+<iframe src="http://localhost:4702/tracking" title="Tracking"></iframe>
+<iframe src="http://localhost:4702/trends" title="Trends"></iframe>
+<iframe src="http://localhost:4702/brief" title="IC Meeting"></iframe>
+</body></html>

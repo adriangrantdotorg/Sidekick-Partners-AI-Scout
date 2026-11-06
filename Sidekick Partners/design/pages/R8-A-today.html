@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Today · Sidekick Partners AI Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"><link rel="stylesheet" href="assets/live-scout.css"><style>
+body{min-height:100vh}
+main.ll{max-width:1440px;margin:0 auto;padding:28px 0 60px}
+.ll-intro{margin:0 40px 22px;color:var(--wall);font-size:18px;max-width:920px}
+.ll-intro h1{font:600 40px/1.1 var(--font-head);font-variant:small-caps;margin:0 0 6px;color:#fff}
+.ll-label{margin:34px 40px 12px;color:var(--wall);font-size:18px}
+.ll-label b{font:600 28px/1.2 var(--font-head);font-variant:small-caps;color:#fff;margin-right:12px}
+.ll-label span.tag{display:inline-block;margin-right:10px;padding:2px 8px;border:1px solid var(--brass);border-radius:4px;font-size:14px;font-weight:700;color:var(--brass)}
+.ll-zoom{margin:14px 40px 0;width:330px;overflow:hidden;border-radius:4px;zoom:2.2;box-shadow:0 0 0 1px rgba(201,164,92,.35)}
+.ll-zoom .ticker{width:330px}
+.ll-cap{margin:6px 40px 0;color:#d8ccad;font-size:15px}
+/* every option: the label is set apart, and passing names fade in from under it instead of looking cut */
+[data-variation] .ticker .lbl{padding:0 18px;gap:10px}
+[data-variation] .ticker .lbl::after{content:"";position:absolute;top:0;bottom:0;left:100%;width:30px;background:linear-gradient(90deg,var(--ticker),transparent);pointer-events:none}
+[data-variation] .ticker .lbl i{width:10px;height:10px;border-radius:50%;flex:none;animation:none}
+[data-variation] .ticker .lbl span{font:700 15px/1 "Source Sans 3",system-ui,sans-serif}
+
+/* A: Breathing Dot */
+[data-variation=A] .ticker .lbl{background:#c9a45c;color:#10261f}
+[data-variation=A] .ticker .lbl i{background:#30e1ae;box-shadow:0 0 0 1.5px #0d2c24,0 0 6px 1px rgba(48,225,174,.55);animation:llbreathe 3s ease-in-out infinite}
+@keyframes llbreathe{0%,100%{box-shadow:0 0 0 1.5px #0d2c24,0 0 4px 1px rgba(48,225,174,.45)}50%{box-shadow:0 0 0 1.5px #0d2c24,0 0 16px 6px rgba(48,225,174,.95)}}
+
+/* B: Ping Ring */
+[data-variation=B] .ticker .lbl{background:#0d2c24;color:#30e1ae;box-shadow:inset -2px 0 0 #c9a45c}
+[data-variation=B] .ticker .lbl i{background:#30e1ae;box-shadow:0 0 6px rgba(48,225,174,.8)}
+[data-variation=B] .ticker .lbl .ring{position:absolute;left:18px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;border:2px solid #30e1ae;box-sizing:border-box;animation:llping 2s ease-out infinite}
+@keyframes llping{0%{transform:scale(1);opacity:.85}80%,100%{transform:scale(2.8);opacity:0}}
+
+/* C: Lit Edge */
+[data-variation=C] .ticker .lbl{background:#0b2a22;color:#f3ead6;box-shadow:inset 0 0 0 1px rgba(48,225,174,.7),0 0 10px rgba(48,225,174,.35);animation:lledge 4s ease-in-out infinite}
+[data-variation=C] .ticker .lbl i{background:#30e1ae;box-shadow:0 0 8px rgba(48,225,174,.9)}
+[data-variation=C] .ticker .lbl span{font:600 16px/1 "Bodoni Moda",Georgia,serif;letter-spacing:.06em !important}
+@keyframes lledge{0%,100%{box-shadow:inset 0 0 0 1px rgba(48,225,174,.45),0 0 6px rgba(48,225,174,.2)}50%{box-shadow:inset 0 0 0 1px rgba(48,225,174,1),0 0 16px rgba(48,225,174,.6)}}
+
+/* D: Light Sweep */
+[data-variation=D] .ticker .lbl{background:#c9a45c;color:#10261f;overflow:hidden}
+[data-variation=D] .ticker .lbl::after{display:none}
+[data-variation=D] .ticker .lbl i{background:#30e1ae;box-shadow:0 0 0 1.5px #0d2c24,0 0 9px 2px rgba(48,225,174,.75)}
+[data-variation=D] .ticker .lbl .sheen{position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,248,224,.75),transparent);transform:translateX(-120%);animation:llsweep 5s ease-in-out infinite}
+@keyframes llsweep{0%{transform:translateX(-120%)}28%{transform:translateX(320%)}100%{transform:translateX(320%)}}
+[data-variation=D] .ticker{--fade:1}
+[data-variation=D] .ticker .track{-webkit-mask-image:linear-gradient(90deg,transparent 70px,#000 110px);mask-image:linear-gradient(90deg,transparent 70px,#000 110px)}
+
+@media (prefers-reduced-motion: reduce){[data-variation] .ticker .lbl, [data-variation] .ticker .lbl *{animation:none !important}}
+</style><script type="application/json" id="variation-manifest">
+{
+ "project": "VC Scout",
+ "subject": "Sidekick Scout: the ticker's Live label",
+ "surface": "component",
+ "claude_rec": "C",
+ "compares": [
+  "motion",
+  "visual.fonts",
+  "visual.ornament"
+ ],
+ "options": [
+  {
+   "id": "A",
+   "name": "Breathing Dot",
+   "desc": "The dot turns mint and breathes a soft glow every 3 s; Live in Source Sans 3 bold on the brass tab.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae",
+      "#c9a45c"
+     ],
+     "ornament": "glow dot",
+     "energy": "calm",
+     "fonts": {
+      "display": "source sans 3"
+     }
+    },
+    "motion": [
+     {
+      "element": "live-dot",
+      "kind": "breathe",
+      "period_s": 3,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "attention_cue": "motion"
+    }
+   }
+  },
+  {
+   "id": "B",
+   "name": "Ping Ring",
+   "desc": "A dark tab with a brass edge; a mint ring ripples out from the dot every 2 s, the way a broadcast marks live.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "ornament": "ring",
+     "energy": "balanced",
+     "fonts": {
+      "display": "source sans 3"
+     }
+    },
+    "motion": [
+     {
+      "element": "live-ring",
+      "kind": "ping",
+      "period_s": 2,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "medium",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "attention_cue": "motion"
+    }
+   }
+  },
+  {
+   "id": "C",
+   "name": "Lit Edge",
+   "desc": "The tab's edge itself glows mint and breathes every 4 s; Live set in Bodoni Moda, the AI SCOUT wordmark's face.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "ornament": "edge light",
+     "energy": "calm",
+     "fonts": {
+      "display": "bodoni moda"
+     }
+    },
+    "motion": [
+     {
+      "element": "live-edge",
+      "kind": "breathe",
+      "period_s": 4,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "attention_cue": "ornament"
+    }
+   }
+  },
+  {
+   "id": "D",
+   "name": "Light Sweep",
+   "desc": "The brass tab catches a sheen of light that crosses it every 5 s; the dot holds a steady mint glow.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#c9a45c",
+      "#30e1ae"
+     ],
+     "ornament": "sheen",
+     "energy": "balanced",
+     "fonts": {
+      "display": "source sans 3"
+     }
+    },
+    "motion": [
+     {
+      "element": "live-sheen",
+      "kind": "sweep",
+      "period_s": 5,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "path": "line",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "attention_cue": "motion"
+    }
+   }
+  }
+ ]
+}
+</script><script>
+const at = new URLSearchParams(location.search).get("at");
+if (at !== null) { const s = document.createElement("style"); s.textContent = `*,*::before,*::after{animation-play-state:paused!important;animation-delay:-${at}s!important}`; document.head.append(s); }
+</script></head>
+<body data-variation="A"><div class="app"><header class="top"><a class="brand own" title="Sidekick Partners AI Scout: go to Today" href="/"><img class="brand-logo" src="assets/sk-logo.svg" alt="Sidekick Partners"><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">AI SCOUT</span></a><nav class="nav" aria-label="Pages"><a class="on" href="/">Today</a><a class="" href="/pipeline">Pipeline</a><a class="" href="/brief">IC Meeting</a><a class="" href="/trends">Trends</a><a class="" href="/tracking">Tracking</a><a class="" href="/backtest">Backtest</a><div class="dd"><button aria-expanded="false" aria-haspopup="true" title="Shows Filings, Co-Investors, Consumer Funds">Funding ▾</button><div class="menu" hidden=""><a class="" href="/filings">Filings</a><a class="" href="/co-investors">Co-Investors</a><a class="" href="/consumer-funds">Consumer Funds</a></div></div></nav><div class="tools"><a class="chip gh" href="https://github.com/adriangrantdotorg/Sidekick-Partners-AI-Scout" target="_blank" rel="noopener noreferrer" title="Opens Scout's code on GitHub in a new window" data-github="true"><svg class="gh-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg><span class="gh-lbl"><span class="gh-long">View on </span>GitHub</span></a><button class="chip" title="Search companies, pages, trends, people and brands (⌘K)" data-search-chip="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search ico" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span class="lbl-long">Search</span><span class="kbd">⌘K</span></button></div></header><div class="ticker" aria-label="Today's changes"><div class="lbl"><i></i><span>Live</span></div><div class="track"><a title="Opens Chairside in Scout" tabindex="0" href="/company/1">Chairside <b class="up">▲ 84%</b></a><a title="Opens Cartwise in Scout" tabindex="0" href="/company/2">Cartwise <b class="up">▲ 78%</b></a><a title="Opens Brightbench in Scout" tabindex="0" href="/company/3">Brightbench <b class="up">▲ 74%</b></a><a title="Opens Chairside in Scout" tabindex="-1" aria-hidden="true" href="/company/1">Chairside <b class="up">▲ 84%</b></a><a title="Opens Cartwise in Scout" tabindex="-1" aria-hidden="true" href="/company/2">Cartwise <b class="up">▲ 78%</b></a><a title="Opens Brightbench in Scout" tabindex="-1" aria-hidden="true" href="/company/3">Brightbench <b class="up">▲ 74%</b></a></div></div><main id="main"><div class="today"><section class="x-start" aria-label="Start Here" data-testid="start-here"><div><h2 class="x-h2">Start Here</h2><p>Scout reads public funding news, SEC filings and trade press every morning, and ranks startups by how well they fit Sidekick's thesis. Today's three best picks: <a title="Open Chairside in Scout" href="/company/1"><b>Chairside</b></a>, <a title="Open Cartwise in Scout" href="/company/2"><b>Cartwise</b></a> and <a title="Open Brightbench in Scout" href="/company/3"><b>Brightbench</b></a>.</p></div><div class="x-acts"><a class="x-btn primary" title="Open this week's IC Meeting brief" data-testid="start-brief" href="/brief">Open the IC Brief</a><button type="button" class="x-btn ghost" title="Hide this panel for good in this browser" data-testid="start-dismiss">Dismiss</button></div></section><div class="mast"><span class="big">Scout</span><nav class="segs" aria-label="Counts"><a class="seg hero" title="Opens the Pipeline, score 45 and up" href="/pipeline?min=45"><b><svg class="trophy" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"></path></svg>6</b><span>Worth a Look</span></a></nav><div class="right"><span>Mon, Nov 2</span><button class="refresh" data-act="refresh" title="Pulls the fastest sources now; once an hour for everyone (R)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw ico" aria-hidden="true" style="width:14px;height:14px"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>Refresh Now</button></div></div><section class="x-sec" aria-label="Must See"><div class="x-sech"><h2 class="x-h2">Must See</h2><span class="x-count">The Highest Thesis-Fit Startup Recently in the News</span></div><article class="x-tile hero open always" data-item="true" data-company="1"><div class="x-tm"><div class="x-media x-sky" data-kind="logo" data-tier="3" style="--top:#0f1f29;--mid:#1b384b;--low:#081116;--sun:rgba(127,212,255,0.42);--cloud:rgba(224,238,245,0.18);--tile:#7fd4ff;--tile-ink:#0e1c25"><div class="x-clouds x-drift"></div><div class="x-sun"></div><div class="x-skymark word m"><span class="x-skytile">C</span><span class="x-skyname">Chairside</span></div></div><div class="x-scrim"></div><div class="x-tl"><span class="x-fit lg" style="--h:140" title="Thesis fit: how well Chairside matches Sidekick's thesis" data-testid="fit"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42" stroke-dasharray="221.7 263.9"></circle></svg><span class="num"><b>84<small>%</small></b><em>Fit</em></span></span></div><div class="x-tr"><a class="x-web w1 known" href="https://chairside.example" target="_blank" rel="noopener noreferrer" aria-label="Visit Website: chairside.example" data-tip="Visit Website"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></a></div><div class="x-over"><div class="x-tags"><span class="x-area">Vertical SaaS + Embedded Payments</span><span class="x-new" title="A new signal in the last 7 days"><i></i>New</span></div><h3 class="x-name">Chairside</h3><div class="x-funds tile"><span class="x-flabel">Funds Raised</span><span class="x-amt" data-testid="funds">$4.1M</span></div><div class="x-reveal"><div><p class="x-why">Booking, payroll and card payments for independent salons and spas, inside Sidekick's thesis.</p><a class="x-sig" href="https://news.example.com/chairside" target="_blank" rel="noopener noreferrer" title="Opens Chairside raises $4.1M seed for salon booking and payments in a new window"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2M18 14h-8M15 18h-5M10 6h8v4h-8z"></path></svg><span>Example News</span><time><span class="live-v l" style="min-width:0ch" title="10-31-26 6:09 PM" data-live="ago">2d ago</span></time></a><div class="x-acts"><a class="x-btn ghost" data-act="open" title="Open Chairside in Scout" href="/company/1"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg><span>View Details</span></a><button type="button" class="x-btn x-track" data-act="track" aria-pressed="false" title="Track Chairside: a daily check of news, filings and shows"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5M9 10.8a2 2 0 0 1-1.1 1.8l-1.8.9A2 2 0 0 0 5 15.2V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.8a2 2 0 0 0-1.1-1.8l-1.8-.9A2 2 0 0 1 15 10.8V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path></svg><span>Track</span></button><span class="x-pop"><button type="button" class="x-btn x-more" aria-expanded="false" title="Memo, email, note, CRM, CSV and Not a Fit"><span>More</span><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><span class="x-popbox x-menu" hidden=""></span></span><span class="x-votes" data-vote="company:1"><button type="button" class="up" data-act="up" aria-pressed="false" title="This fits Sidekick" aria-label="This fits Sidekick: Chairside"><svg class="x-ico fill" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3l6 9H2z"></path></svg></button><b data-testid="vote-count">0</b><button type="button" class="dn" data-act="down" aria-pressed="false" title="Not for Sidekick" aria-label="Not for Sidekick: Chairside"><svg class="x-ico fill" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13L2 4h12z"></path></svg></button></span></div></div></div></div></div></article></section><section class="x-sec" aria-label="Shortlist"><button type="button" class="x-mdcopy" aria-label="Copy this section as Markdown" title="Copy this section as Markdown" data-testid="mdcopy"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8"></path></svg></button><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count" data-md="sub">(Top 10 Startups by Thesis Fit · Updated Daily)</span></div><div class="x-race static"><div class="x-rhead" data-md="skip"><span>#</span><span></span><span>Company</span><span class="x-rfound">Found</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" title="Open Chairside in Scout" data-md="li" data-md-text="1. **Chairside** · 84% Thesis Fit · Funds Raised $4.1M" href="/company/1"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname">Chairside</span><span class="x-rfound"><span class="live-v l" style="min-width:11ch" title="10-30-26 6:09 PM" data-live="ago">3 days ago</span></span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" title="Open Cartwise in Scout" data-md="li" data-md-text="2. **Cartwise** · 78% Thesis Fit · Funds Raised $2.4M" href="/company/2"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname">Cartwise</span><span class="x-rfound"><span class="live-v l" style="min-width:11ch" title="10-29-26 6:09 PM" data-live="ago">4 days ago</span></span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" title="Open Brightbench in Scout" data-md="li" data-md-text="3. **Brightbench** · 74% Thesis Fit · Funds Raised $6.5M" href="/company/3"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname">Brightbench</span><span class="x-rfound"><span class="live-v l" style="min-width:11ch" title="10-28-26 6:09 PM" data-live="ago">5 days ago</span></span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" title="Open Crownwell in Scout" data-md="li" data-md-text="4. **Crownwell** · 71% Thesis Fit · Funds Raised $3.2M" href="/company/4"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname">Crownwell</span><span class="x-rfound"><span class="live-v l" style="min-width:11ch" title="10-27-26 6:09 PM" data-live="ago">6 days ago</span></span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" title="Open Steadfast Health in Scout" data-md="li" data-md-text="5. **Steadfast Health** · 69% Thesis Fit · Funds Raised $5.2M" href="/company/5"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname">Steadfast Health</span><span class="x-rfound"><span class="live-v l" style="min-width:11ch" title="10-26-26 6:09 PM" data-live="ago">7 days ago</span></span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" title="Open Olea &amp; Oak in Scout" data-md="li" data-md-text="6. **Olea &amp; Oak** · 66% Thesis Fit · Funds Raised $1.5M" href="/company/6"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname">Olea &amp; Oak</span><span class="x-rfound"><span class="live-v l" style="min-width:11ch" title="10-24-26 6:09 PM" data-live="ago">9 days ago</span></span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section><section class="x-sec" aria-label="On the Radar"><button type="button" class="x-mdcopy" aria-label="Copy this section as Markdown" title="Copy this section as Markdown" data-testid="mdcopy"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8"></path></svg></button><div class="x-sech"><h2 class="x-h2">On the Radar</h2><span class="x-count" data-md="sub">5 Companies by Fit</span></div><div class="x-fwrap" id="fbar" data-md="skip"><div class="x-filter f2"><span class="x-dd"><span class="x-pop"><button type="button" class="x-ddbtn" aria-expanded="false" title="Filter by Funds Raised"><span class="x-flabel">Funds Raised</span><b data-shown="true">All</b><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><span class="x-popbox x-ddmenu" hidden=""></span></span></span><span class="x-dd"><span class="x-pop"><button type="button" class="x-ddbtn" aria-expanded="false" title="Filter by Category"><span class="x-flabel">Category</span><b data-shown="true">All</b><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><span class="x-popbox x-ddmenu" hidden=""></span></span></span><button type="button" class="x-chip" aria-pressed="false" title="Only startups with 50% thesis fit or more">50%+ Fit</button><button type="button" class="x-chip" aria-pressed="false" title="Only startups with a new signal in the last 7 days"><i class="x-dot"></i>New This Week</button><span class="x-fcount" data-count="true">5 of 5 Companies</span><button type="button" class="x-fclear" disabled="" title="Clear every filter">Clear Filters</button></div></div><div class="x-grid3" id="radar"><article class="x-tile link" tabindex="0" data-item="true" data-company="2" data-md="li" data-md-text="**Cartwise** · E-Commerce Software · 78% Thesis Fit · Funds Raised $2.4M" title="Open Cartwise" aria-label="Cartwise: 78% thesis fit, Funds Raised $2.4M"><div class="x-tm"><div class="x-media x-sky" data-kind="logo" data-tier="3" style="--top:#122526;--mid:#214445;--low:#0a1415;--sun:rgba(48,225,174,0.42);--cloud:rgba(224,245,239,0.18);--tile:#30e1ae;--tile-ink:#112222"><div class="x-clouds x-drift"></div><div class="x-sun"></div><div class="x-skymark word l"><span class="x-skytile">C</span><span class="x-skyname">Cartwise</span></div></div><div class="x-scrim"></div><div class="x-hovwrap"><div class="x-hov h1" aria-hidden="true"><span>Click to View More Details<svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></span></div></div><div class="x-tl"><span class="x-fit md" style="--h:140" title="Thesis fit: how well Cartwise matches Sidekick's thesis" data-testid="fit"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42" stroke-dasharray="205.8 263.9"></circle></svg><span class="num"><b>78<small>%</small></b><em>Fit</em></span></span></div><div class="x-tr"><a class="x-web w1 search" href="https://www.google.com/search?q=%22Cartwise%22%20e-commerce%20software%20startup%20official%20site" target="_blank" rel="noopener noreferrer" aria-label="Find Website: No Official Site Yet, Searches the Web" data-tip="Find Website"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></a></div><div class="x-over"><div class="x-tags"><span class="x-area">E-Commerce Software</span><span class="x-new" title="A new signal in the last 7 days"><i></i>New</span></div><h3 class="x-name"><a data-act="open" tabindex="-1" href="/company/2">Cartwise</a></h3><div class="x-funds tile"><span class="x-flabel">Funds Raised</span><span class="x-amt" data-testid="funds">$2.4M</span></div></div></div></article><article class="x-tile link" tabindex="0" data-item="true" data-company="3" data-md="li" data-md-text="**Brightbench** · Tech-Enabled Roll-Ups + AI Services · 74% Thesis Fit · Funds Raised $6.5M" title="Open Brightbench" aria-label="Brightbench: 74% thesis fit, Funds Raised $6.5M"><div class="x-tm"><div class="x-media x-sky" data-kind="logo" data-tier="3" style="--top:#262112;--mid:#453b21;--low:#15120a;--sun:rgba(217,178,106,0.42);--cloud:rgba(245,238,224,0.18);--tile:#d9b26a;--tile-ink:#221e11"><div class="x-clouds x-drift"></div><div class="x-sun"></div><div class="x-skymark word m"><span class="x-skytile">B</span><span class="x-skyname">Brightbench</span></div></div><div class="x-scrim"></div><div class="x-hovwrap"><div class="x-hov h1" aria-hidden="true"><span>Click to View More Details<svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></span></div></div><div class="x-tl"><span class="x-fit md" style="--h:140" title="Thesis fit: how well Brightbench matches Sidekick's thesis" data-testid="fit"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42" stroke-dasharray="195.3 263.9"></circle></svg><span class="num"><b>74<small>%</small></b><em>Fit</em></span></span></div><div class="x-tr"><a class="x-web w1 search" href="https://www.google.com/search?q=%22Brightbench%22%20tech-enabled%20roll-ups%20%2B%20ai%20services%20startup%20official%20site" target="_blank" rel="noopener noreferrer" aria-label="Find Website: No Official Site Yet, Searches the Web" data-tip="Find Website"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></a></div><div class="x-over"><div class="x-tags"><span class="x-area">Tech-Enabled Roll-Ups + AI Services</span><span class="x-new" title="A new signal in the last 7 days"><i></i>New</span></div><h3 class="x-name"><a data-act="open" tabindex="-1" href="/company/3">Brightbench</a></h3><div class="x-funds tile"><span class="x-flabel">Funds Raised</span><span class="x-amt" data-testid="funds">$6.5M</span></div></div></div></article><article class="x-tile link" tabindex="0" data-item="true" data-company="4" data-md="li" data-md-text="**Crownwell** · Premium Consumer Brands · 71% Thesis Fit · Funds Raised $3.2M" title="Open Crownwell" aria-label="Crownwell: 71% thesis fit, Funds Raised $3.2M"><div class="x-tm"><div class="x-media x-sky" data-kind="logo" data-tier="3" style="--top:#0d2b23;--mid:#174f3f;--low:#071813;--sun:rgba(242,198,109,0.42);--cloud:rgba(245,238,224,0.18);--tile:#f2c66d;--tile-ink:#0b281f"><div class="x-clouds x-drift"></div><div class="x-sun"></div><div class="x-skymark word m"><span class="x-skytile">C</span><span class="x-skyname">Crownwell</span></div></div><div class="x-scrim"></div><div class="x-hovwrap"><div class="x-hov h1" aria-hidden="true"><span>Click to View More Details<svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></span></div></div><div class="x-tl"><span class="x-fit md" style="--h:140" title="Thesis fit: how well Crownwell matches Sidekick's thesis" data-testid="fit"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42" stroke-dasharray="187.4 263.9"></circle></svg><span class="num"><b>71<small>%</small></b><em>Fit</em></span></span></div><div class="x-tr"><a class="x-web w1 search" href="https://www.google.com/search?q=%22Crownwell%22%20premium%20consumer%20brands%20startup%20official%20site" target="_blank" rel="noopener noreferrer" aria-label="Find Website: No Official Site Yet, Searches the Web" data-tip="Find Website"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></a></div><div class="x-over"><div class="x-tags"><span class="x-area">Premium Consumer Brands</span><span class="x-new" title="A new signal in the last 7 days"><i></i>New</span><span class="x-area x-inv" title="Unilever Ventures backed Crownwell, so Unilever leads its likely buyers" data-testid="buyer-chip">Buyer Already Invested</span></div><h3 class="x-name"><a data-act="open" tabindex="-1" href="/company/4">Crownwell</a></h3><div class="x-funds tile"><span class="x-flabel">Funds Raised</span><span class="x-amt" data-testid="funds">$3.2M</span></div></div></div></article><article class="x-tile link" tabindex="0" data-item="true" data-company="5" data-md="li" data-md-text="**Steadfast Health** · Consumer Health · 69% Thesis Fit · Funds Raised $5.2M" title="Open Steadfast Health" aria-label="Steadfast Health: 69% thesis fit, Funds Raised $5.2M"><div class="x-tm"><div class="x-media x-sky" data-kind="logo" data-tier="3" style="--top:#0a2d2e;--mid:#135353;--low:#061919;--sun:rgba(158,240,196,0.42);--cloud:rgba(224,245,234,0.18);--tile:#9ef0c4;--tile-ink:#09292a"><div class="x-clouds x-drift"></div><div class="x-sun"></div><div class="x-skymark word m"><span class="x-skytile">S</span><span class="x-skyname">Steadfast Health</span></div></div><div class="x-scrim"></div><div class="x-hovwrap"><div class="x-hov h1" aria-hidden="true"><span>Click to View More Details<svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></span></div></div><div class="x-tl"><span class="x-fit md" style="--h:140" title="Thesis fit: how well Steadfast Health matches Sidekick's thesis" data-testid="fit"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42" stroke-dasharray="182.1 263.9"></circle></svg><span class="num"><b>69<small>%</small></b><em>Fit</em></span></span></div><div class="x-tr"><a class="x-web w1 search" href="https://www.google.com/search?q=%22Steadfast%20Health%22%20consumer%20health%20startup%20official%20site" target="_blank" rel="noopener noreferrer" aria-label="Find Website: No Official Site Yet, Searches the Web" data-tip="Find Website"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></a></div><div class="x-over"><div class="x-tags"><span class="x-area">Consumer Health</span><span class="x-new" title="A new signal in the last 7 days"><i></i>New</span></div><h3 class="x-name"><a data-act="open" tabindex="-1" href="/company/5">Steadfast Health</a></h3><div class="x-funds tile"><span class="x-flabel">Funds Raised</span><span class="x-amt" data-testid="funds">$5.2M</span></div></div></div></article><article class="x-tile link" tabindex="0" data-item="true" data-company="6" data-md="li" data-md-text="**Olea &amp; Oak** · Premium Consumer Brands · 66% Thesis Fit · Funds Raised $1.5M" title="Open Olea &amp; Oak" aria-label="Olea &amp; Oak: 66% thesis fit, Funds Raised $1.5M"><div class="x-tm"><div class="x-media x-sky" data-kind="logo" data-tier="3" style="--top:#0d2b23;--mid:#174f3f;--low:#071813;--sun:rgba(242,198,109,0.42);--cloud:rgba(245,238,224,0.18);--tile:#f2c66d;--tile-ink:#0b281f"><div class="x-clouds x-drift"></div><div class="x-sun"></div><div class="x-skymark word m"><span class="x-skytile">O</span><span class="x-skyname">Olea &amp; Oak</span></div></div><div class="x-scrim"></div><div class="x-hovwrap"><div class="x-hov h1" aria-hidden="true"><span>Click to View More Details<svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></span></div></div><div class="x-tl"><span class="x-fit md" style="--h:140" title="Thesis fit: how well Olea &amp; Oak matches Sidekick's thesis" data-testid="fit"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42" stroke-dasharray="174.2 263.9"></circle></svg><span class="num"><b>66<small>%</small></b><em>Fit</em></span></span></div><div class="x-tr"><a class="x-web w1 search" href="https://www.google.com/search?q=%22Olea%20%26%20Oak%22%20premium%20consumer%20brands%20startup%20official%20site" target="_blank" rel="noopener noreferrer" aria-label="Find Website: No Official Site Yet, Searches the Web" data-tip="Find Website"><svg class="x-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></a></div><div class="x-over"><div class="x-tags"><span class="x-area">Premium Consumer Brands</span></div><h3 class="x-name"><a data-act="open" tabindex="-1" href="/company/6">Olea &amp; Oak</a></h3><div class="x-funds tile"><span class="x-flabel">Funds Raised</span><span class="x-amt" data-testid="funds">$1.5M</span></div></div></div></article></div></section></div><!--$--><!--/$--></main><footer class="foot"><span class="left"><a title="Open Deck Screen" href="/deck">Deck Screen</a><a title="Open Settings" href="/settings">Settings</a><a title="Open About" href="/about">About</a></span><span class="right"><a class="gh-foot" href="https://github.com/adriangrantdotorg/Sidekick-Partners-AI-Scout" target="_blank" rel="noopener noreferrer" title="Opens Scout's code on GitHub in a new window" data-github="true"><svg class="gh-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>View on GitHub</a><span>Built by <a href="https://www.example.com/builder/" target="_blank" rel="noopener noreferrer" title="Opens the user on LinkedIn in a new window">the user</a></span><button class="linkish" title="What Phase II adds, built together">Phase II</button><button class="linkish" title="Show every keyboard shortcut (?)">Shortcuts</button></span><span class="disc" data-disclaimer="true">An independent prototype. Not affiliated with or endorsed by Sidekick Partners.</span></footer></div></body></html>

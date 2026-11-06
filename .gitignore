@@ -1,0 +1,8 @@
+.DS_Store
+.claude/scheduled_tasks.lock
+__pycache__/
+
+# Vercel's link at the repo root (Engine/scripts/vercel-root.sh): holds the production env
+.vercel
+RECURRING.md
+.claude/

@@ -1,0 +1,62 @@
+{
+  "name": "vc-scout-engine",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "step": "tsx scripts/step.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "e2e:sidekick": "tsx tests/firms/sidekick-partners/e2e/fixture.ts && SCOUT_PGLITE=.local-db/sidekick-fixture.tar.gz NEXT_PUBLIC_SCOUT_FIRM=sidekick-partners next build && playwright test -c tests/firms/sidekick-partners/e2e/playwright.config.ts",
+    "check": "npm run typecheck && npm run lint && vitest run && npm run e2e:sidekick",
+    "smoke": "playwright test tests/e2e/smoke.spec.ts",
+    "verify:live": "tsx scripts/verify-live.ts",
+    "pipeline:all": "tsx scripts/pipeline-all.ts",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "seed": "tsx scripts/load-seed.ts",
+    "watch": "bash scripts/watch-launch.sh",
+    "launch": "bash scripts/launch.sh",
+    "update": "bash scripts/update.sh",
+    "release": "bash scripts/release.sh",
+    "seed:export": "tsx scripts/export-seed.ts",
+    "verify:light": "tsx scripts/verify-live.ts --light",
+    "check:ai": "tsx scripts/check-ai.ts",
+    "brand:backfill": "tsx scripts/brand-backfill.ts"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "ai": "^7.0.139",
+    "drizzle-orm": "^0.45.4",
+    "fast-xml-parser": "^5.11.2",
+    "lucide-react": "^1.56.0",
+    "next": "16.4.3",
+    "pdfjs-dist": "6.4.299",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@electric-sql/pglite": "^0.5.9",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^18.0.7",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.0.4"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}

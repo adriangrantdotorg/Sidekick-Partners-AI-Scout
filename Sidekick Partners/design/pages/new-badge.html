@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>New Badge · Sidekick Partners AI Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"><link rel="stylesheet" href="assets/live-scout.css"><style>
+body{min-height:100vh}
+main.nb{max-width:1440px;margin:0 auto;padding:28px 0 60px}
+.nb-intro{margin:0 40px 22px;color:var(--wall);font-size:18px;max-width:900px}
+.nb-intro h1{font:600 40px/1.1 var(--font-head);font-variant:small-caps;letter-spacing:.03em;margin:0 0 6px;color:#fff}
+.nb-label{margin:34px 40px 12px;color:var(--wall);font-size:18px}
+.nb-label b{font:600 28px/1.2 var(--font-head);font-variant:small-caps;letter-spacing:.03em;color:#fff;margin-right:12px}
+.nb-label span.tag{display:inline-block;margin-right:10px;padding:2px 8px;border:1px solid var(--brass);border-radius:4px;font-size:14px;font-weight:700;color:var(--brass)}
+.x-race{height:auto}
+/* A: Mint Glow Dot */
+.nb-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#1b5d4a;margin-right:-4px;box-shadow:0 0 0 0 rgba(48,225,174,.0);animation:nbbreathe 6s ease-in-out infinite;flex:none}
+@keyframes nbbreathe{0%,100%{box-shadow:0 0 0 2px rgba(48,225,174,.25),0 0 6px 1px rgba(48,225,174,.35)}50%{box-shadow:0 0 0 3px rgba(48,225,174,.45),0 0 14px 4px rgba(48,225,174,.55)}}
+@media (prefers-reduced-motion: reduce){.nb-dot{animation:none;box-shadow:0 0 0 3px rgba(48,225,174,.35)}}
+/* B: Brass Small Capitals */
+.nb-word{font:600 19px/1 var(--font-head);font-variant:small-caps;letter-spacing:.06em !important;color:#7a5a1c;margin-left:4px}
+/* C: Found Date */
+.nb-two{display:grid;gap:3px}
+.nb-found{font:600 14px/1.2 var(--font-body);color:var(--text-3)}
+.nb-found.new{color:#1b5d4a}
+/* D: Edge Light */
+[data-variation=D] .x-rr.nb-new{box-shadow:inset 3px 0 0 #c9a45c, inset 14px 0 16px -12px rgba(201,164,92,.55)}
+.nb-legend{font:600 15px/1 var(--font-body);color:var(--text-3);display:inline-flex;align-items:center;gap:8px}
+.nb-legend i{display:inline-block;width:3px;height:16px;background:#c9a45c;box-shadow:0 0 8px rgba(201,164,92,.8)}
+</style>
+<script type="application/json" id="variation-manifest">
+{
+ "project": "VC Scout",
+ "subject": "Sidekick Scout: the Shortlist's New badge",
+ "surface": "component",
+ "claude_rec": "D",
+ "compares": [
+  "ux.attention_cue",
+  "visual.ornament",
+  "motion"
+ ],
+ "options": [
+  {
+   "id": "A",
+   "name": "Mint Glow Dot",
+   "desc": "A small forest dot before the name, glowing mint and breathing slowly (6 s). No word.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "ornament": "glow dot",
+     "energy": "calm"
+    },
+    "motion": [
+     {
+      "element": "new-dot",
+      "kind": "breathe",
+      "period_s": 6,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "attention_cue": "motion"
+    }
+   }
+  },
+  {
+   "id": "B",
+   "name": "Brass Small Capitals",
+   "desc": "The word set like the headings: brass Cormorant small capitals after the name, no box.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#7a5a1c"
+     ],
+     "ornament": "typographic",
+     "energy": "calm",
+     "fonts": {
+      "display": "cormorant garamond"
+     }
+    },
+    "ux": {
+     "attention_cue": "text"
+    }
+   }
+  },
+  {
+   "id": "C",
+   "name": "Found Date",
+   "desc": "No flag: a quiet line under the name says when Scout found it, so a new one reads at a glance and an old one says how old.",
+   "tokens": {
+    "visual": {
+     "ornament": "none",
+     "energy": "calm"
+    },
+    "ux": {
+     "attention_cue": "text",
+     "detail": "dated"
+    }
+   }
+  },
+  {
+   "id": "D",
+   "name": "Edge Light",
+   "desc": "New rows carry a thin glowing brass edge on the left; the heading's legend names it. Nothing beside the name.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#c9a45c"
+     ],
+     "ornament": "edge light",
+     "energy": "calm"
+    },
+    "ux": {
+     "attention_cue": "ornament"
+    }
+   }
+  }
+ ]
+}
+</script></head>
+<body><main class="nb"><div class="nb-intro"><h1>The New Badge · Four Options</h1>Each is the real Shortlist card in the site's own styles, with the test site's made-up startups. Only the New marker changes. The broken favicon is fixed in all four: a startup with no icon shows its letter.</div><div class="nb-opt" data-variation="A"><p class="nb-label"><b>A · Mint Glow Dot</b><span class="tag">On-profile</span>A small forest dot before the name, glowing mint and breathing slowly (6 s). No word.</p><section class="x-sec" aria-label="Shortlist" id="opt-A"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>Chairside</span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>Cartwise</span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>Brightbench</span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>Crownwell</span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>Steadfast Health</span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname">Olea & Oak</span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div><div class="nb-opt" data-variation="B"><p class="nb-label"><b>B · Brass Small Capitals</b><span class="tag">Classic</span>The word set like the headings: brass Cormorant small capitals after the name, no box.</p><section class="x-sec" aria-label="Shortlist" id="opt-B"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname">Chairside <span class="nb-word" title="New this week: a new signal in the last 7 days">New</span></span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname">Cartwise <span class="nb-word" title="New this week: a new signal in the last 7 days">New</span></span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname">Brightbench <span class="nb-word" title="New this week: a new signal in the last 7 days">New</span></span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname">Crownwell <span class="nb-word" title="New this week: a new signal in the last 7 days">New</span></span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname">Steadfast Health <span class="nb-word" title="New this week: a new signal in the last 7 days">New</span></span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname">Olea & Oak</span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div><div class="nb-opt" data-variation="C"><p class="nb-label"><b>C · Found Date</b><span class="tag">Stretch</span>No flag: a quiet line under the name says when Scout found it, so a new one reads at a glance and an old one says how old.</p><section class="x-sec" aria-label="Shortlist" id="opt-C"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname nb-two"><span>Chairside</span><span class="nb-found new">New · Found 10-30-26</span></span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname nb-two"><span>Cartwise</span><span class="nb-found new">New · Found 10-29-26</span></span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname nb-two"><span>Brightbench</span><span class="nb-found new">New · Found 10-28-26</span></span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname nb-two"><span>Crownwell</span><span class="nb-found new">New · Found 10-27-26</span></span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname nb-two"><span>Steadfast Health</span><span class="nb-found new">New · Found 10-26-26</span></span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname nb-two"><span>Olea & Oak</span><span class="nb-found">Found 10-24-26</span></span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div><div class="nb-opt" data-variation="D"><p class="nb-label"><b>D · Edge Light</b><span class="tag">On-profile</span>New rows carry a thin glowing brass edge on the left; the heading's legend names it. Nothing beside the name.</p><section class="x-sec" aria-label="Shortlist" id="opt-D"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span><span class="nb-legend"><i></i>New This Week</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr nb-new" title="New this week: a new signal in the last 7 days" style="--w:84;--h:140" href="#"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname">Chairside</span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr nb-new" title="New this week: a new signal in the last 7 days" style="--w:78;--h:140" href="#"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname">Cartwise</span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr nb-new" title="New this week: a new signal in the last 7 days" style="--w:74;--h:140" href="#"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname">Brightbench</span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr nb-new" title="New this week: a new signal in the last 7 days" style="--w:71;--h:140" href="#"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname">Crownwell</span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr nb-new" title="New this week: a new signal in the last 7 days" style="--w:69;--h:140" href="#"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname">Steadfast Health</span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname">Olea & Oak</span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div></main></body></html>

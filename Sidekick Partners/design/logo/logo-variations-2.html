@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scout Logo Round 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600&family=Cinzel:wght@600&family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&family=Libre+Baskerville:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,600&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{--page:#eef2f1;--ink:#1c2321;--muted:#4a5654;--card:#ffffff;--line:#d7e0dd}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:18px/1.55 "Source Sans 3",system-ui,sans-serif}
+.wrap{max-width:1360px;margin:0 auto;padding:48px 32px 96px}
+h1{font:600 40px/1.15 "Libre Baskerville",Georgia,serif;margin:0 0 12px}
+.lede{max-width:980px;margin:0 0 10px;color:var(--muted)}
+.rec{display:inline-block;margin:6px 0 32px;padding:8px 14px;border-radius:4px;background:#e2efe9;color:#123d31;font-weight:600}
+.opt{background:var(--card);border:1px solid var(--line);border-radius:4px;margin:0 0 48px;overflow:hidden}
+.opt-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:22px 28px;border-bottom:1px solid var(--line)}
+.tile{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:4px;background:#1b5d4a;color:#f4f9f8;font:700 22px "Source Sans 3",sans-serif}
+.opt-head h2{margin:0;font:600 28px/1.2 "Libre Baskerville",Georgia,serif}
+.tag{padding:4px 12px;border-radius:999px;border:1px solid #9cbcb2;color:#1e4d40;font-size:16px;font-weight:600}
+.tag.stretch{border-color:#c9b27a;color:#6b5420}
+.tag.profile{border-color:#2fbf93;color:#0f6a50}
+.desc{flex-basis:100%;margin:0;color:var(--muted)}
+.font{flex-basis:100%;margin:0;color:var(--muted);font-size:16px}
+.hero{display:grid;place-items:center;min-height:380px;padding:56px 40px}
+.label{font-size:16px;color:var(--muted);padding:14px 28px 0}
+.hdr-wrap{padding:8px 28px 0}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px;padding:0 24px;border-radius:4px}
+.hdr-brand{display:flex;align-items:center;gap:14px;white-space:nowrap}
+.hdr nav{display:flex;gap:22px;font-size:18px;font-weight:600;white-space:nowrap}
+.bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:0 28px;padding:0 28px 28px}
+.rev{display:grid;place-items:center;min-height:250px;padding:32px;border-radius:4px;margin-top:8px}
+.tabs{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+.tab{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:10px 10px 0 0;background:#f6f7f7;border:1px solid var(--line);border-bottom:none;font-size:17px;width:max-content;max-width:100%}
+.tab b{font-weight:400;color:#7a8583;margin-left:12px}
+.tab.dark{background:#2a2f2e;color:#eef2f1;border-color:#2a2f2e}
+.favs{display:flex;align-items:flex-end;gap:18px}
+.favs small{color:var(--muted);font-size:16px}
+.fav{display:inline-grid;place-items:center}
+.fav-box{display:grid;place-items:center;width:100%;height:100%;border-radius:22%}
+.fav64{width:64px;height:64px}.fav32{width:32px;height:32px}.fav16{width:16px;height:16px}
+.fav32 .fav-box svg{width:20px;height:20px}.fav16 .fav-box svg{width:11px;height:11px}
+.fav64 .fav-box svg{width:40px;height:40px}
+.fav-seal svg{width:100%;height:auto}
+.fav-seal{display:block;width:100%}
+/* A */
+.a-name,.c-line,.d-name,.e-name,.e-sub,.b-sub,.a-sub,.hdr-brand span{white-space:nowrap}
+.lkA{display:flex;flex-direction:column;align-items:center}
+.a-rule{display:flex;align-items:center;gap:14px;margin:22px 0 8px;width:100%;max-width:420px}
+.a-rule i{flex:1;height:1px;background:currentColor;opacity:.55}
+.a-rule b{color:var(--r);font-size:14px}
+.a-sub{font:600 18px "Cormorant Garamond",Georgia,serif;letter-spacing:.5em;text-transform:uppercase;margin-left:.5em}
+.a-name{font:italic 500 64px/1.05 "Cormorant Garamond",Georgia,serif}
+.rev .a-name{font-size:48px}
+.hb-rule{width:1px;height:30px}
+.hb-a{font:italic 600 30px "Cormorant Garamond",Georgia,serif;color:#1b5d4a}
+/* B */
+.lkB{display:flex;align-items:center;gap:28px}
+.b-left{display:flex;flex-direction:column;align-items:flex-end}
+.b-sub{font:600 18px "Source Sans 3",sans-serif;letter-spacing:.42em;text-transform:uppercase;margin-top:6px;margin-right:-.42em}
+.b-rule{width:2px;align-self:stretch}
+.plate{white-space:nowrap;font:700 38px/1 "Libre Baskerville",Georgia,serif;letter-spacing:.18em;padding:24px 30px 22px 36px;border-radius:4px}
+.rev .plate{font-size:30px;padding:20px 24px 18px 30px}
+.plate-sm{font-size:18px;padding:9px 12px 8px 15px;letter-spacing:.16em}
+/* C */
+.lkC{display:flex;align-items:center;gap:34px}
+.c-text{display:flex;flex-direction:column;gap:10px}
+.c-line{font:400 36px/1.1 "Playfair Display",Georgia,serif}
+.c-line em{font-weight:600}
+.rev .c-line{font-size:28px}
+.hb-c{font:400 22px "Playfair Display",Georgia,serif;color:#f4f9f8}
+.hb-c em{color:#30e1ae;font-weight:600}
+/* D */
+.lkD{display:flex;align-items:center;gap:40px}
+.d-text{display:flex;flex-direction:column;align-items:flex-start}
+.d-rule{width:100%;height:2px;background:#e3c47e;margin:18px 0 14px}
+.d-name{font:600 34px "Cinzel",Georgia,serif;letter-spacing:.32em}
+.rev .d-name{font-size:26px}
+.seal-t{font:600 25px "Cinzel",Georgia,serif;letter-spacing:4px;fill:#e3c47e}
+.hb-d{font:600 20px "Cinzel",Georgia,serif;letter-spacing:.28em;color:#1b5d4a}
+/* E */
+.lkE{display:flex;align-items:center;gap:30px}
+.e-rule{width:2px;align-self:stretch;border-radius:2px}
+.e-text{display:flex;flex-direction:column;gap:6px}
+.e-name{font:600 50px/1 "Bodoni Moda",Georgia,serif;letter-spacing:.24em}
+.rev .e-name{font-size:38px}
+.e-sub{font:600 18px "Source Sans 3",sans-serif;letter-spacing:.45em;text-transform:uppercase}
+.e-rule-sm{height:30px;background:#30e1ae;box-shadow:0 0 10px 1px #30e1ae;align-self:center}
+.hb-e{font:600 22px "Bodoni Moda",Georgia,serif;letter-spacing:.22em;color:#30e1ae}
+.edge{box-shadow:inset 0 1px 0 #30e1ae,inset 0 18px 30px -24px #30e1ae}
+footer{color:var(--muted);font-size:16px}
+
+.lk2{display:flex;align-items:baseline;gap:30px}
+.r2{display:inline-block;width:2px;border-radius:2px}
+.n2{font-family:"Bodoni Moda",Georgia,serif;font-weight:600;line-height:1;white-space:nowrap}
+.hdr .lk2{gap:14px}
+.bottom{grid-template-columns:1fr}
+.rev{justify-items:center}
+.ref{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:24px;background:#fff;border:1px solid var(--line);
+  border-radius:4px;padding:18px 28px;margin:0 0 40px}
+.ref .hero{min-height:0;padding:28px 36px;border-radius:4px}
+.ref p{margin:0;color:var(--muted)}
+.cmp{border-collapse:collapse;margin:0 0 40px;background:#fff;border:1px solid var(--line)}
+.cmp th,.cmp td{padding:10px 18px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.cmp th{font-weight:600}
+</style>
+<script type="application/json" id="variation-manifest">
+{
+ "project": "VC Scout",
+ "subject": "Sidekick Partners AI Scout logo: After Hours sizing",
+ "surface": "graphic",
+ "claude_rec": "E1",
+ "compares": [
+  "visual.lockup_size"
+ ],
+ "options": [
+  {
+   "id": "E1",
+   "name": "Same letter height",
+   "desc": "AI SCOUT's capitals are exactly as tall as the letters of \"Sidekick\" and sit on the same line, so both words share a top and a bottom edge. Spacing tightened so it doesn't run long.",
+   "tokens": {
+    "visual": {
+     "bg": "#0f1f1e",
+     "text": "#f4f9f8",
+     "accent": [
+      "#30e1ae"
+     ],
+     "base": "dark",
+     "saturation": "high",
+     "ornament": "edge light",
+     "fonts": {
+      "display": "bodoni moda"
+     },
+     "lockup_size": "cap-match",
+     "letter_spacing_em": 0.05
+    }
+   }
+  },
+  {
+   "id": "E2",
+   "name": "Same width",
+   "desc": "AI SCOUT is exactly as wide as the word \"Sidekick\", on the same line, keeping the wide spacing from your pick. Smaller letters, so Sidekick stays the lead.",
+   "tokens": {
+    "visual": {
+     "bg": "#0f1f1e",
+     "text": "#f4f9f8",
+     "accent": [
+      "#30e1ae"
+     ],
+     "base": "dark",
+     "saturation": "high",
+     "ornament": "edge light",
+     "fonts": {
+      "display": "bodoni moda"
+     },
+     "lockup_size": "width-match",
+     "letter_spacing_em": 0.24
+    }
+   }
+  },
+  {
+   "id": "E3",
+   "name": "Same height as the whole logo",
+   "desc": "AI SCOUT's capitals run from the top of the arrows down to the line, the full height of Sidekick's logo. The boldest of the three.",
+   "tokens": {
+    "visual": {
+     "bg": "#0f1f1e",
+     "text": "#f4f9f8",
+     "accent": [
+      "#30e1ae"
+     ],
+     "base": "dark",
+     "saturation": "high",
+     "ornament": "edge light",
+     "fonts": {
+      "display": "bodoni moda"
+     },
+     "lockup_size": "full-height",
+     "letter_spacing_em": 0.03
+    }
+   }
+  }
+ ]
+}
+</script>
+</head><body><div class="wrap">
+<h1>Sidekick Partners AI Scout · the logo, round 2</h1>
+<p class="lede">Design step 2 of 5. You picked E, After Hours, and asked to drop "Partners" and size AI SCOUT so it
+looks right. Three ways to size it, each named for what it matches in Sidekick's logo.</p>
+<span class="rec">My pick: E1, Same letter height. Both words share a top and a bottom edge, so it reads as one logo.</span>
+<div class="ref"><div class="hero edge" style="background:#0f1f1e"><div class="lkE"><svg class="logo" viewBox="0 0 1817 463" height="64" width="251" role="img" aria-label="Sidekick"><defs><mask id="m13" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w13"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a13"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g13" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m13)"><rect clip-path="url(#w13)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g13)"><g mask="url(#m13)"><rect clip-path="url(#a13)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="e-rule" style="background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><div class="e-text"><div class="e-name" style="color:#30e1ae;font-size:31px">AI SCOUT</div><div class="e-sub" style="color:#f4f9f8;font-size:16px">Partners</div></div></div></div><p><b>Your pick, as it was.</b> Each option below drops "Partners" and sizes AI SCOUT a different way. The rest is E as you picked it: the glow, the colors, the Bodoni Moda type.</p></div>
+<table class="cmp"><tr><th>Option</th><th>AI SCOUT capitals, large</th><th>In the header</th><th>Letter spacing</th></tr>
+<tr><td><b>E1</b> · Same letter height</td><td>67px</td><td>21px</td><td>0.05em</td></tr><tr><td><b>E2</b> · Same width</td><td>42px</td><td>13px</td><td>0.24em</td></tr><tr><td><b>E3</b> · Same height as the whole logo</td><td>104px</td><td>32px</td><td>0.03em</td></tr></table>
+
+<section class="opt" id="opt-E1" data-variation="E1">
+  <header class="opt-head"><span class="tile">E1</span><h2>Same letter height</h2><span class="tag profile">After Hours · my pick</span>
+    <p class="desc">AI SCOUT's capitals are exactly as tall as the letters of "Sidekick" and sit on the same line, so both words share a top and a bottom edge. Spacing tightened so it doesn't run long.</p></header>
+  <div class="hero edge" style="background:#0f1f1e"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="104" width="408" role="img" aria-label="Sidekick"><defs><mask id="m1" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w1"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a1"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m1)"><rect clip-path="url(#w1)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g1)"><g mask="url(#m1)"><rect clip-path="url(#a1)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="r2" style="height:104px;background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><span class="n2" style="color:#30e1ae;font-size:87.5px;letter-spacing:0.05em;margin-right:-0.05em">AI SCOUT</span></div></div>
+  <div class="label">In the site header, real size</div>
+  <div class="hdr-wrap"><div class="hdr" style="background:#0f1f1e;color:#f4f9f8;border-bottom:1px solid #1d3a37"><div class="hdr-brand"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="32" width="126" role="img" aria-label="Sidekick"><defs><mask id="m2" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w2"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a2"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m2)"><rect clip-path="url(#w2)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g2)"><g mask="url(#m2)"><rect clip-path="url(#a2)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="r2" style="height:32px;background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><span class="n2" style="color:#30e1ae;font-size:26.9px;letter-spacing:0.05em;margin-right:-0.05em">AI SCOUT</span></div></div><nav><span>Today</span><span>Pipeline</span><span>IC Meeting</span><span>Trends</span><span>Tracking</span><span>Backtest</span><span>Funding ▾</span></nav></div></div>
+  <div class="bottom">
+    <div><div class="label" style="padding-left:0">Reversed</div><div class="rev" style="background:#f4f9f8"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="80" width="314" role="img" aria-label="Sidekick"><defs><mask id="m3" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w3"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a3"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath></defs><g mask="url(#m3)"><rect clip-path="url(#w3)" width="1817" height="463" fill="#1b5d4a"/></g><g><g mask="url(#m3)"><rect clip-path="url(#a3)" width="1817" height="463" fill="#2a866d"/></g></g></svg><span class="r2" style="height:80px;background:#1b5d4a;box-shadow:none"></span><span class="n2" style="color:#1b5d4a;font-size:67.3px;letter-spacing:0.05em;margin-right:-0.05em">AI SCOUT</span></div></div></div>
+    <div><div class="label" style="padding-left:0">Browser tab icon (unchanged)</div><div class="tabs"><div class="tab dark"><span class="fav fav32"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g4" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g4)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span>Sidekick Partners AI Scout</span><b>×</b></div><div class="favs"><span class="fav fav64"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g4" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g4)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span class="fav fav32"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g4" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g4)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span class="fav fav16"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g4" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g4)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><small>64 · 32 · 16 px</small></div></div></div>
+  </div>
+</section>
+<section class="opt" id="opt-E2" data-variation="E2">
+  <header class="opt-head"><span class="tile">E2</span><h2>Same width</h2><span class="tag profile">After Hours</span>
+    <p class="desc">AI SCOUT is exactly as wide as the word "Sidekick", on the same line, keeping the wide spacing from your pick. Smaller letters, so Sidekick stays the lead.</p></header>
+  <div class="hero edge" style="background:#0f1f1e"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="104" width="408" role="img" aria-label="Sidekick"><defs><mask id="m5" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w5"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a5"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g5" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m5)"><rect clip-path="url(#w5)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g5)"><g mask="url(#m5)"><rect clip-path="url(#a5)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="r2" style="height:104px;background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><span class="n2" style="color:#30e1ae;font-size:54.1px;letter-spacing:0.24em;margin-right:-0.24em">AI SCOUT</span></div></div>
+  <div class="label">In the site header, real size</div>
+  <div class="hdr-wrap"><div class="hdr" style="background:#0f1f1e;color:#f4f9f8;border-bottom:1px solid #1d3a37"><div class="hdr-brand"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="32" width="126" role="img" aria-label="Sidekick"><defs><mask id="m6" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w6"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a6"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g6" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m6)"><rect clip-path="url(#w6)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g6)"><g mask="url(#m6)"><rect clip-path="url(#a6)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="r2" style="height:32px;background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><span class="n2" style="color:#30e1ae;font-size:16.6px;letter-spacing:0.24em;margin-right:-0.24em">AI SCOUT</span></div></div><nav><span>Today</span><span>Pipeline</span><span>IC Meeting</span><span>Trends</span><span>Tracking</span><span>Backtest</span><span>Funding ▾</span></nav></div></div>
+  <div class="bottom">
+    <div><div class="label" style="padding-left:0">Reversed</div><div class="rev" style="background:#f4f9f8"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="80" width="314" role="img" aria-label="Sidekick"><defs><mask id="m7" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w7"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a7"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath></defs><g mask="url(#m7)"><rect clip-path="url(#w7)" width="1817" height="463" fill="#1b5d4a"/></g><g><g mask="url(#m7)"><rect clip-path="url(#a7)" width="1817" height="463" fill="#2a866d"/></g></g></svg><span class="r2" style="height:80px;background:#1b5d4a;box-shadow:none"></span><span class="n2" style="color:#1b5d4a;font-size:41.6px;letter-spacing:0.24em;margin-right:-0.24em">AI SCOUT</span></div></div></div>
+    <div><div class="label" style="padding-left:0">Browser tab icon (unchanged)</div><div class="tabs"><div class="tab dark"><span class="fav fav32"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g8" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g8)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span>Sidekick Partners AI Scout</span><b>×</b></div><div class="favs"><span class="fav fav64"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g8" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g8)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span class="fav fav32"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g8" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g8)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span class="fav fav16"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g8" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g8)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><small>64 · 32 · 16 px</small></div></div></div>
+  </div>
+</section>
+<section class="opt" id="opt-E3" data-variation="E3">
+  <header class="opt-head"><span class="tile">E3</span><h2>Same height as the whole logo</h2><span class="tag profile">After Hours</span>
+    <p class="desc">AI SCOUT's capitals run from the top of the arrows down to the line, the full height of Sidekick's logo. The boldest of the three.</p></header>
+  <div class="hero edge" style="background:#0f1f1e"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="104" width="408" role="img" aria-label="Sidekick"><defs><mask id="m9" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w9"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a9"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g9" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m9)"><rect clip-path="url(#w9)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g9)"><g mask="url(#m9)"><rect clip-path="url(#a9)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="r2" style="height:104px;background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><span class="n2" style="color:#30e1ae;font-size:135.1px;letter-spacing:0.03em;margin-right:-0.03em">AI SCOUT</span></div></div>
+  <div class="label">In the site header, real size</div>
+  <div class="hdr-wrap"><div class="hdr" style="background:#0f1f1e;color:#f4f9f8;border-bottom:1px solid #1d3a37"><div class="hdr-brand"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="32" width="126" role="img" aria-label="Sidekick"><defs><mask id="m10" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w10"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a10"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath><filter id="g10" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g mask="url(#m10)"><rect clip-path="url(#w10)" width="1817" height="463" fill="#f4f9f8"/></g><g filter="url(#g10)"><g mask="url(#m10)"><rect clip-path="url(#a10)" width="1817" height="463" fill="#30e1ae"/></g></g></svg><span class="r2" style="height:32px;background:#30e1ae;box-shadow:0 0 14px 2px #30e1ae"></span><span class="n2" style="color:#30e1ae;font-size:41.6px;letter-spacing:0.03em;margin-right:-0.03em">AI SCOUT</span></div></div><nav><span>Today</span><span>Pipeline</span><span>IC Meeting</span><span>Trends</span><span>Tracking</span><span>Backtest</span><span>Funding ▾</span></nav></div></div>
+  <div class="bottom">
+    <div><div class="label" style="padding-left:0">Reversed</div><div class="rev" style="background:#f4f9f8"><div class="lk2"><svg class="logo" viewBox="0 0 1817 463" height="80" width="314" role="img" aria-label="Sidekick"><defs><mask id="m11" maskUnits="userSpaceOnUse" x="0" y="0" width="1817" height="463"><image href="assets/sk-white.png" x="0" y="0" width="1817" height="463"/></mask><clipPath id="w11"><polygon points="0,0 1505,0 1505,235 1640,235 1640,463 0,463"/></clipPath><clipPath id="a11"><polygon points="1505,0 1817,0 1817,463 1640,463 1640,235 1505,235"/></clipPath></defs><g mask="url(#m11)"><rect clip-path="url(#w11)" width="1817" height="463" fill="#1b5d4a"/></g><g><g mask="url(#m11)"><rect clip-path="url(#a11)" width="1817" height="463" fill="#2a866d"/></g></g></svg><span class="r2" style="height:80px;background:#1b5d4a;box-shadow:none"></span><span class="n2" style="color:#1b5d4a;font-size:103.9px;letter-spacing:0.03em;margin-right:-0.03em">AI SCOUT</span></div></div></div>
+    <div><div class="label" style="padding-left:0">Browser tab icon (unchanged)</div><div class="tabs"><div class="tab dark"><span class="fav fav32"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g12" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g12)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span>Sidekick Partners AI Scout</span><b>×</b></div><div class="favs"><span class="fav fav64"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g12" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g12)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span class="fav fav32"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g12" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g12)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><span class="fav fav16"><span class="fav-box" style="background:#0f1f1e"><svg class="mark" viewBox="23 42 781 780" width="22" height="22" aria-hidden="true"><defs><filter id="g12" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="40" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#g12)"><polygon points="140,42 804,42 804,706 677,822 677,168 23,168" fill="#30e1ae"/><polygon points="140,297 550,297 550,706 423,822 423,424 23,424" fill="#30e1ae"/></g></svg></span></span><small>64 · 32 · 16 px</small></div></div></div>
+  </div>
+</section>
+<footer>Generated by build_round2.py · Sidekick's logo files from sidekickpartners.com (10-31-26) · sample only, not affiliated with Sidekick Partners.</footer>
+</div></body></html>

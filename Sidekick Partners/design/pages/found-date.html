@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Found Date · Sidekick Partners AI Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"><link rel="stylesheet" href="assets/live-scout.css"><style>
+body{min-height:100vh}
+main.nb{max-width:1440px;margin:0 auto;padding:28px 0 60px}
+.nb-intro{margin:0 40px 22px;color:var(--wall);font-size:18px;max-width:900px}
+.nb-intro h1{font:600 40px/1.1 var(--font-head);font-variant:small-caps;letter-spacing:.03em;margin:0 0 6px;color:#fff}
+.nb-label{margin:34px 40px 12px;color:var(--wall);font-size:18px}
+.nb-label b{font:600 28px/1.2 var(--font-head);font-variant:small-caps;letter-spacing:.03em;color:#fff;margin-right:12px}
+.nb-label span.tag{display:inline-block;margin-right:10px;padding:2px 8px;border:1px solid var(--brass);border-radius:4px;font-size:14px;font-weight:700;color:var(--brass)}
+.x-race{height:auto}
+/* the mint glow dot (round 1's A), breathing slowly; still for reduced motion */
+.nb-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#1b5d4a;flex:none;animation:nbbreathe 6s ease-in-out infinite}
+@keyframes nbbreathe{0%,100%{box-shadow:0 0 0 2px rgba(48,225,174,.25),0 0 6px 1px rgba(48,225,174,.35)}50%{box-shadow:0 0 0 3px rgba(48,225,174,.45),0 0 14px 4px rgba(48,225,174,.55)}}
+@media (prefers-reduced-motion: reduce){.nb-dot{animation:none;box-shadow:0 0 0 3px rgba(48,225,174,.35)}}
+.nb-slot{display:inline-grid;width:10px;place-items:center}
+.nb-two{display:grid;gap:2px}
+.nb-date{font:600 14px/1.2 var(--font-body);color:var(--text-3)}
+.nb-age{font:600 15px/1 var(--font-body);color:var(--text-3);margin-left:2px}
+/* C3: a Found column between the name and the fit */
+[data-variation=C3] .x-rhead, [data-variation=C3] .x-rr{grid-template-columns:44px 34px minmax(160px,280px) 120px minmax(0,1fr) 150px}
+.nb-col{display:inline-flex;align-items:center;gap:8px;font:600 16px/1 var(--font-body);color:var(--text-3)}
+/* C4: the date waits for a hover */
+[data-variation=C4] .nb-date{max-height:0;opacity:0;overflow:hidden;transition:max-height .2s ease,opacity .2s ease}
+[data-variation=C4] .x-rr:hover .nb-date, [data-variation=C4] .x-rr:focus-visible .nb-date{max-height:20px;opacity:1}
+.nb-legend{font:600 15px/1 var(--font-body);color:var(--text-3);display:inline-flex;align-items:center;gap:8px}
+</style>
+<script type="application/json" id="variation-manifest">
+{
+ "project": "VC Scout",
+ "subject": "Sidekick Scout: the Shortlist's Found Date, with the dot",
+ "surface": "component",
+ "claude_rec": "C3",
+ "compares": [
+  "ux.detail",
+  "ux.structure",
+  "ux.attention_cue"
+ ],
+ "options": [
+  {
+   "id": "C1",
+   "name": "Dot and Date",
+   "desc": "The glowing dot marks a new startup; a small date under every name, with no words around it.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "energy": "calm"
+    },
+    "motion": [
+     {
+      "element": "new-dot",
+      "kind": "breathe",
+      "period_s": 6,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "detail": "date",
+     "structure": "two-line",
+     "attention_cue": "motion"
+    }
+   }
+  },
+  {
+   "id": "C2",
+   "name": "Dot and Age",
+   "desc": "One line per row: the dot for new, then a muted age after the name (3d, 9d) instead of a date.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "energy": "calm"
+    },
+    "motion": [
+     {
+      "element": "new-dot",
+      "kind": "breathe",
+      "period_s": 6,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "detail": "relative-age",
+     "structure": "one-line",
+     "attention_cue": "motion"
+    }
+   }
+  },
+  {
+   "id": "C3",
+   "name": "Found Column",
+   "desc": "The date moves into its own Found column, the dot beside it for new rows; names stand alone.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "energy": "calm"
+    },
+    "motion": [
+     {
+      "element": "new-dot",
+      "kind": "breathe",
+      "period_s": 6,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "detail": "date",
+     "structure": "column",
+     "attention_cue": "motion"
+    }
+   }
+  },
+  {
+   "id": "C4",
+   "name": "Dot, Date on Hover",
+   "desc": "Only the dot shows; hovering a row brings in its date. The heading's legend says what the dot means.",
+   "tokens": {
+    "visual": {
+     "accent": [
+      "#30e1ae"
+     ],
+     "energy": "calm"
+    },
+    "motion": [
+     {
+      "element": "new-dot",
+      "kind": "breathe",
+      "period_s": 6,
+      "reactivity": "ambient",
+      "trigger": "idle",
+      "pace": "slow",
+      "text_moves": false,
+      "flashes": false
+     }
+    ],
+    "ux": {
+     "detail": "on-hover",
+     "structure": "one-line",
+     "attention_cue": "motion"
+    }
+   }
+  }
+ ]
+}
+</script></head>
+<body><main class="nb"><div class="nb-intro"><h1>Found Date · Four Ways With the Dot</h1>Round 2 of the New badge: your pick C, with the mint glow dot and fewer words. The same Shortlist card, styles and made-up startups as round 1. In C4, hover a row to see its date.</div><div class="nb-opt" data-variation="C1"><p class="nb-label"><b>C1 · Dot and Date</b><span class="tag">On-profile</span>The glowing dot marks a new startup; a small date under every name, with no words around it.</p><section class="x-sec" aria-label="Shortlist" id="opt-C1"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span><span class="nb-legend"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>New This Week</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#" title="Found 10-30-26"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Chairside</span><span class="nb-date">10-30-26</span></span></span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#" title="Found 10-29-26"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Cartwise</span><span class="nb-date">10-29-26</span></span></span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#" title="Found 10-28-26"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Brightbench</span><span class="nb-date">10-28-26</span></span></span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#" title="Found 10-27-26"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Crownwell</span><span class="nb-date">10-27-26</span></span></span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#" title="Found 10-26-26"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Steadfast Health</span><span class="nb-date">10-26-26</span></span></span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#" title="Found 10-24-26"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname"><span class="nb-slot"></span><span class="nb-two"><span>Olea & Oak</span><span class="nb-date">10-24-26</span></span></span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div><div class="nb-opt" data-variation="C2"><p class="nb-label"><b>C2 · Dot and Age</b><span class="tag">Fewest Lines</span>One line per row: the dot for new, then a muted age after the name (3d, 9d) instead of a date.</p><section class="x-sec" aria-label="Shortlist" id="opt-C2"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span><span class="nb-legend"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>New This Week</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#" title="Found 10-30-26"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span>Chairside</span><span class="nb-age" title="Found 10-30-26">3d</span></span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#" title="Found 10-29-26"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span>Cartwise</span><span class="nb-age" title="Found 10-29-26">4d</span></span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#" title="Found 10-28-26"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span>Brightbench</span><span class="nb-age" title="Found 10-28-26">5d</span></span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#" title="Found 10-27-26"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span>Crownwell</span><span class="nb-age" title="Found 10-27-26">6d</span></span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#" title="Found 10-26-26"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span>Steadfast Health</span><span class="nb-age" title="Found 10-26-26">7d</span></span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#" title="Found 10-24-26"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname"><span class="nb-slot"></span><span>Olea & Oak</span><span class="nb-age" title="Found 10-24-26">9d</span></span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div><div class="nb-opt" data-variation="C3"><p class="nb-label"><b>C3 · Found Column</b><span class="tag">Cleanest Names</span>The date moves into its own Found column, the dot beside it for new rows; names stand alone.</p><section class="x-sec" aria-label="Shortlist" id="opt-C3"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span><span class="nb-legend"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>New This Week</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Found</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#" title="Found 10-30-26"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname">Chairside</span><span class="nb-col"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>10-30-26</span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#" title="Found 10-29-26"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname">Cartwise</span><span class="nb-col"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>10-29-26</span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#" title="Found 10-28-26"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname">Brightbench</span><span class="nb-col"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>10-28-26</span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#" title="Found 10-27-26"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname">Crownwell</span><span class="nb-col"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>10-27-26</span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#" title="Found 10-26-26"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname">Steadfast Health</span><span class="nb-col"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>10-26-26</span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#" title="Found 10-24-26"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname">Olea & Oak</span><span class="nb-col">10-24-26</span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div><div class="nb-opt" data-variation="C4"><p class="nb-label"><b>C4 · Dot, Date on Hover</b><span class="tag">Stretch</span>Only the dot shows; hovering a row brings in its date. The heading's legend says what the dot means.</p><section class="x-sec" aria-label="Shortlist" id="opt-C4"><div class="x-sech"><h2 class="x-h2">Shortlist</h2><span class="x-count">(Top 10 Startups by Thesis Fit · Updated Daily)</span><span class="nb-legend"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i>New This Week</span></div><div class="x-race static"><div class="x-rhead"><span>#</span><span></span><span>Company</span><span>Thesis Fit</span><span>Funds Raised</span></div><a class="x-rr" style="--w:84;--h:140" href="#" title="Found 10-30-26"><span class="x-rpos">1</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Chairside</span><span class="nb-date">Found 10-30-26</span></span></span><span class="x-rtrack"><i></i><b>84%</b></span><span class="x-rfund">$4.1M</span></a><a class="x-rr" style="--w:78;--h:140" href="#" title="Found 10-29-26"><span class="x-rpos">2</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Cartwise</span><span class="nb-date">Found 10-29-26</span></span></span><span class="x-rtrack"><i></i><b>78%</b></span><span class="x-rfund">$2.4M</span></a><a class="x-rr" style="--w:74;--h:140" href="#" title="Found 10-28-26"><span class="x-rpos">3</span><span class="x-logo sm mono">B</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Brightbench</span><span class="nb-date">Found 10-28-26</span></span></span><span class="x-rtrack"><i></i><b>74%</b></span><span class="x-rfund">$6.5M</span></a><a class="x-rr" style="--w:71;--h:140" href="#" title="Found 10-27-26"><span class="x-rpos">4</span><span class="x-logo sm mono">C</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Crownwell</span><span class="nb-date">Found 10-27-26</span></span></span><span class="x-rtrack"><i></i><b>71%</b></span><span class="x-rfund">$3.2M</span></a><a class="x-rr" style="--w:69;--h:140" href="#" title="Found 10-26-26"><span class="x-rpos">5</span><span class="x-logo sm mono">S</span><span class="x-rname"><i class="nb-dot" title="New this week: a new signal in the last 7 days"></i><span class="nb-two"><span>Steadfast Health</span><span class="nb-date">Found 10-26-26</span></span></span><span class="x-rtrack"><i></i><b>69%</b></span><span class="x-rfund">$5.2M</span></a><a class="x-rr" style="--w:66;--h:140" href="#" title="Found 10-24-26"><span class="x-rpos">6</span><span class="x-logo sm mono">O</span><span class="x-rname"><span class="nb-slot"></span><span class="nb-two"><span>Olea & Oak</span><span class="nb-date">Found 10-24-26</span></span></span><span class="x-rtrack"><i></i><b>66%</b></span><span class="x-rfund">$1.5M</span></a></div></section></div></main></body></html>

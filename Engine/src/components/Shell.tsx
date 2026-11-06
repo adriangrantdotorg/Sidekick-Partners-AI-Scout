@@ -1,0 +1,824 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { Search, Sun, Moon, House, ListChecks, TrendingUp, Users2, Menu, FileText, CalendarDays } from "lucide-react";
+import { UIProvider, useUI, Overlay, Kbd, ClearX } from "./ui";
+import { ACTIONS, loadBindings, comboOf, prettyCombo, type Action } from "@/lib/shortcuts";
+import { postJSON, CHANGED } from "@/lib/client";
+import { pagesChanged } from "@/app/actions";
+import { Theater } from "./V2";
+import { dragHasFiles, handOff, isPdf } from "@/lib/deck-drop";
+// the firm's brand/logo.svg, copied in by firm.config.mjs and bundled into the build
+import brandLogo from "@/firm/brand-logo.svg";
+import { DROP_WORDS } from "./panels";
+import { firm, NAMES, PATHS, on, DISCLAIMER, BRAND_LINES, BUILDER, builderTip } from "@/firm";
+
+export const NAV: { href: string; label: string }[] = [
+  { href: "/", label: "Today" },
+  { href: "/pipeline", label: "Pipeline" },
+  { href: "/brief", label: "IC Meeting" },
+  { href: "/trends", label: "Trends" },
+  // Sponsor Radar and Culture only for a firm with them (switches: sponsorRadar, culture)
+  ...(on("sponsorRadar") ? [{ href: "/sponsors", label: "Sponsor Radar" }] : []),
+  ...(on("culture") ? [{ href: "/culture", label: "Culture" }] : []),
+  { href: "/tracking", label: "Tracking" },
+  { href: "/backtest", label: "Backtest" },
+];
+export const MONEY = [
+  { href: PATHS.filings, label: NAMES.filings },
+  { href: PATHS.coInvestors, label: NAMES.coInvestors },
+  { href: PATHS.peerFunds, label: NAMES.peerFunds },
+];
+export const MORE = [
+  // Deck Screen opens from any page by dropping a deck; this is its way in without one (switch: deckScreen)
+  ...(on("deckScreen") ? [{ href: "/deck", label: "Deck Screen" }] : []),
+  { href: "/settings", label: "Settings" },
+  { href: "/about", label: "About" },
+];
+const ALL_PAGES = [...NAV, ...MONEY, ...MORE];
+// a week with no trend hides Trends everywhere: the top bar, the phone tab bar, ⌘K and g t (user, 11-04-26: "if
+// there are scenarios where there are no trends, then the trend page should be hidden"); the layout reads the count
+const TrendsOn = createContext(true);
+const NAV_NO_TRENDS = NAV.filter((p) => p.href !== "/trends");
+const ALL_NO_TRENDS = ALL_PAGES.filter((p) => p.href !== "/trends");
+function usePages() {
+  const trends = useContext(TrendsOn);
+  return { trends, nav: trends ? NAV : NAV_NO_TRENDS, all: trends ? ALL_PAGES : ALL_NO_TRENDS };
+}
+
+export function Logo() {
+  return (
+    <svg viewBox="0 0 46 34" aria-hidden="true" width="54" height="40">
+      <circle cx="16" cy="17" r="13" fill="none" stroke="#fff" strokeWidth="3" strokeDasharray="65.8 15.9" strokeDashoffset="73.8" />
+      <text x="16" y="21.5" textAnchor="middle" fontFamily="Oswald,sans-serif" fontWeight="700" fontSize="11.5" fill="#fff">
+        VC
+      </text>
+      <rect x="31" y="13" width="9" height="8" fill="#fff" />
+      <rect x="40" y="0" width="2.5" height="34" fill="#fff" />
+    </svg>
+  );
+}
+
+/** The header's mark: the firm's own logo with its word beside it (brand.logo), else Scout's mark and the firm's name. */
+export function BrandMark() {
+  const own = firm.brand?.logo;
+  if (own)
+    return (
+      <>
+        {/* on the logo's own line (11-03-26, 2nd report): the logo's letters reach its bottom edge, so the word sits on
+            the row's baseline, never centered on the logo's box with its arrows (design/logo/lockup.py) */}
+        <div className="brand-lock">
+          <img className="brand-logo" src={brandLogo.src} alt={firm.name} />
+          <span className="brand-rule" aria-hidden="true" />
+          <span className="brand-word">{own.word}</span>
+        </div>
+      </>
+    );
+  return (
+    <>
+      <Logo />
+      <span>
+        {BRAND_LINES[0]}
+        <br />
+        {BRAND_LINES[1]}
+      </span>
+    </>
+  );
+}
+
+function isOn(path: string, href: string) {
+  return href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+}
+
+function Dropdown({ label, items, path }: { label: string; items: { href: string; label: string }[]; path: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [open]);
+  useEffect(() => setOpen(false), [path]);
+  const on = items.some((i) => isOn(path, i.href));
+  return (
+    <div className={"dd" + (on ? " on" : "")} ref={ref}>
+      <button aria-expanded={open} aria-haspopup="true" onClick={() => setOpen(!open)} title={`Shows ${items.map((i) => i.label).join(", ")}`}>
+        {label} ▾
+      </button>
+      <div className="menu" hidden={!open}>
+        {items.map((i) => (
+          <Link key={i.href} href={i.href} className={isOn(path, i.href) ? "on" : ""}>
+            {i.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ThemeChip() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  useEffect(() => {
+    setTheme((document.documentElement.dataset.theme as "dark" | "light") || "dark");
+    const obs = new MutationObserver(() => setTheme((document.documentElement.dataset.theme as "dark" | "light") || "dark"));
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <button className="chip" aria-pressed={theme === "light"} onClick={toggleTheme} title={theme === "dark" ? `Switch to ${NAMES.lightLook} (⇧T)` : `Switch to ${NAMES.darkLook} (⇧T)`} data-theme-chip>
+      {theme === "dark" ? <Sun className="ico" /> : <Moon className="ico" />}
+      <span className="kbd">⇧T</span>
+    </button>
+  );
+}
+
+export function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "light" ? "dark" : "light";
+  html.dataset.theme = next;
+  try {
+    localStorage.setItem("scout.theme", next);
+  } catch {
+    /* private window */
+  }
+}
+
+const REPO_URL = firm.repoUrl;
+const REPO_TIP = "Opens Scout's code on GitHub in a new window";
+
+/** GitHub's mark (Octicons mark-github); lucide has no brand icons. */
+function GitHubMark() {
+  return (
+    <svg className="gh-mark" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
+    </svg>
+  );
+}
+
+function TopBar() {
+  const { trends, nav, all } = usePages();
+  const path = usePathname();
+  const ui = useUI();
+  const [more, setMore] = useState(false);
+  useEffect(() => setMore(false), [path]);
+  return (
+    <>
+      <header className="top">
+        <Link href="/" className={"brand" + (firm.brand?.logo ? " own" : "")} title={`${firm.product}: go to Today`}>
+          <BrandMark />
+        </Link>
+        <nav className="nav" aria-label="Pages">
+          {nav.map((n) => (
+            <Link key={n.href} href={n.href} className={isOn(path, n.href) ? "on" : ""}>
+              {n.label}
+            </Link>
+          ))}
+          <Dropdown label={NAMES.fundingMenu} items={MONEY} path={path} />
+        </nav>
+        <div className="tools">
+          {REPO_URL && (
+            <a className="chip gh" href={REPO_URL} target="_blank" rel="noopener noreferrer" title={REPO_TIP} data-github>
+              <GitHubMark />
+              <span className="gh-lbl">
+                <span className="gh-long">View on </span>GitHub
+              </span>
+            </a>
+          )}
+          <button className="chip" onClick={ui.openPalette} title="Search companies, pages, trends, people and brands (⌘K)" data-search-chip>
+            <Search className="ico" />
+            <span className="lbl-long">Search</span>
+            <span className="kbd">⌘K</span>
+          </button>
+          <ThemeChip />
+        </div>
+      </header>
+      <nav className="tabbar" aria-label="Pages on a phone">
+        <Link href="/" className={path === "/" ? "on" : ""} title="Today">
+          <House className="ico" />
+          Today
+        </Link>
+        <Link href="/pipeline" className={isOn(path, "/pipeline") ? "on" : ""} title="Pipeline">
+          <ListChecks className="ico" />
+          Pipeline
+        </Link>
+        {trends ? (
+          <Link href="/trends" className={isOn(path, "/trends") ? "on" : ""} title="Trends">
+            <TrendingUp className="ico" />
+            Trends
+          </Link>
+        ) : (
+          <Link href="/tracking" className={isOn(path, "/tracking") ? "on" : ""} title="Tracking">
+            <ListChecks className="ico" />
+            Tracking
+          </Link>
+        )}
+        {/* the fourth tab: Culture, or the IC Meeting for a firm without Culture */}
+        {on("culture") ? (
+          <Link href="/culture" className={isOn(path, "/culture") ? "on" : ""} title="Culture">
+            <Users2 className="ico" />
+            Culture
+          </Link>
+        ) : (
+          <Link href="/brief" className={isOn(path, "/brief") ? "on" : ""} title="IC Meeting">
+            <CalendarDays className="ico" />
+            IC Meeting
+          </Link>
+        )}
+        <button aria-expanded={more} onClick={() => setMore(!more)} title="Shows every other page">
+          <Menu className="ico" />
+          More
+        </button>
+      </nav>
+      <div className="tabmenu" hidden={!more}>
+        {all.filter((p) => !["/", "/pipeline", trends ? "/trends" : "/tracking", on("culture") ? "/culture" : "/brief"].includes(p.href)).map((p) => (
+          <Link key={p.href} href={p.href}>
+            {p.label}
+          </Link>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ---------- ⌘K palette ---------- */
+type Hit = { kind: string; title: string; sub?: string; href: string; img?: string; ext?: boolean; act?: string; id?: number };
+
+function highlight(text: string, q: string): ReactNode {
+  if (!q) return text;
+  const i = text.toLowerCase().indexOf(q.toLowerCase());
+  if (i < 0) return text;
+  return (
+    <>
+      {text.slice(0, i)}
+      <mark>{text.slice(i, i + q.length)}</mark>
+      {text.slice(i + q.length)}
+    </>
+  );
+}
+
+function Palette({ close }: { close: () => void }) {
+  const { all: pageList } = usePages();
+  const router = useRouter();
+  const ui = useUI();
+  const [q, setQ] = useState("");
+  const [hits, setHits] = useState<Hit[]>([]);
+  const [sel, setSel] = useState(0);
+  useEffect(() => {
+    const ctl = new AbortController();
+    const t = setTimeout(async () => {
+      const pages: Hit[] = pageList.filter((p) => !q || p.label.toLowerCase().includes(q.toLowerCase())).map((p) => ({ kind: "Pages", title: p.label, href: p.href }));
+      const actions: Hit[] = [
+        { kind: "Pages", title: "Settings › Scoring", sub: "weights, penalties, Worth a Look threshold", href: "/settings?s=scoring" },
+        { kind: "Pages", title: "Switch theme", sub: `${NAMES.darkLook} or ${NAMES.lightLook}`, href: "#theme", act: "theme" },
+      ].filter((p) => !q || p.title.toLowerCase().includes(q.toLowerCase()));
+      let remote: Hit[] = [];
+      if (q.trim().length >= 1) {
+        try {
+          const r = await fetch(`/api/search?q=${encodeURIComponent(q.trim())}`, { signal: ctl.signal });
+          remote = (await r.json()).hits || [];
+        } catch {
+          /* aborted or offline */
+        }
+      }
+      const companies = remote.filter((h) => h.kind === "Companies");
+      const first = companies[0];
+      const acts: Hit[] = first
+        ? [
+            { kind: `Actions on ${first.title}`, title: `Track ${first.title}`, sub: "a daily check and a timeline", href: "#track", act: "track", id: first.id },
+            { kind: `Actions on ${first.title}`, title: "Draft Investment Memo", sub: "copy the eight-part outline", href: `${first.href}#memo` },
+          ]
+        : [];
+      const order = ["Companies", `Actions on ${first?.title}`, "Pages", "Trends", "People", "Brands"];
+      const all = [...companies, ...acts, ...pages.slice(0, q ? 6 : 12), ...actions, ...remote.filter((h) => h.kind !== "Companies")];
+      all.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+      setHits(all);
+      setSel(0);
+    }, 120);
+    return () => {
+      clearTimeout(t);
+      ctl.abort();
+    };
+  }, [q, pageList]);
+
+  async function go(h: Hit, newWin = false) {
+    if (h.act === "theme") {
+      toggleTheme();
+      close();
+      return;
+    }
+    if (h.act === "track" && h.id) {
+      close();
+      const r = await postJSON("/api/track", { kind: "company", id: h.id, on: true });
+      if (r.ok) ui.toast(`${h.title.replace(/^Track /, "")} Tracked`);
+      else ui.error("Track didn't save", r.error || "The server did not answer.");
+      return;
+    }
+    close();
+    if (newWin || h.ext) window.open(h.href, "_blank", "noopener,noreferrer");
+    else router.push(h.href);
+  }
+
+  let lastKind = "";
+  return (
+    <Overlay className="pal" label="Search Scout" onClose={close} onSubmit={() => hits[sel] && go(hits[sel], true)} testid="palette">
+      <div className="in">
+        <Search className="ico" style={{ width: 18, height: 18 }} />
+        <input
+          autoFocus
+          value={q}
+          placeholder="Search companies, pages, trends, people, brands"
+          aria-label="Search Scout"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+          onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setSel((s) => Math.min(hits.length - 1, s + 1));
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setSel((s) => Math.max(0, s - 1));
+            } else if (e.key === "Enter" && !e.metaKey && !e.ctrlKey && hits[sel]) {
+              e.preventDefault();
+              go(hits[sel]);
+            }
+          }}
+        />
+        <ClearX show={!!q} onClear={() => setQ("")} />
+        <span className="kbd">Esc</span>
+      </div>
+      <div className="results">
+        {hits.map((h, i) => {
+          const head = h.kind !== lastKind ? <div className="grp">{h.kind}</div> : null;
+          lastKind = h.kind;
+          return (
+            <div key={h.kind + h.href + h.title + i}>
+              {head}
+              <a
+                className={"pal-it" + (i === sel ? " on" : "")}
+                href={h.href}
+                onMouseEnter={() => setSel(i)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  go(h, e.metaKey || e.ctrlKey);
+                }}
+              >
+                {h.img ? <img src={h.img} alt="" /> : <FileText className="ico" />}
+                <span>
+                  {highlight(h.title, q)}
+                  {h.sub && <small>{h.sub}</small>}
+                </span>
+                <span className="kbd">{i === sel ? "↩" : ""}</span>
+              </a>
+            </div>
+          );
+        })}
+      </div>
+      <div className="ft">
+        <span>
+          <b>↑↓</b> move
+        </span>
+        <span>
+          <b>↩</b> open
+        </span>
+        <span>
+          <b>⌘↩</b> open in a new window
+        </span>
+        <span>
+          <b>Esc</b> close
+        </span>
+        <span style={{ marginLeft: "auto" }}>{hits.length} results</span>
+      </div>
+    </Overlay>
+  );
+}
+
+/* ---------- ? sheet ---------- */
+function Sheet({ close }: { close: () => void }) {
+  const [b, setB] = useState<Record<string, string[]>>({});
+  useEffect(() => setB(loadBindings()), []);
+  return (
+    <Overlay className="sheet" label="Keyboard shortcuts" onClose={close} testid="sheet">
+      <h2>Keyboard Shortcuts</h2>
+      <p style={{ margin: 0, color: "var(--text-2)" }}>
+        Shortcuts never fire while you type in a field. Change any of them in <Link href="/settings?s=shortcuts" onClick={close}>Settings › Shortcuts</Link>.
+      </p>
+      <table>
+        <tbody>
+          {ACTIONS.map((a) => (
+            <tr key={a.id}>
+              <td>{a.label}</td>
+              <td className="mono">{(b[a.id] || a.keys).map(prettyCombo).join(" / ")}</td>
+            </tr>
+          ))}
+          <tr>
+            <td>Close or back</td>
+            <td className="mono">Esc</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="acts2">
+        <button className="btn" onClick={close} title="Close (Esc)">
+          Close<Kbd>Esc</Kbd>
+        </button>
+      </div>
+    </Overlay>
+  );
+}
+
+/* ---------- keyboard ---------- */
+function Keys() {
+  const { trends } = usePages();
+  const ui = useUI();
+  const router = useRouter();
+  const path = usePathname();
+  const idx = useRef(-1);
+  const pendingG = useRef(0);
+  useEffect(() => {
+    idx.current = -1;
+  }, [path]);
+  useEffect(() => {
+    let bindings = loadBindings();
+    const onStore = () => (bindings = loadBindings());
+    window.addEventListener("scout:bindings", onStore);
+    function items(): HTMLElement[] {
+      return Array.from(document.querySelectorAll<HTMLElement>("main [data-item]"));
+    }
+    function focusItem(i: number) {
+      const list = items();
+      if (!list.length) return;
+      idx.current = Math.max(0, Math.min(list.length - 1, i));
+      list.forEach((x) => x.classList.remove("focused"));
+      const el = list[idx.current];
+      el.classList.add("focused");
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+    function inItem(sel: string) {
+      const list = items();
+      const el = list[idx.current] || list[0];
+      if (idx.current < 0 && el) focusItem(0);
+      return el?.querySelector<HTMLElement>(sel) || null;
+    }
+    function run(a: Action, e: KeyboardEvent): boolean {
+      switch (a) {
+        case "next":
+          focusItem(idx.current + 1);
+          return true;
+        case "prev":
+          focusItem(idx.current - 1);
+          return true;
+        case "voteUp":
+          inItem("[data-act=up]")?.click();
+          return true;
+        case "voteDown":
+          inItem("[data-act=down]")?.click();
+          return true;
+        case "open": {
+          if (idx.current < 0) return false;
+          const a2 = inItem("[data-act=open]") as HTMLAnchorElement | null;
+          if (!a2) return false;
+          a2.click();
+          return true;
+        }
+        case "openSource":
+          inItem(".evi a, [data-act=source]")?.click();
+          return true;
+        case "track":
+          inItem("[data-act=track]")?.click();
+          return true;
+        case "memo":
+          inItem("[data-act=memo]")?.click();
+          return true;
+        case "email":
+          inItem("[data-act=email]")?.click();
+          return true;
+        case "crm":
+          inItem("[data-act=crm]")?.click();
+          return true;
+        case "note":
+          inItem("[data-act=note]")?.click();
+          return true;
+        case "alert":
+          router.push("/alerts#new");
+          return true;
+        case "search": {
+          const s = document.querySelector<HTMLInputElement>("main [data-search]");
+          if (s) s.focus();
+          else ui.openPalette();
+          return true;
+        }
+        case "refresh": {
+          const b = document.querySelector<HTMLButtonElement>("[data-act=refresh]");
+          if (b && !b.disabled) b.click();
+          else if (!b) router.push("/");
+          return true;
+        }
+        case "palette":
+          ui.openPalette();
+          return true;
+        case "goToday":
+          router.push("/");
+          return true;
+        case "goPipeline":
+          router.push("/pipeline");
+          return true;
+        case "goTrends":
+          if (trends) router.push("/trends");
+          return true;
+        case "goCulture":
+          router.push("/culture");
+          return true;
+        case "goTracking":
+          router.push("/tracking");
+          return true;
+        case "goBrief":
+          router.push("/brief");
+          return true;
+        case "goSettings":
+          router.push("/settings");
+          return true;
+        case "theme":
+          toggleTheme();
+          return true;
+        case "undo":
+          ui.undo();
+          return true;
+        case "sheet":
+          ui.openSheet();
+          return true;
+      }
+      void e;
+      return false;
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.defaultPrevented) return;
+      if (document.getElementById("app-root")?.hasAttribute("inert")) return;
+      const t = e.target as HTMLElement;
+      const typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable);
+      const combo = comboOf(e);
+      if (typing) return; // shortcuts never fire while typing (⌘Z there is the field's own undo)
+      if (["shift", "meta", "control", "alt"].includes(e.key.toLowerCase())) return;
+      if (combo === "escape") {
+        document.querySelectorAll(".focused").forEach((x) => x.classList.remove("focused"));
+        idx.current = -1;
+        return;
+      }
+      const now = Date.now();
+      let key = combo;
+      if (pendingG.current && now - pendingG.current < 1200 && !e.metaKey && !e.ctrlKey) {
+        key = "g " + combo;
+        pendingG.current = 0;
+      } else if (combo === "g") {
+        pendingG.current = now;
+        return;
+      }
+      for (const a of ACTIONS) {
+        if ((bindings[a.id] || []).includes(key)) {
+          if (run(a.id, e)) {
+            e.preventDefault();
+          }
+          return;
+        }
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scout:bindings", onStore);
+    };
+  }, [router, ui, trends]);
+  return null;
+}
+
+/* phone: swipe a card right for ▲, left for ▼ */
+function Swipe() {
+  useEffect(() => {
+    let sx = 0,
+      sy = 0,
+      el: HTMLElement | null = null;
+    const start = (e: TouchEvent) => {
+      el = (e.target as HTMLElement).closest("[data-item]");
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+    };
+    const end = (e: TouchEvent) => {
+      if (!el) return;
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 80 && Math.abs(dy) < 40) el.querySelector<HTMLElement>(dx > 0 ? "[data-act=up]" : "[data-act=down]")?.click();
+      el = null;
+    };
+    document.addEventListener("touchstart", start, { passive: true });
+    document.addEventListener("touchend", end, { passive: true });
+    return () => {
+      document.removeEventListener("touchstart", start);
+      document.removeEventListener("touchend", end);
+    };
+  }, []);
+  return null;
+}
+
+/** A link to the page you're already on (the logo, Today, the current nav item) scrolls back to the top.
+ *  Next.js keeps the scroll position for a same-page link, so it looked like nothing happened (feedback, 10-26-26). */
+function ScrollTop() {
+  // tests wait for this before pressing anything: a click before hydration does nothing
+  useEffect(() => void (document.documentElement.dataset.hydrated = "1"), []);
+  useEffect(() => {
+    // capture phase: Next's Link prevents the default before a bubbling listener would see the click
+    const on = (e: MouseEvent) => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as HTMLElement).closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!a || a.target === "_blank") return;
+      const u = new URL(a.href, location.href);
+      if (u.origin !== location.origin || u.pathname !== location.pathname || u.hash) return;
+      if (u.search !== location.search) return;
+      window.scrollTo({ top: 0, behavior: document.documentElement.dataset.motion === "off" ? "auto" : "smooth" });
+    };
+    document.addEventListener("click", on, true);
+    return () => document.removeEventListener("click", on, true);
+  }, []);
+  return null;
+}
+
+/** After any save (src/lib/client.ts), every page shows it on the next visit: the Server Action purges the browser's
+ *  copies of every page, then the page on screen redraws (11-03-26: Tracking showed a company only after a reload).
+ *  Drawn by Shell itself, so it runs for every firm (it first sat in DeckCatch, which a firm without the Deck Screen
+ *  never draws). */
+/** How long after the last save the second purge runs (SaveRefresh). */
+export const SECOND_PURGE_MS = 2500;
+
+function SaveRefresh() {
+  const router = useRouter();
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    // while the purge is on its way, a link clicked opens only after it lands: before, a click on Tracking right after
+    // a Track could open the browser's old copy (user, 11-03-26: "I had to hit refresh"; under load the purge took
+    // longer than the 600 ms a test waited, 11-04-26)
+    let pending: Promise<void> | null = null;
+    let done: (() => void) | null = null;
+    // A second purge once the saves stop (11-05-26, the Tracking test's third sighting, read from its trace): a page the
+    // server began rebuilding just before the save (another visitor's request) can finish just after the first purge
+    // and be kept as the current copy, so the next visit got the old list for up to 5 minutes. 2.5 s on, every rebuild
+    // begun before the save has finished; this purge drops it and redraws the page on screen.
+    let again: ReturnType<typeof setTimeout> | undefined;
+    const onChange = () => {
+      clearTimeout(t);
+      clearTimeout(again);
+      again = setTimeout(() => void pagesChanged().catch(() => undefined).then(() => router.refresh()), SECOND_PURGE_MS);
+      if (!pending) pending = new Promise<void>((res) => (done = res));
+      // the Server Action purges the browser's copies of every page; refresh redraws the one on screen
+      t = setTimeout(
+        () =>
+          void pagesChanged()
+            .catch(() => undefined)
+            .then(() => {
+              router.refresh();
+              done?.();
+              pending = null;
+              done = null;
+            }),
+        250,
+      );
+    };
+    const onClick = (e: MouseEvent) => {
+      if (!pending || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash)) return;
+      e.preventDefault();
+      const go = pending;
+      void go.then(() => router.push(url.pathname + url.search + url.hash));
+    };
+    window.addEventListener(CHANGED, onChange);
+    document.addEventListener("click", onClick, true);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(again);
+      window.removeEventListener(CHANGED, onChange);
+      document.removeEventListener("click", onClick, true);
+    };
+  }, [router]);
+  return null;
+}
+
+export function Shell({ children, ticker, trends = true }: { children: ReactNode; ticker: ReactNode; trends?: boolean }) {
+  return (
+    <TrendsOn.Provider value={trends}>
+    <UIProvider palette={(c) => <Palette close={c} />} sheet={(c) => <Sheet close={c} />} >
+      <div className="app">
+        <TopBar />
+        {ticker}
+        <main id="main">{children}</main>
+        <Footer />
+      </div>
+      <Keys />
+      <Swipe />
+      <ScrollTop />
+      <Theater />
+      <SaveRefresh />
+      {on("deckScreen") && <DeckCatch />}
+    </UIProvider>
+    </TrendsOn.Provider>
+  );
+}
+
+function Footer() {
+  const ui = useUI();
+  return (
+    <footer className="foot">
+      <span className="left">
+        {MORE.map((m) => (
+          <Link key={m.href} href={m.href} title={`Open ${m.label}`}>
+            {m.label}
+          </Link>
+        ))}
+      </span>
+      <span className="right">
+        {REPO_URL && (
+          <a className="gh-foot" href={REPO_URL} target="_blank" rel="noopener noreferrer" title={REPO_TIP} data-github>
+            <GitHubMark />
+            View on GitHub
+          </a>
+        )}
+        {BUILDER.name && (
+          <span>
+            Built by{" "}
+            {BUILDER.url ? (
+              <a href={BUILDER.url} target="_blank" rel="noopener noreferrer" title={builderTip()}>
+                {BUILDER.name}
+              </a>
+            ) : (
+              BUILDER.name
+            )}
+          </span>
+        )}
+        <button className="linkish" onClick={() => ui.door("team")} title="What Phase II adds, built together">
+          Phase II
+        </button>
+        <button className="linkish" onClick={ui.openSheet} title="Show every keyboard shortcut (?)">
+          Shortcuts
+        </button>
+      </span>
+      {/* Scout never speaks as the firm (Plan section 1) */}
+      <span className="disc" data-disclaimer>
+        {DISCLAIMER}
+      </span>
+    </footer>
+  );
+}
+
+/** Deck Screen from anywhere (Plan section 5: "drop a PDF anywhere on the page"): a deck dragged over any page shows
+ *  where it goes, and dropping it opens the Deck Screen, which reads it. Other files keep the browser's own behavior. */
+function DeckCatch() {
+  const router = useRouter();
+  const path = usePathname();
+  const [over, setOver] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const drag = (e: DragEvent) => {
+      if (!dragHasFiles(e)) return;
+      e.preventDefault();
+      setOver(true);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setOver(false), 200); // dragover repeats while the deck is over the page
+    };
+    const drop = (e: DragEvent) => {
+      const f = e.dataTransfer?.files[0];
+      setOver(false);
+      if (!isPdf(f)) return;
+      e.preventDefault();
+      handOff(f);
+      if (path === "/deck") window.dispatchEvent(new Event("scout:deck"));
+      else router.push("/deck");
+    };
+    window.addEventListener("dragover", drag);
+    window.addEventListener("drop", drop);
+    return () => {
+      window.removeEventListener("dragover", drag);
+      window.removeEventListener("drop", drop);
+    };
+  }, [path, router]);
+  if (!over) return null;
+  return (
+    <div className="x-dropall" aria-hidden="true" data-testid="deck-catch">
+      <div>
+        <b>Drop to Screen This Deck</b>
+        <span>{DROP_WORDS[0]}</span>
+        <span>{DROP_WORDS[1]}</span>
+      </div>
+    </div>
+  );
+}
