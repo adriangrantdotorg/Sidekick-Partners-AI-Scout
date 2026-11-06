@@ -1,6 +1,6 @@
 # Investment Memo: Rebuy
 
-> Drafted by GPT-5 (OpenAI) through Scout's own Draft the Memo code, on a throwaway local database holding Rebuy's public facts: 41 s, one draft, no gap in any section. The Recommendation question was dropped by Scout (not a gap the founder fills), leaving 14. Rebuy is a Sidekick portfolio company, so it has no Scout score and no Why It Fits: on a real company page those two lines are filled.
+> A sample memo drafted by GPT-5 (OpenAI) through Scout's Draft the Memo step from Rebuy's public facts. Scout drops the Recommendation question (not a gap the founder fills), leaving 14. Rebuy is a Sidekick portfolio company, so it has no Scout score and no Why It Fits: on a real company page those two lines are filled.
 
 ## 1. Recommendation
 Take the meeting — the company is a live, venture-backed AI upsell/personalization platform in E-Commerce Software at Series A with credible investors and clear fit to Sidekick’s focus, per company disclosures (https://www.rebuyengine.com/news-room/series-a-announcement; https://rebuyengine.com).

@@ -1,6 +1,6 @@
 # Investment Memo: Rebuy
 
-> A sample of the "Gaps Become Questions" memo shape, drafted by GPT-5 from what Scout holds on Rebuy, one of Sidekick's portfolio companies. It has no "Thesis fit" line: portfolio companies get no company page, so Rebuy has no Scout score.
+> A sample of the "Gaps Become Questions" shape, drafted by GPT-5 (OpenAI) from what Scout holds on Rebuy, one of Sidekick's portfolio companies. The "Thesis fit" line is left out: Rebuy has no Scout score, since portfolio companies get no company page.
 
 ## 1. Recommendation
 Take the meeting: Rebuy fits the “Shopify tools that pay back fast” thesis and has credible backing, including a $17M Series A and listing in Sidekick’s portfolio.  
