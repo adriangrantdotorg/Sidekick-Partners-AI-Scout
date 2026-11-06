@@ -125,6 +125,9 @@ const sidekick: FirmProfile = {
     logo: { word: "AI SCOUT" },
     // Trends in two columns with labeled buttons (user, 11-04-26: round 1's B, round 2's A: "use this version")
     trends: "columns",
+    // Trepo's teal wordmark is drawn white on its picture (user, 11-06-26: "Change this logo to white so it looks
+    // better", then "a one-time thing for that specific logo")
+    whiteLogos: ["https://hellotrepo.com/media/wordmark.png"],
     themeColor: "#0d2c24",
     // two looks since 11-03-26: the signed-off cream cards are Light (drawn before the viewer's device setting is read),
     // and Dark is round 1's Charcoal and Brass (user: "use this", design/pages/DB-today.html)

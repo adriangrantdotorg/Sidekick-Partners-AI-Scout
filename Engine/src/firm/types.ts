@@ -319,6 +319,10 @@ export type FirmBrand = {
    *  Find Startups in This Trend and See the N Stories as labeled buttons, the mentions, sparkline, outlets and Track on
    *  the right (Sidekick, user 11-04-26: round 1's B, then round 2's A, "use this version"). */
   trends?: "cards" | "columns";
+  /** Startup logos (their file addresses, as Brand Sky found them) drawn white with a soft shadow on their picture.
+   *  One logo at a time, picked by eye, never a rule for every dark logo (Sidekick, user 11-06-26, Trepo: "a one-time
+   *  thing for that specific logo"). A new logo file at that startup draws in its own colors again. */
+  whiteLogos?: string[];
 };
 
 /** An alert the Alerts page starts with (the shape of AlertRule in src/db/schema.ts). */

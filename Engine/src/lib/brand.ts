@@ -152,9 +152,6 @@ export type SkyPlan = {
   sky: Sky;
   /** a dark mark on the dark sky is drawn white, a light one on light art is drawn dark */
   flip: boolean;
-  /** a dark logo on light art is drawn white with a soft shadow (user, 11-06-26, Trepo's teal wordmark on its light
-   *  picture: "Change this logo to white so it looks better") */
-  shade: boolean;
 };
 
 /** What the masthead draws, from what the enrich job found (or nothing at all). */
@@ -168,8 +165,7 @@ export function skyPlan(c: { name: string; thesisArea: string | null; logo: stri
   // a solid tile keeps its own colors: recolored to one color it is a blank square (11-03-26)
   const tone = mark.kind === "logo" && !b.markSolid ? mark.tone : null;
   const flip = !!tone && (backdropLight ? tone === "light" : tone === "dark");
-  const shade = backdropLight && tone === "dark";
-  return { tier: art ? 1 : mark.kind === "letter" ? 3 : 2, art, mark, sky, flip, shade };
+  return { tier: art ? 1 : mark.kind === "letter" ? 3 : 2, art, mark, sky, flip };
 }
 
 export type Box = { x: number; y: number; w: number; h: number };

@@ -521,8 +521,10 @@ export function BrandSky({ c }: { c: CompanyCard }) {
   const sky = useRef<HTMLDivElement>(null);
   useClearMark(sky, `${p.mark.kind}:${"src" in p.mark ? p.mark.src : ""}:${words}`);
   let mark: ReactNode;
+  // a logo the firm names in brand.whiteLogos is drawn white with a soft shadow, one logo at a time, never a rule
+  const shade = p.mark.kind === "logo" && (firm.brand?.whiteLogos || []).includes(p.mark.src);
   if (p.mark.kind === "logo")
-    mark = <Img className={`x-skymark logo${p.shade ? " white shade" : p.flip ? (p.art && b.artTone === "light" ? " ink" : " white") : ""}`} src={p.mark.src} alt={c.name} onFail={fail("mark")} />;
+    mark = <Img className={`x-skymark logo${shade ? " white shade" : p.flip ? (p.art && b.artTone === "light" ? " ink" : " white") : ""}`} src={p.mark.src} alt={c.name} onFail={fail("mark")} />;
   else
     mark = (
       <div className={`x-skymark word ${size}`}>

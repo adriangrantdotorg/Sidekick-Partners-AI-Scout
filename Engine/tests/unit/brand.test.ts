@@ -46,9 +46,6 @@ describe("skyPlan: every tier, and the last one needs nothing", () => {
   });
   it("tier 1: only a light logo on light art is drawn dark", () => {
     expect(skyPlan({ ...base, media: { kind: "mp4", brand: { art: "a.jpg", artTone: "light", mark: "cream.svg", markTone: "light" } } }).flip).toBe(true);
-    // Trepo (11-06-26): a dark logo on light art is drawn white with a shadow, never in its own dark color
-    expect(skyPlan({ ...base, media: { kind: "mp4", brand: { art: "a.jpg", artTone: "light", mark: "teal.png", markTone: "dark" } } })).toMatchObject({ flip: false, shade: true });
-    expect(skyPlan({ ...base, media: { kind: "mp4", brand: { art: "a.jpg", artTone: "light", mark: "teal.png", markTone: "dark", markSolid: true } } }).shade).toBe(false);
   });
   it("tier 2: a logo on the painted sky, a dark one drawn white", () => {
     expect(skyPlan({ ...base, media: { kind: "logo", brand: { mark: "white.png", markTone: "light" } } })).toMatchObject({ tier: 2, flip: false });
