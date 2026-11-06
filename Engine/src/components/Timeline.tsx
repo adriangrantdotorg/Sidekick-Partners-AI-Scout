@@ -8,7 +8,7 @@ import { firm } from "@/firm";
 function Line({ e }: { e: Entry }) {
   const co = e.companyId ? <Link href={`/company/${e.companyId}`} title={`Open ${e.company} in Scout`}>{e.company}</Link> : e.company;
   return (
-    <div className="te" data-item data-filter={`${e.company} ${e.funds.join(" ")} ${e.headline || ""}`} data-area={e.area || ""}>
+    <div className="te" id={e.ids[0]} data-also={e.ids.slice(1).join(" ") || undefined} data-item data-filter={`${e.company} ${e.funds.join(" ")} ${e.headline || ""}`} data-area={e.area || ""}>
       <i aria-hidden="true" />
       <div>
         <p className="tt">

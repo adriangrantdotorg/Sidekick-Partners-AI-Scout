@@ -111,7 +111,8 @@ export function CultureRow({ o, compact }: { o: Overlap; compact?: boolean }) {
           </div>
         )}
       </div>
-      <Vote k={`culture:${o.slug}`} initial={o.votes} upTitle="Worth watching" downTitle="Not useful" name={o.entity} />
+      {/* only a startup takes a vote (user, 11-05-26: "startup votes only"): a row whose startup is in Scout votes for that startup */}
+      {o.companyId ? <Vote k={`company:${o.companyId}`} initial={o.votes} name={o.entity} /> : null}
     </div>
   );
 }
@@ -161,12 +162,12 @@ export function FilingRow({ f, compact }: { f: Filing; compact?: boolean }) {
           </a>
         </p>
       </div>
-      <Vote k={`filing:${f.id}`} initial={f.votes} name={f.issuer} />
+      {f.companyId ? <Vote k={`company:${f.companyId}`} initial={f.votes} name={f.issuer} /> : null}
     </div>
   );
 }
 
-type FundItem = { id: number; kind: string; title: string; url: string; date: Date | null; company: string | null; round: string | null; amount: number | null; currency: string; role: string | null; thesisArea: string | null; possible: boolean; source: string | null; fund: { name: string; slug: string; focus: string; kind: string }; votes: number; inPipeline: boolean; score: number | null; companyId: number | null };
+type FundItem = { id: number; kind: string; title: string; url: string; date: Date | null; company: string | null; round: string | null; amount: number | null; currency: string; role: string | null; thesisArea: string | null; possible: boolean; source: string | null; fund: { name: string; slug: string; focus: string; kind: string }; also?: { id: number; possible: boolean; fund: { name: string; slug: string; kind: string } }[]; votes: number; inPipeline: boolean; score: number | null; companyId: number | null };
 export function FundItemRow({ i, compact }: { i: FundItem; compact?: boolean }) {
   const label = i.kind === "newfund" ? "New fund raised" : i.kind === "said" ? "They said it" : "New deal";
   return (
@@ -200,7 +201,7 @@ export function FundItemRow({ i, compact }: { i: FundItem; compact?: boolean }) 
         </div>
         {!compact && i.fund.focus && <p style={{ marginTop: 4, fontSize: 13, color: "var(--text-3)" }}>{i.fund.focus === "specialist" ? "Specialist fund: every deal is shown" : `Broad fund: only deals inside ${firm.short}'s thesis are shown`}</p>}
       </div>
-      <Vote k={`fund_item:${i.id}`} initial={i.votes} name={i.company || i.fund.name} />
+      {i.companyId ? <Vote k={`company:${i.companyId}`} initial={i.votes} name={i.company || i.fund.name} /> : null}
     </div>
   );
 }
@@ -275,7 +276,8 @@ export function FilingTable({ rows, compact }: { rows: Filing[]; compact?: boole
                 </td>
               )}
               <td>
-                <Vote k={`filing:${f.id}`} initial={f.votes} name={f.issuer} row />
+                {/* only a startup takes a vote (user, 11-05-26: "startup votes only"): a row whose startup is in Scout votes for that startup */}
+                {f.companyId ? <Vote k={`company:${f.companyId}`} initial={f.votes} name={f.issuer} row /> : null}
               </td>
             </tr>
           ))}
@@ -319,12 +321,18 @@ export function FundItemTable({ items, compact }: { items: FundItem[]; compact?:
       </thead>
       <tbody>
         {items.map((i) => (
-          <tr key={i.id} id={`fi${i.id}`} data-item data-filter={`${i.title} ${i.fund.name} ${i.company || ""}`} data-area={i.thesisArea || ""}>
+          // one row per deal: a link to any fund's copy of it lands here (data-also, read by Shell's Landing)
+          <tr key={i.id} id={`fi${i.id}`} data-also={(i.also || []).map((a) => `fi${a.id}`).join(" ") || undefined} data-item data-filter={`${i.title} ${i.fund.name} ${(i.also || []).map((a) => a.fund.name).join(" ")} ${i.company || ""}`} data-area={i.thesisArea || ""}>
             <td>
               <Link className="fund" href={`${fundPath(i.fund.kind)}#${i.fund.slug}`} title={`Open ${i.fund.name}`}>
                 {i.fund.name}
               </Link>
               {i.role === "lead" && <span className="sub">led</span>}
+              {(i.also || []).filter((a) => !a.possible).map((a) => (
+                <span className="sub" key={a.id}>
+                  with <Link href={`${fundPath(a.fund.kind)}#${a.fund.slug}`} title={`Open ${a.fund.name}`}>{a.fund.name}</Link>
+                </span>
+              ))}
             </td>
             <td>{backed(i)}</td>
             {compact ? (
@@ -349,7 +357,8 @@ export function FundItemTable({ items, compact }: { items: FundItem[]; compact?:
               </span>
             </td>
             <td>
-              <Vote k={`fund_item:${i.id}`} initial={i.votes} name={i.company || i.fund.name} row />
+              {/* only a startup takes a vote (user, 11-05-26: "startup votes only"): a row whose startup is in Scout votes for that startup */}
+              {i.companyId ? <Vote k={`company:${i.companyId}`} initial={i.votes} name={i.company || i.fund.name} row /> : null}
             </td>
           </tr>
         ))}

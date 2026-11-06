@@ -652,6 +652,44 @@ function ScrollTop() {
   return null;
 }
 
+/** A link with an address inside a page (the ticker's `/synergistic-funds#fi4`, a trend, a filing) lands ON its item:
+ *  scrolled below the top bar and marked `data-landed`, which globals.css tints (user, 11-05-26, second report of a
+ *  link that "sent me to the page at the top"). It runs after every in-app navigation and hash change, because Next's
+ *  client navigation never sets :target, and it also finds a row that answers for the address in `data-also` (one deal
+ *  row stands for every fund's copy of it). It waits up to 2 s for the item to be drawn. */
+function Landing() {
+  const path = usePathname();
+  useEffect(() => {
+    let frame = 0;
+    let tries = 0;
+    const land = () => {
+      cancelAnimationFrame(frame);
+      tries = 0;
+      const id = decodeURIComponent(location.hash.slice(1));
+      document.querySelectorAll("[data-landed]").forEach((el) => el.removeAttribute("data-landed"));
+      if (!id) return;
+      const find = () => document.getElementById(id) || document.querySelector(`[data-also~="${CSS.escape(id)}"]`);
+      const step = () => {
+        const el = find();
+        if (!el) {
+          if (++tries < 120) frame = requestAnimationFrame(step);
+          return;
+        }
+        el.setAttribute("data-landed", "");
+        el.scrollIntoView({ block: "start", behavior: document.documentElement.dataset.motion === "off" ? "auto" : "smooth" });
+      };
+      step();
+    };
+    land();
+    addEventListener("hashchange", land);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener("hashchange", land);
+    };
+  }, [path]);
+  return null;
+}
+
 /** After any save (src/lib/client.ts), every page shows it on the next visit: the Server Action purges the browser's
  *  copies of every page, then the page on screen redraws (11-03-26: Tracking showed a company only after a reload).
  *  Drawn by Shell itself, so it runs for every firm (it first sat in DeckCatch, which a firm without the Deck Screen
@@ -727,6 +765,7 @@ export function Shell({ children, ticker, trends = true }: { children: ReactNode
       <Keys />
       <Swipe />
       <ScrollTop />
+      <Landing />
       <Theater />
       <SaveRefresh />
       {on("deckScreen") && <DeckCatch />}

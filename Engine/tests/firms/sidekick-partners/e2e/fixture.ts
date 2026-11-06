@@ -124,7 +124,10 @@ async function sampleWorld(d: ReturnType<typeof drizzle<typeof S>>) {
     deal("Gaingels", 5, "Olea & Oak", "seed", 1.5e6, "consumer-brands"),
     deal("QED Investors", 7, "Chairside", "seed", 4.1e6, "vertical-saas"),
     deal("Willow Growth Partners", 6, "Steadfast Health", "seed", 5.2e6, "consumer-health", "lead"),
-    deal("Female Founders Fund", 4, "Crownwell", "seed", 3.2e6, "consumer-brands"),
+    // the live site's case (11-05-26): the newest story about a startup doesn't name its fund (a possible match), the
+    // proven one is a day older and is the one the ticker links to, so the page must land on the row for both
+    deal("Female Founders Fund", 1, "Crownwell", "seed", 3.2e6, "consumer-brands"),
+    { ...deal("Silas Capital", 0.5, "Crownwell", "seed", 3.2e6, "consumer-brands"), title: "Crownwell raises $3.2M seed for its bath line", possible: true },
     deal("igniteXL Ventures", 8, "Steadfast Health", "seed", 5.2e6, "consumer-health"),
   ]);
   // Tracking: three startups and one trend followed, two made-up founders, the profile's three alerts with hits

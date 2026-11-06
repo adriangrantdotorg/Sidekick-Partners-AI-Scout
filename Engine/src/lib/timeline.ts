@@ -4,7 +4,7 @@
 // deals the co-investor watch found in the news, and the checked rounds the co-investors shared with the firm. Pure, so
 // tests/unit/timeline.test.ts holds the rules; src/components/Timeline.tsx draws it.
 
-export type FeedNews = { title: string | null; url: string; source: string | null; date: Date | string | null; company: string | null; companyId?: number | null; round: string | null; amount: number | string | null; currency: string | null; role: string | null; possible: boolean | null; thesisArea: string | null; kind: string; fundName: string };
+export type FeedNews = { title: string | null; url: string; source: string | null; date: Date | string | null; company: string | null; companyId?: number | null; round: string | null; amount: number | string | null; currency: string | null; role: string | null; possible: boolean | null; thesisArea: string | null; kind: string; fundName: string; id?: number; also?: { id: number; possible: boolean; fund: { name: string } }[] };
 export type FeedFund = { name: string; shared: { company: string; round?: string | null; date?: string | null; url?: string }[] };
 
 export type Entry = {
@@ -20,6 +20,7 @@ export type Entry = {
   lead: boolean;
   unnamed: boolean; // the headline doesn't name the fund
   shared: boolean; // a round the fund shared with the firm
+  ids: string[]; // the page addresses this entry answers to (`fi<deal id>`, one per fund's copy of the deal): the ticker links there
 };
 
 const ymd = (d: Date | string | null) => (d ? (typeof d === "string" ? d.slice(0, 10) : d.toISOString().slice(0, 10)) : "");
@@ -49,7 +50,7 @@ export function timeline(news: FeedNews[], funds: FeedFund[]): Entry[] {
       company: n.company,
       companyId: n.companyId ?? null,
       round: [money(n.amount, n.currency || "$"), rnd].filter(Boolean).join(" ") || "A round",
-      funds: [n.fundName],
+      funds: [n.fundName, ...(n.also || []).filter((a) => !a.possible).map((a) => a.fund.name)],
       headline: n.title,
       url: n.url,
       outlet: n.source || host(n.url),
@@ -57,6 +58,7 @@ export function timeline(news: FeedNews[], funds: FeedFund[]): Entry[] {
       lead: n.role === "lead",
       unnamed: !!n.possible,
       shared: false,
+      ids: n.id ? [n.id, ...(n.also || []).map((a) => a.id)].map((i) => `fi${i}`) : [],
     });
   }
   const rounds = new Map<string, Entry>();
@@ -66,7 +68,7 @@ export function timeline(news: FeedNews[], funds: FeedFund[]): Entry[] {
       const k = `${s.company}|${s.round || ""}|${s.date}`;
       const e = rounds.get(k);
       if (e) e.funds.push(f.name);
-      else rounds.set(k, { date: s.date.slice(0, 10), company: s.company, companyId: null, round: s.round || "A round", funds: [f.name], headline: null, url: s.url || "", outlet: s.url ? host(s.url) : "", area: null, lead: false, unnamed: false, shared: true });
+      else rounds.set(k, { date: s.date.slice(0, 10), company: s.company, companyId: null, round: s.round || "A round", funds: [f.name], headline: null, url: s.url || "", outlet: s.url ? host(s.url) : "", area: null, lead: false, unnamed: false, shared: true, ids: [] });
     }
   out.push(...rounds.values());
   return out.filter((e) => e.date).sort((a, b) => b.date.localeCompare(a.date) || a.company.localeCompare(b.company));

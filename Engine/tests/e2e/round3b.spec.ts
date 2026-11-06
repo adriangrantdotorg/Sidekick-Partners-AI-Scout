@@ -24,6 +24,36 @@ test("a deep link lands with the item fully below the sticky top bar", async ({ 
   if (!atEnd) expect(top - barBottom).toBeLessThan(60);
 });
 
+// Second report, 11-05-26 (user: "clicking items in the ticker should directly link to the actual item"): the
+// ticker's Silas Capital deal opened Synergistic Funds at the top, because the page showed that startup's row under
+// another fund and an in-app click never sets :target. Clicked the way he clicks (an in-app navigation, not a page
+// load), every ticker link with an address must land on a marked item right under the top bar. The test data holds
+// the live case: Crownwell's newest story is a possible match, the ticker links the proven one.
+test("every ticker link lands on its item, marked, right under the top bar", async ({ page }) => {
+  await page.goto(HOME);
+  const hrefs = [...new Set(await page.locator(".ticker .track > a:not([aria-hidden])").evaluateAll((as) => as.map((a) => a.getAttribute("href") || "").filter((h) => h.includes("#"))))];
+  expect(hrefs.some((h) => h.includes("#fi"))).toBe(true);
+  for (const href of hrefs) {
+    await page.goto(HOME);
+    await page.waitForSelector("html[data-hydrated]");
+    await page.locator(`.ticker .track > a[href="${href}"]`).first().evaluate((a) => (a as HTMLAnchorElement).click());
+    await page.waitForURL((u) => u.pathname + u.hash === href);
+    const hash = href.split("#")[1];
+    const landed = page.locator("[data-landed]");
+    await expect(landed, `${href} lands on an item`).toHaveCount(1);
+    const at = await landed.evaluate((el) => [el.id, ...(el.getAttribute("data-also") || "").split(" ")]);
+    expect(at, `${href} lands on its own item`).toContain(hash);
+    const marked = await landed.evaluate((el) => getComputedStyle(el.tagName === "TR" ? el.querySelector("td")! : el).boxShadow);
+    expect(marked, `${href}: the landed item wears the edge`).toContain("inset");
+    const barBottom = await page.locator("header.top").evaluate((el) => el.getBoundingClientRect().bottom);
+    await expect.poll(async () => {
+      const top = await landed.evaluate((el) => el.getBoundingClientRect().top);
+      const atEnd = await page.evaluate(() => scrollY + innerHeight >= document.documentElement.scrollHeight - 2);
+      return top >= barBottom - 1 && (atEnd || top - barBottom < 60);
+    }, { message: `${href} scrolls its item right under the top bar` }).toBe(true);
+  }
+});
+
 test("no keycap appears in the top bar, even on hover", async ({ page }) => {
   await page.goto(HOME);
   // every chip in the top bar: the theme chip and the search chip
