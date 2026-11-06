@@ -511,9 +511,14 @@ a.x-sig { width:fit-content; justify-self:start; }
 .x-sky .x-drift { animation:x-skydrift 70s ease-in-out infinite; }
 @keyframes x-skydrift { 0%, 100% { transform:translateX(0); } 50% { transform:translateX(-12%); } }
 html[data-motion="off"] .x-sky .x-drift { animation:none; }
+/* Must See's picture holds still; the On the Radar cards, Pipeline rows and company pages keep the drift (user, 11-06-26:
+   "make the background image no longer move on the must see area"). Guard: "Must See's picture holds still" (tests/e2e/v2.spec.ts). */
+.x-tile.hero .x-sky .x-drift { animation:none; }
 .x-sky .x-skymark { position:absolute; left:70%; top:28%; transform:translate(-50%, -50%); z-index:1; }
 .x-sky .x-skymark.logo { width:30%; height:34%; object-fit:contain; } /* a small logo file scales up; a square one fits the height */
 .x-sky .x-skymark.logo.white { filter:brightness(0) invert(1); }
+/* white on the light part of a picture still reads: a soft dark shadow under it (11-06-26) */
+.x-sky .x-skymark.logo.white.shade { filter:brightness(0) invert(1) drop-shadow(0 2px 3px rgba(0,0,0,.35)) drop-shadow(0 6px 22px rgba(0,0,0,.4)); }
 .x-sky .x-skymark.logo.ink { filter:brightness(0); opacity:.86; }
 .x-sky .x-skymark.word { display:flex; align-items:center; gap:1.7cqw; max-width:42%; }
 .x-sky .x-skytile, .x-sky .x-skyicon { flex:none; width:8cqw; height:8cqw; border-radius:23%; }

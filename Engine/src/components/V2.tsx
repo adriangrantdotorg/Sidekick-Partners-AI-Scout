@@ -522,7 +522,7 @@ export function BrandSky({ c }: { c: CompanyCard }) {
   useClearMark(sky, `${p.mark.kind}:${"src" in p.mark ? p.mark.src : ""}:${words}`);
   let mark: ReactNode;
   if (p.mark.kind === "logo")
-    mark = <Img className={`x-skymark logo${p.flip ? (p.art && b.artTone === "light" ? " ink" : " white") : ""}`} src={p.mark.src} alt={c.name} onFail={fail("mark")} />;
+    mark = <Img className={`x-skymark logo${p.shade ? " white shade" : p.flip ? (p.art && b.artTone === "light" ? " ink" : " white") : ""}`} src={p.mark.src} alt={c.name} onFail={fail("mark")} />;
   else
     mark = (
       <div className={`x-skymark word ${size}`}>

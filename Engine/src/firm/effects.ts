@@ -26,7 +26,7 @@ export const EFFECTS = {
   ticker: { keyframes: ["tick"], el: "track", what: "the ticker's names scroll by", where: "every page, the ticker" },
   headLine: { keyframes: ["sweep"], el: "rule", what: "a light sweeps the thin line under a page heading", where: "Pipeline, a company page, Settings" },
   leadCount: { keyframes: ["breatheG"], el: "seg hero", what: "the glow under Today's lead count breathes", where: "Today, the counts" },
-  sky: { keyframes: ["x-skydrift"], el: "x-drift", what: "clouds drift across a startup's picture", where: "Today and company pages" },
+  sky: { keyframes: ["x-skydrift"], el: "x-drift", what: "clouds drift across a startup's picture", where: "On the Radar cards, Pipeline rows and company pages (never Must See)" },
   sparkline: { keyframes: ["draw"], el: "spark", what: "a trend's four-week line draws itself", where: "Trends" },
   readingStep: { keyframes: ["x-dotbreathe"], el: "x-steps", what: "the step the Deck Screen is on breathes while it reads", where: "Deck Screen, while a deck is read" },
   launchDots: { keyframes: ["pg-br"], el: "pg-note", what: "the launch progress page's dots breathe", where: "the progress page during a launch" },

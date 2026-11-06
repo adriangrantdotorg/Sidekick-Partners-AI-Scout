@@ -48,6 +48,28 @@ test("Must See shows no website button with no official site, and no Funds Raise
   await expect(box).toBeHidden();
 });
 
+test("Must See's picture holds still, while the other startup pictures keep their drift", async ({ page }) => {
+  // user, 11-06-26: "make the background image no longer move on the must see area"
+  await page.goto(HOME);
+  await ready(page);
+  const names = await page.evaluate(() => {
+    const probe = (inHero: boolean) => {
+      const tile = document.createElement("article");
+      tile.className = inHero ? "x-tile hero" : "x-tile";
+      tile.innerHTML = '<div class="x-media x-sky"><div class="x-clouds x-drift"></div></div>';
+      document.body.appendChild(tile);
+      const name = getComputedStyle(tile.querySelector(".x-drift")!).animationName;
+      tile.remove();
+      return name;
+    };
+    const real = document.querySelector(".x-tile.hero .x-drift");
+    return { hero: probe(true), card: probe(false), real: real ? real.getAnimations().length : 0 };
+  });
+  expect(names.hero).toBe("none");
+  expect(names.real).toBe(0);
+  expect(names.card).toBe("x-skydrift");
+});
+
 test("Must See with no product picture draws Brand Sky: the startup's mark in the open sky, clear of the words, never a gray letter", async ({ page }) => {
   // user, 10-30-26: Helios showed a gray "H"; Brand Sky (src/lib/brand.ts) always has a backdrop and a mark
   await page.goto(HOME);
