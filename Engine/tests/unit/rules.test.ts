@@ -426,7 +426,15 @@ describe("a live database's free transfer (11-06-26)", () => {
     const { JOBS, ON_DEMAND } = await import("@/lib/jobs");
     const runs = block("run");
     expect(runs.length).toBeGreaterThan(0);
-    for (const r of runs) expect(r in JOBS || r in ON_DEMAND, r).toBe(true);
+    for (const r of runs.filter((r) => r !== "ship-day-fill")) expect(r in JOBS || r in ON_DEMAND, r).toBe(true);
+    // ship-day-fill runs a launch's fill on GitHub (11-06-26): every job it names must exist
+    expect(runs).toContain("ship-day-fill");
+    const fill = y.slice(y.indexOf("ship-day-fill)"), y.indexOf(";;", y.indexOf("ship-day-fill)")));
+    const jobs = [...fill.matchAll(/pipeline-all\.ts ([\w -]+?) "--rounds/g)].flatMap((m) => m[1].split(" "));
+    expect(jobs).toEqual(["backfill", "library", "score", "enrich", "thesis-check-all"]);
+    for (const j of jobs) expect(j in JOBS || j in ON_DEMAND, j).toBe(true);
+    // the AI runs can't use the Mac's Vercel token on GitHub
+    expect(y).toMatch(/AI_GATEWAY_API_KEY: \$\{\{ secrets\.AI_GATEWAY_API_KEY \}\}/);
     const firms = block("firm");
     expect(firms.length).toBeGreaterThan(0);
     for (const f of firms) {
