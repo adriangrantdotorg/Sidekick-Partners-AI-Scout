@@ -16,6 +16,23 @@ export function bucketOf(total: number | null | undefined): number {
   return 3;
 }
 
+/** The Funds Raised menu (Pipeline and Today's On the Radar): each range, plus Under $5M, which takes the two ranges
+ *  under $5M together (user, 11-10-26). Unknown is a startup with no amount on record, never counted under $5M. */
+export const UNDER_5M = "lt5";
+export const FUNDS_OPTS: [string, string][] = [["0", BUCKETS[0]], ["1", BUCKETS[1]], [UNDER_5M, "Under $5M"], ["2", BUCKETS[2]], ["3", BUCKETS[3]]];
+export const fundsLabel = (v: string) => FUNDS_OPTS.find(([k]) => k === v)?.[1] || "All";
+export function inFunds(bucket: number, v: string): boolean {
+  if (v === "") return true;
+  if (v === UNDER_5M) return bucket === 1 || bucket === 2;
+  return String(bucket) === v;
+}
+
+/** A startup Scout knows nothing about: no description of its own (its line is the stand-in "A new … company") and
+ *  no website. The Pipeline's Details menu hides them (user, 11-10-26). */
+export function hasDetails(c: { description: string | null; domain: string | null }): boolean {
+  return (c.description || "").trim().length > 30 || !!c.domain;
+}
+
 /** New means a real signal in the last 7 days: the green chip and the "New This Week" filter read the same rule. */
 export const NEW_DAYS = 7;
 export function isNew(lastSignal: string | null | undefined, now = Date.now()): boolean {
