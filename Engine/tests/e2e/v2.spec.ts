@@ -311,7 +311,8 @@ test("Back from a startup returns to the Pipeline's filters and page (user, 11-1
     await page.locator(".x-ddmenu button", { hasText: "Under $5M" }).click();
     await expect(page).toHaveURL(/[?&]funds=lt5(&|$)/);
     const tiles = await page.locator("#radar .x-tile").count();
-    await page.locator("#radar .x-tile a[data-act='open']").first().click();
+    // the tile's own link to its company (a click on the tile's corner can land on a button or the picture)
+    await page.locator("#radar .x-tile a[href^='/company/']").first().click();
     await expect(page).toHaveURL(/\/company\/\d+$/);
     await page.goBack();
     await expect(page.locator(".x-ddbtn", { hasText: "Funds Raised" }).locator("[data-shown]")).toHaveText("Under $5M");

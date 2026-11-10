@@ -216,7 +216,8 @@ function v2Fields(c: CoRow, overlap: CompanyCard["overlap"], now: number) {
     logo,
     funds,
     bucket: bucketOf(funds.total),
-    known: hasDetails(c),
+    // the line the row shows: its description, else the why-it-fits line
+    known: hasDetails(cleanDesc(c.description) || cleanCopy(c.whyFits || "")),
     overlap,
     isNew: isNew(c.lastSignal ? c.lastSignal.toISOString() : null, now),
     recommend: !c.notStartup && !c.mergedInto && !(funds.total && funds.total >= CAP),

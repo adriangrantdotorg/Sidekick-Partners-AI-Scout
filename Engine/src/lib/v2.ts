@@ -27,10 +27,18 @@ export function inFunds(bucket: number, v: string): boolean {
   return String(bucket) === v;
 }
 
-/** A startup Scout knows nothing about: no description of its own (its line is the stand-in "A new … company") and
- *  no website. The Pipeline's Details menu hides them (user, 11-10-26). */
-export function hasDetails(c: { description: string | null; domain: string | null }): boolean {
-  return (c.description || "").trim().length > 30 || !!c.domain;
+/** The line a card shows when Scout has no words of its own for the startup: whyFitsLine() writes it, and the
+ *  Pipeline's Details menu reads it back, so the two never drift apart. */
+export const standInWhat = (area: string) => `A new ${area || "consumer"} company`;
+const STAND_IN = /^A new [\w-]+ company\b/;
+/** Details = the line the startup's row shows says what it does: not the stand-in "A new Gaming company, inside the
+ *  thesis; raised $500K" (user, 11-10-26: a website alone is no details; Arcustin Games had one and showed only that
+ *  line), and at least three words of its own before ", inside the thesis" or the raise (a scraped page title
+ *  "Homepage", or the name again, "Nineteen Films", says nothing). Pass the exact line the row shows. */
+export function hasDetails(line: string): boolean {
+  const t = line.trim();
+  const what = t.split(/, inside |; /)[0];
+  return !STAND_IN.test(t) && what.split(/\s+/).filter(Boolean).length >= 3;
 }
 
 /** New means a real signal in the last 7 days: the green chip and the "New This Week" filter read the same rule. */

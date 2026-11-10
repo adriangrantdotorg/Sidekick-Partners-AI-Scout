@@ -2,7 +2,9 @@
 // page 1), the Details menu hides startups Scout knows nothing about, and Funds Raised offers Under $5M.
 import { describe, expect, it } from "vitest";
 import { filtersFrom, pageFrom, pipelineQuery, matches } from "@/components/Pipeline";
-import { FUNDS_OPTS, UNDER_5M, bucketOf, fundsLabel, hasDetails, inFunds } from "@/lib/v2";
+import { FUNDS_OPTS, UNDER_5M, bucketOf, fundsLabel, hasDetails, inFunds, standInWhat } from "@/lib/v2";
+import { whyFitsLine, weakDescription } from "@/lib/score";
+import { siteDescription } from "@/lib/enrich";
 import { radarFrom, radarKeys } from "@/components/V2";
 import type { CompanyCard } from "@/lib/queries";
 
@@ -28,12 +30,28 @@ describe("the Pipeline's address", () => {
   });
 });
 
-describe("Details: a startup with no description of its own and no website", () => {
-  it("has no details; a real description or a website is enough", () => {
-    expect(hasDetails({ description: null, domain: null })).toBe(false);
-    expect(hasDetails({ description: "  Raised $2M.  ", domain: null })).toBe(false);
-    expect(hasDetails({ description: "Single-estate olive oil in a refill tin.", domain: null })).toBe(true);
-    expect(hasDetails({ description: null, domain: "nextvein.com" })).toBe(true);
+describe("Details: the row's line says something real, not the stand-in", () => {
+  it("the stand-in has no details, whatever else the startup has (a website, a raise)", () => {
+    for (const area of ["Gaming", "Consumer-health", "Vertical-saas", ""]) {
+      const line = `${standInWhat(area)}, inside the thesis; raised $500K pre-seed.`;
+      expect(hasDetails(line), line).toBe(false);
+    }
+    expect(hasDetails("")).toBe(false);
+  });
+  it("a page title or the name again is no details: fewer than three words of its own", () => {
+    expect(hasDetails("Homepage, inside Courtside's thesis; raised $220K.")).toBe(false);
+    expect(hasDetails("Nineteen Films, inside Courtside's thesis; raised $475K.")).toBe(false);
+    expect(hasDetails("GoalPulse: Live Football (by Vu Thi Hanh): GoalPulse helps football fans follow, inside the thesis.")).toBe(true);
+  });
+  it("a description of its own, or a why line built from one, has details", () => {
+    expect(hasDetails("Single-estate olive oil in a refill tin.")).toBe(true);
+    expect(hasDetails("Peanut protein powder brand Scoops has secured $2 million in seed investment.")).toBe(true);
+    expect(hasDetails("AI upsell offers for Shopify brands: a Shopify tool, like Rebuy; raised $2.4M seed.")).toBe(true);
+  });
+  it("whyFitsLine writes the stand-in that Details reads, for a startup with no words of its own", () => {
+    const line = whyFitsLine({ name: "Arcustin Games", description: "", thesisArea: null, stage: "pre-seed", amount: 5e5, currency: "$", lastSignal: null });
+    expect(line.startsWith(standInWhat(""))).toBe(true);
+    expect(hasDetails(line)).toBe(false);
   });
   it("Has Details hides it, No Details shows only it", () => {
     const f = filtersFrom(new URLSearchParams());
@@ -67,5 +85,32 @@ describe("Today's On the Radar keeps its place the same way", () => {
   it("an empty or odd address is the first 18 tiles, unfiltered", () => {
     expect(radarFrom(new URLSearchParams("shown=abc"))).toEqual({ f: { bucket: "", area: "", fit50: false, newonly: false }, limit: 18 });
     expect(Object.values(radarKeys({ bucket: "", area: "", fit50: false, newonly: false }, 18)).every((v) => v === "")).toBe(true);
+  });
+});
+
+describe("a website known means a description: the homepage's own line fills a missing or empty one (11-10-26)", () => {
+  const page = (meta: string) => `<html><head><title>Homepage</title>${meta}</head><body></body></html>`;
+  it("reads og:description, then description, either attribute order, and keeps an apostrophe", () => {
+    expect(siteDescription(page(`<meta property="og:description" content="Monk is the AI-native AR automation platform for finance teams.">`), "Monk")).toBe("Monk is the AI-native AR automation platform for finance teams.");
+    expect(siteDescription(page(`<meta content="The team's booking app for padel clubs &amp; courts." name="description">`), "Courtly")).toBe("The team's booking app for padel clubs & courts.");
+  });
+  it("never runs on into the next tag (ssbdfest.com's real tags: content first, three in a row)", () => {
+    const html = `<meta content="Same Same But Different Music Festival at Lake Perris State Park, California." name="description"/> <meta content="Same Same But Different Music Festival at Lake Perris State Park, California." property="og:description"/>`;
+    expect(siteDescription(html, "Same Same But Different")).toBe("Same Same But Different Music Festival at Lake Perris State Park, California.");
+    expect(siteDescription(`<meta name='description' content='A booking app for padel clubs and courts.'>`, "Courtly")).toBe("A booking app for padel clubs and courts.");
+  });
+  it("skips a placeholder, a bare name or a line under four words, and cuts a long one at a sentence end", () => {
+    expect(siteDescription(page(`<meta name="description" content="Just another WordPress site">`), "X")).toBeNull();
+    expect(siteDescription(page(`<meta name="description" content="Homepage">`), "X")).toBeNull();
+    expect(siteDescription(page(`<meta name="description" content="Nineteen Films">`), "Nineteen Films")).toBeNull();
+    const long = siteDescription(page(`<meta name="description" content="${"Scouts build lineups. ".repeat(20)}">`), "X")!;
+    expect(long.length).toBeLessThanOrEqual(300);
+    expect(long.endsWith(".")).toBe(true);
+  });
+  it("only a description that says nothing is replaced", () => {
+    expect(weakDescription(null)).toBe(true);
+    expect(weakDescription("Homepage. Same Same But Different Music Festival at Lake Perris State Park, California.")).toBe(true); // its real scraped text
+    expect(weakDescription("Scoops raises $2M in seed funding for peanut protein")).toBe(true);
+    expect(weakDescription("Single-estate olive oil sold in a refill tin.")).toBe(false);
   });
 });
