@@ -11,6 +11,7 @@ import { saveItems } from "./collect-media";
 import { getSetting, setSetting, extraSourcesOn, sourcesOff, DEFAULT_QUERIES } from "../settings";
 import { domainOf } from "../format";
 import type { Ctx } from "./runner";
+import { addTeamPicks } from "./team-picks";
 import { firm, firmSlug, on } from "@/firm";
 import { ycConsumer } from "../sources/parse";
 
@@ -390,6 +391,7 @@ export async function stageExtra(ctx: Ctx) {
 
 export async function collectSignals(ctx: Ctx) {
   const stages: [string, (c: Ctx) => Promise<void>][] = [
+    ["team", (c) => addTeamPicks(c).then(() => undefined)], // the startups the team added with checked details: before Scoring reads the cards
     ["sec", (c) => stageSec(c)],
     ["quick", stageQuick],
     ["yc", stageYC],

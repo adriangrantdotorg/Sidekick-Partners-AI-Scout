@@ -32,4 +32,4 @@ export const BRAND_LINES = ((w: string[]) => [w[0], w.slice(1).join(" ")].map((x
 export const DEFAULT_LOOK: "light" | "dark" = firm.brand?.defaultLook ?? "dark";
 export const DISCLAIMER = disclaimer(firm.name);
 export { FEATURES, NEEDS, JOB_FEATURE, INCOMPLETE, type FeatureKey } from "./features";
-export type { FirmProfile, FirmPerson, FirmArea, FirmPlay, FirmWeights, MemoFacts, FirmBuyer, BuyerDeal, PortfolioCo, FirmThesis, FirmAi, FirmSources, FirmPortfolio, FirmFunds, FundDef, Shared, FirmNames, FirmPaths, FirmCopy, FirmMemo, FirmAlert, LibraryPick, ExitNote, RefStatus, UeText, UeLine, FirmUnitEconomics, DeckCheck, DeckResult, DeckStatus, MoatStrength, FirmDeck, FirmBrand } from "./types";
+export type { FirmProfile, FirmPerson, FirmArea, FirmPlay, FirmWeights, MemoFacts, FirmBuyer, BuyerDeal, PortfolioCo, FirmThesis, FirmAi, FirmSources, FirmPortfolio, FirmFunds, FundDef, Shared, FirmNames, FirmPaths, FirmCopy, FirmMemo, FirmAlert, LibraryPick, CheckedDetails, CheckedFact, ExitNote, RefStatus, UeText, UeLine, FirmUnitEconomics, DeckCheck, DeckResult, DeckStatus, MoatStrength, FirmDeck, FirmBrand } from "./types";

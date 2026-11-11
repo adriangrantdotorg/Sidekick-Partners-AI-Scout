@@ -10,8 +10,10 @@ import { LIBRARY, libraryStory, LIBRARY_DAYS } from "../library";
 import { FUNDING_Q } from "./collect-signals";
 import { launchAllowed } from "./enrich";
 import type { Ctx } from "./runner";
+import { addTeamPicks } from "./team-picks";
 
 export async function libraryJob(ctx: Ctx) {
+  await addTeamPicks(ctx); // the team's checked picks need neither the search nor the AI
   if (!(await aiAvailable())) {
     ctx.change("AI is off: the Library backfill waits for the AI screen");
     return;
@@ -27,7 +29,7 @@ export async function libraryJob(ctx: Ctx) {
       break;
     }
     const p = LIBRARY[k];
-    if (await knownCompany(p.name, p.domain)) {
+    if (p.details || (await knownCompany(p.name, p.domain))) {
       ctx.tick();
       continue;
     }

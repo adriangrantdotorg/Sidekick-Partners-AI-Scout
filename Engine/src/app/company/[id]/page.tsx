@@ -16,6 +16,7 @@ import { moneyRange, CAP } from "@/lib/v2";
 import { cleanCopy } from "@/lib/copy";
 import { SCORE_PARTS } from "@/lib/score";
 import { firm, on } from "@/firm";
+import { pickFor } from "@/lib/library";
 
 export const revalidate = 300;
 
@@ -52,6 +53,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const rounds = c.funds.rounds.filter((r) => r.amount || r.stage !== "unknown");
   const backed = rounds.find((r) => r.investors);
   const investors = backed ? { text: backed.investors!, url: backed.sources.find((s) => s.url)?.url || null } : null;
+  const checked = pickFor({ name: c.name, domain: c.domain })?.details;
   const why = d.row.notStartup ? d.row.notStartup : c.funds.total && c.funds.total >= CAP ? `It has raised ${c.funds.text}, past Scout's $${CAP / 1e6}M limit` : null;
   return (
     <div>
@@ -90,6 +92,44 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         off={!!why}
       />
       {acq?.invested && <BuyerInvested company={c.name} buyer={acq.invested} />}
+      {/* a startup the team added: each fact with the source that states it (user, 11-11-26: "find revenue
+          estimates (and any other key details you can where relevant)") */}
+      {checked && checked.facts.length > 0 && (
+        <section className="x-rounds x-keyfacts" aria-label="Key Facts">
+          <CopyMd />
+          <h2 className="x-h2">Key Facts</h2>
+          <div className="x-tscroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fact</th>
+                  <th>What It Says</th>
+                  <th>Date</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {checked.facts.map((f, i) => (
+                  <tr key={i}>
+                    <td className="r-st">{f.label}</td>
+                    <td>{f.value}</td>
+                    <td className="r-date">{f.date ? fmtDate(f.date) : "Undated"}</td>
+                    <td>
+                      <a href={f.url} target="_blank" rel="noopener noreferrer" title={`Opens ${f.source} in a new window`}>
+                        {f.source}
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="x-keyfacts-note">
+            Added by the team; each fact checked against its source on {checked.checked}.
+            {checked.facts.some((f) => /\(Estimate\)/.test(f.label)) ? " An estimate is the team's math on the source beside it." : ""}
+          </p>
+        </section>
+      )}
       <UnitEconomicsPanel rows={ue} heading={ueHeading(c.thesisArea)} fyi={ueFyi(c.thesisArea, `${c.name} ${d.row.description || ""}`)} />
       {/* no section when the industry has no buyer with a deal loaded (user, 11-04-26: an empty box read as a gap) */}
       {acq && c.thesisArea && acq.buyers.length > 0 && <LikelyAcquirersPanel area={c.thesisArea} buyers={acq.buyers} also={acq.also} notes={acq.notes} />}

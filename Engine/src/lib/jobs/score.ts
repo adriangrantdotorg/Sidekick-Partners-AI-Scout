@@ -1,6 +1,6 @@
 // Re-scores every company, writes "why it fits" (unless hand-written), the portfolio check,
 // and learns from the shared votes (capped at ±15 points).
-import { eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { db, schema as S } from "@/db";
 import { scoreCompany, whyFitsLine, portfolioCheck, type Breakdown } from "../score";
 import { INCUMBENT, NOT_CONSUMER } from "../thesis";
@@ -35,7 +35,9 @@ export async function learnFromVotes(): Promise<{ learned: Learned; summary: str
   return { learned, summary };
 }
 
-export async function scoreAll(ctx: Ctx) {
+/** `ids`: score only these (a startup the team just added); the daily run scores every card. Each run saves the old
+ *  score as prevScore, so a second full run in a day would wipe the day's movers (the ticker's ▲). */
+export async function scoreAll(ctx: Ctx, opts: { ids?: number[] } = {}) {
   const [w, port, cfg, { learned, summary }] = await Promise.all([
     getWeights(),
     db().select({ name: S.portfolio.name, sector: S.portfolio.sector, description: S.portfolio.description }).from(S.portfolio),
@@ -44,7 +46,7 @@ export async function scoreAll(ctx: Ctx) {
   ]);
   await setSetting("learned", learned);
   await setSetting("learnedSummary", summary);
-  const cos = await db().select().from(S.companies).where(eq(S.companies.hidden, false));
+  const cos = await db().select().from(S.companies).where(opts.ids ? and(eq(S.companies.hidden, false), inArray(S.companies.id, opts.ids.concat(-1))) : eq(S.companies.hidden, false));
   const sigs = (await db().execute(sql`select company_id, type, date from signals`)) as unknown as { rows: { company_id: number; type: string; date: string | null }[] };
   const bySig = new Map<number, { type: string; date: Date | null }[]>();
   for (const s of sigs.rows) {

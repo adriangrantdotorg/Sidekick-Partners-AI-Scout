@@ -252,6 +252,8 @@
 .x-rounds .r-amt { font:700 24px/1 var(--font-head); color:var(--gold); }
 .x-rounds .r-date { white-space:nowrap; font:15px/1.6 var(--font-mono); color:var(--text-2); }
 .x-rounds .x-h2 { margin:0 0 6px; font-size:24px; }
+.x-keyfacts .r-st { white-space:normal; }
+.x-keyfacts-note { margin:12px 0 0; font-size:15px; line-height:1.5; color:var(--text-2); }
 .x-sim { display:grid; gap:4px; }
 .x-sim > a { display:grid; grid-template-columns:30px minmax(0,1fr) auto; gap:12px; align-items:center; padding:12px 8px; border-radius:10px; text-decoration:none; color:var(--text); }
 .x-sim > a:hover { background:var(--elevated); }

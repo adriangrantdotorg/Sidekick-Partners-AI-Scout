@@ -328,8 +328,43 @@ export type FirmBrand = {
 /** An alert the Alerts page starts with (the shape of AlertRule in src/db/schema.ts). */
 export type FirmAlert = { title: string; rule: { subject: string; event: string; keywords: string[]; sources: string[]; minAmount?: number } };
 
+/** One fact about a startup the team added, shown under Key Facts on its page with the source that states it. */
+export type CheckedFact = {
+  /** Title Case: "Revenue, 2025 (Company)". */
+  label: string;
+  /** The fact, short: "Over $10M". */
+  value: string;
+  /** The source's name, the link's words: "The Spirits Business". */
+  source: string;
+  url: string;
+  /** When the source said it, YYYY-MM-DD; leave out when the source is undated. */
+  date?: string;
+};
+
+/** A startup the team added by hand with details checked against their sources (user, 11-11-26: "ensure all their
+ *  key details are filled out"). It gets its card from these, tracked, with no funding-story search and no AI Thesis
+ *  Check (src/lib/jobs/team-picks.ts); its page lists `facts` under Key Facts. */
+export type CheckedDetails = {
+  /** When the details were checked, MM-DD-YY. */
+  checked: string;
+  /** Its industry: one of the thesis's area ids. */
+  area: string;
+  /** Its first sentence, 12 words at most, is the card's one-line summary (shortWhat in src/lib/score.ts). */
+  description: string;
+  descriptionUrl: string;
+  /** Its latest round's stage, when a source states it. */
+  stage?: string;
+  /** The dated story its card starts from. */
+  signal: { title: string; url: string; source: string; date: string };
+  /** A portfolio company it resembles, listed first under Nearby in the Portfolio. */
+  like?: string;
+  /** Its logo, when the site's own icon is too small or too faint for a card (Tip Top's is 32 px). */
+  logo?: string;
+  facts: CheckedFact[];
+};
+
 /** A startup the firm's team saved: from its link library, its thesis page, or named by the team. */
-export type LibraryPick = { name: string; domain?: string; from: "library" | "thesis" | "team" };
+export type LibraryPick = { name: string; domain?: string; from: "library" | "thesis" | "team"; details?: CheckedDetails };
 
 export type FirmProfile = {
   /** Folder key, also the build's NEXT_PUBLIC_SCOUT_FIRM: "sidekick-partners". */

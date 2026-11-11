@@ -7,6 +7,7 @@ import { areaLabel, domainOf, favicon, fmtMoney, pastStage, slugify, stageLabel 
 import { getSetting, getThreshold, type BuildProgress } from "./settings";
 import { cleanCopy, unescapeTwice } from "./copy";
 import { classify } from "./thesis";
+import { pickFor } from "./library";
 import { playOf } from "./score";
 import { CAP, fundsOf, bucketOf, hasDetails, isNew, searchUrl, type Funds } from "./v2";
 import type { Media } from "@/db/schema";
@@ -265,7 +266,13 @@ export async function companyById(id: number) {
       : Promise.resolve([]),
     db().select().from(S.portfolio).orderBy(asc(S.portfolio.name)),
   ]);
-  const nearby = near.filter((p) => (c.thesisArea ? sectorArea(p.sector, p.description) === c.thesisArea : false)).slice(0, 4);
+  // a startup the team added names the portfolio company it resembles: that one comes first (user, 11-11-26: Tip Top,
+  // "similar to their investment in Slrrrp")
+  const like = pickFor(c)?.details?.like;
+  const nearby = near
+    .filter((p) => p.name === like || (c.thesisArea ? sectorArea(p.sector, p.description) === c.thesisArea : false))
+    .sort((a, b) => Number(b.name === like) - Number(a.name === like))
+    .slice(0, 4);
   return { row: c, card, notes, similar, nearby };
 }
 

@@ -17,7 +17,7 @@ export const LIVE_FROM = 5;
 // own yet; a job that reports "N of M" is estimated from its own pace instead.
 export const JOB_SECONDS = {
   "collect-media": 15, "collect-signals": 60, trends: 5, "funds-neighborhood": 100, "funds-synergistic": 60,
-  score: 10, enrich: 480, alerts: 30, "monday-brief": 30, backfill: 1800, "thesis-check-all": 900, library: 600,
+  score: 10, enrich: 480, alerts: 30, "monday-brief": 30, backfill: 1800, "thesis-check-all": 900, library: 600, "team-picks": 30,
   // Sidekick's 86 portfolio companies, measured on a copy of the live data (11-04-26: 2,625 s, the Proof Finder)
   "portfolio-backtest": 2700,
   // every stored news link a page shows, opened once: Sidekick's 391, measured on a copy of the live data (11-04-26:

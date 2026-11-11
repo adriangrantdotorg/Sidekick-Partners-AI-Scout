@@ -17,6 +17,7 @@ import { aiAvailable, thesisCheck, CHECK_GAP_MS, CHECK_MIN_MS } from "../ai";
 import type { Ctx } from "./runner";
 import type { Media } from "@/db/schema";
 import { brandFor, iconBrand, imageEngineError } from "./brand";
+import { pickFor } from "../library";
 
 const DAY = 86400000;
 
@@ -161,6 +162,8 @@ export async function enrichCompanies(ctx: Ctx, opts: { ids?: number[]; limit?: 
       if (bits?.ogImage && /favicon|logo|icon/i.test(bits.ogImage) && !/og|share|social|preview|banner|hero/i.test(bits.ogImage)) bits = { ...bits, ogImage: null };
       if (bits) bits = await loadingOnly(bits);
       const media: Media = pickMedia({ site: bits, shots: app?.shots || [], appIcon: app?.icon || null, domain });
+      const checkedLogo = pickFor({ name: c.name, domain: domain || null })?.details?.logo;
+      if (checkedLogo) media.logo = checkedLogo; // the team's checked logo beats a site's tiny icon
       // no image engine: keep the parts measured before rather than wiping them
       const brand = engineErr ? null : page ? await brandFor(page.html, page.url, c.name, bits?.logo || app?.icon || null) : await iconBrand(app?.icon || null);
       if (brand && Object.keys(brand).length) media.brand = brand;

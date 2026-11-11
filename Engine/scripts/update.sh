@@ -19,6 +19,12 @@ npm ci --no-audit --no-fund > "$LOG/npm.log" 2>&1 || fail "npm install failed (s
 V env pull .env.local --yes > "$LOG/env.log" 2>&1
 printf '▶ Migrating\n'
 npm run -s db:migrate > "$LOG/migrate.log" 2>&1 || fail "the migration failed (see .logs/migrate.log)" "npm run update"
+# The startups the team added with checked details (the firm's library.ts) go in now, with their pictures and scores,
+# so the build below already shows them (user, 11-11-26: "i want these companies live asap"). Nothing new: two
+# lookups a pick. A failure never stops the deploy: the next morning's jobs add them.
+printf '▶ Adding the startups the team added\n'
+if npx tsx scripts/team-picks.ts > "$LOG/team-picks.log" 2>&1; then sed 's/^/  /' "$LOG/team-picks.log" | tail -4
+else printf '  ⚠️ not added now (see .logs/team-picks.log): the next morning'"'"'s jobs add them\n'; fi
 printf '▶ Building\n'
 root_link || fail "Vercel's Root Directory could not be set to Engine (see .logs/root-dir.log)" "on vercel.com, the project's Settings, Build and Deployment, Root Directory: Engine; then npm run update"
 VR pull --yes --environment=production > "$LOG/pull.log" 2>&1

@@ -8,6 +8,7 @@ import { fundsJob } from "./funds";
 import { alertsJob, mondayBrief, weeklyJob, refreshNow } from "./other";
 import { enrichJob, backfillJob, aiThesisCheck } from "./enrich";
 import { libraryJob } from "./library";
+import { teamPicksJob } from "./team-picks";
 import { portfolioBacktest } from "./backtest-portfolio";
 import { linksAllJob, linksJob, openLeft, openSaved, shownLinks } from "./links";
 import { refreshSpotlight } from "../spotlight";
@@ -54,6 +55,8 @@ export const ON_DEMAND: Record<string, { label: string; run: (ctx: Ctx) => Promi
   "thesis-check-all": { label: "AI Thesis Check, Every Card", run: (c) => aiThesisCheck(c, { launch: true }) },
   // ship day: the startups the team saved, screened by the AI Thesis Check (npm run pipeline:all -- library --rounds=5)
   library: { label: "Library Backfill", run: libraryJob },
+  // a ship: the startups the team added with checked details, with their pictures and scores (scripts/team-picks.ts)
+  "team-picks": { label: "Startups the Team Added", run: teamPicksJob },
   // the firm's own deals, each dated by the first round a reputable page puts the firm in (Plan step 13b); the weekly
   // job picks up new portfolio companies (npm run pipeline:all -- portfolio-backtest --rounds=40)
   "portfolio-backtest": { label: "Backtest of the Firm's Deals", run: portfolioBacktest },

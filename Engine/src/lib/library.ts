@@ -2,15 +2,27 @@
 // story, and the AI Thesis Check is the screen, so only a consumer startup in the thesis, under the cap, gets a card.
 // Scout can't read Notion: this list was pulled on 10-26-26 and is pulled again when the pages change.
 import { isSubject } from "./backtest";
-import { stageOf, moneyOf } from "./companies";
+import { stageOf, moneyOf, normKey } from "./companies";
+import { domainOf } from "./format";
 import { usd, CAP } from "./v2";
 
 export type { LibraryPick } from "@/firm";
-import type { LibraryPick } from "@/firm";
+import type { CheckedFact, LibraryPick } from "@/firm";
 import { firm } from "@/firm";
 
 /** The firm's saved startups (its folder's library.ts). */
 export const LIBRARY: LibraryPick[] = firm.library;
+
+/** The saved startup a company is: the same domain, else the same name. */
+export function pickFor(c: { name: string; domain: string | null }): LibraryPick | undefined {
+  const d = c.domain ? domainOf(c.domain) : null;
+  return LIBRARY.find((p) => (d && p.domain && domainOf(p.domain) === d) || normKey(p.name) === normKey(c.name));
+}
+
+/** The facts the team added for this company (its saved startup's `details`), or none. */
+export function checkedFacts(c: { name: string; domain: string | null }): CheckedFact[] {
+  return pickFor(c)?.details?.facts || [];
+}
 
 // "bags" only with an amount after it: "the viral Pierre Laborde bags" are handbags, not a raise (10-26-26)
 const FUNDING = /\b(raises|raised|secures|closes|nabs|funding|seed round|pre-seed|series a)\b|\bbags\s+(an?\s+)?[$€£\d]/i;
