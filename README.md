@@ -6,7 +6,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt) [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/) [![Neon](https://img.shields.io/badge/Database-Neon_Postgres-00e599.svg)](https://neon.tech/) [![Vercel](https://img.shields.io/badge/Hosted_on-Vercel_Hobby-000000.svg)](https://vercel.com/)
 
-**VIEW LIVE DEMO →** [sidekick-partners-scout.vercel.app](https://sidekick-partners-scout.vercel.app)
+**VIEW LIVE DEMO →** [sidekick.adriangrant.org](https://sidekick.adriangrant.org)
 
 <sub>An independent prototype. Not affiliated with or endorsed by Sidekick Partners.</sub>
 
