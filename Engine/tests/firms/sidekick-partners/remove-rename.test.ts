@@ -1,6 +1,6 @@
 // Plan step 9 on Sidekick's profile: Sponsor Radar, Culture, the creator feeds and the firm's own posts are gone; the
 // Funding pages carry the standard names at Sidekick's own addresses; About and the footer say Scout is user's
-// independent prototype; Form D filers named Holdings or Group carry the Possible Roll-Up Vehicle tag.
+// independent demo; Form D filers named Holdings or Group carry the Possible Roll-Up Vehicle tag.
 import { describe, it, expect, vi } from "vitest";
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -149,17 +149,17 @@ describe("the top bar names Sidekick, never Courtside", () => {
   });
 });
 
-describe("About and the footer: user's independent prototype", () => {
+describe("About and the footer: user's independent demo", () => {
   // the builder comes from brand/builder.json, private to this repo (the public copy credits no one: builder.test.ts)
   it.skipIf(!BUILDER.name)("the line, word for word (Plan section 1)", () => {
-    expect(DISCLAIMER).toBe("An independent prototype by the user. Not affiliated with or endorsed by Sidekick Partners.");
+    expect(DISCLAIMER).toBe("An independent demo. Not affiliated with or endorsed by Sidekick Partners.");
   });
   it.skipIf(!BUILDER.name)("About carries it, the Phase II line, and no creators, shows or Courtside sources", async () => {
     const About = (await import("@/app/about/page")).default;
     const html = render(await About());
     expect(html).toContain(DISCLAIMER);
     expect(html).toContain("A deal-sourcing site built around Sidekick Partners' thesis.");
-    expect(html).toContain("Phase I is this prototype: built by user alone, on free public sources.");
+    expect(html).toContain("Phase I is this demo: built by user alone, on free public sources.");
     expect(html).toContain("is the production version, built with Sidekick:");
     expect(html).not.toMatch(/creators and shows|podcast|Sponsor Radar|Culture|Medium|4th Quarter|73 portfolio/);
     expect(html).not.toMatch(/Courtside/);

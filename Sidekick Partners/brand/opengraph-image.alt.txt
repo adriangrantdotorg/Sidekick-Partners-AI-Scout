@@ -1,1 +1,1 @@
-Sidekick Partners AI Scout, an independent prototype for sourcing Seed and Series A startups.
+Sidekick Partners AI Scout, an independent demo for sourcing Seed and Series A startups.

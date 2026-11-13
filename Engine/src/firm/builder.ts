@@ -11,4 +11,4 @@ export const builderFirst = (b: Builder = BUILDER) => b.name.split(/\s+/)[0] || 
 /** The builder link's tooltip: "Opens the user on LinkedIn in a new window". */
 export const builderTip = (b: Builder = BUILDER) => `Opens ${b.name}${/linkedin\.com/.test(b.url) ? " on LinkedIn" : ""} in a new window`;
 /** The not-affiliated line, with the builder's name only when the firm's folder names one. */
-export const disclaimer = (firmName: string, b: Builder = BUILDER) => `An independent prototype${b.name ? ` by ${b.name}` : ""}. Not affiliated with or endorsed by ${firmName}.`;
+export const disclaimer = (firmName: string, b: Builder = BUILDER) => `An independent demo${b.name ? ` by ${b.name}` : ""}. Not affiliated with or endorsed by ${firmName}.`;

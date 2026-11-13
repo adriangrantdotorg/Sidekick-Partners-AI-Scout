@@ -10,6 +10,7 @@ import { createHash } from "node:crypto";
 import type { Job } from "../src/lib/progress-core.mjs";
 import { firm } from "../src/firm";
 import { launchLook, progressDir, projectName } from "../firm.config.mjs";
+import { siteUrl } from "../src/lib/share";
 
 export type RunsState = { title: string; startedAt: number; updatedAt: number; done: boolean; liveUrl: string; jobs: Job[]; pages: [string, string][] };
 
@@ -24,7 +25,7 @@ export const runsPage = () => join(runsDir(), "runs.html");
 
 export function runsState(title: string, jobs: Job[], startedAt: number): RunsState {
   const pages = jobs.flatMap((j) => JOB_PAGES[j.key] || []);
-  return { title, startedAt, updatedAt: Date.now(), done: false, liveUrl: `https://${projectName()}.vercel.app`, jobs, pages };
+  return { title, startedAt, updatedAt: Date.now(), done: false, liveUrl: siteUrl() || `https://${projectName()}.vercel.app`, jobs, pages };
 }
 
 export function writeRunsPage(s: RunsState) {

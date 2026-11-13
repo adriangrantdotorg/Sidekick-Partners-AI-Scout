@@ -1,7 +1,7 @@
 # Example Firm · Notes
 
 The blank profile to copy for a new firm. Nothing here is live or deployed. How to start
-a firm from it: this folder's `CLAUDE.md`.
+a firm from it: the "Another Firm" section of the repo's README.
 
 ## What a real firm's NOTES.md holds
 
@@ -17,6 +17,5 @@ Copy this section's list into the new firm's `NOTES.md` and fill it at its launc
 
 ## Before its first launch
 
-- Pick a responsive framework first.
-- Its design round, a screen review and every moving part answered in `effects`.
+- Every moving part answered in `effects`.
 - No seed yet: its first launch starts from its profile, then `npm run seed:export` writes its own.

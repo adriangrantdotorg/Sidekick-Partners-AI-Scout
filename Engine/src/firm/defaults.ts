@@ -39,6 +39,8 @@ export const RETIRED_NAMES: { name: string; re: RegExp }[] = [
   // the industry's name of record is "Tech-Enabled Roll-Ups + AI Services"
   { name: "Roll-Ups + AI Services", re: /(?<!Tech-Enabled )\bRoll-Ups \+ AI Services\b/i },
   { name: "Deck Drop", re: /\bDeck Drop\b/ },
+  // every Scout says "demo" (user, 11-12-26: "on all scout sites it should say demo, no longer use the term prototype")
+  { name: "prototype", re: /\bprototypes?\b/i },
   // nobody checks by hand; what Claude checks is "Claude-checked", and only in notes, never on a page (user, 11-04-26)
   { name: "hand-checked", re: /\bhand[- ](?:checked|loaded|verified)\b/i },
   { name: "Claude-checked", re: /\bClaude[- ]checked\b/i },

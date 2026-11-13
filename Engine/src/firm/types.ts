@@ -378,6 +378,10 @@ export type FirmProfile = {
   aliases?: string[];
   /** The site's name in titles, Slack and the header: "Courtside Ventures Scout". */
   product: string;
+  /** Words after the product in every browser tab and link preview title: "(DEMO)" (user, 11-12-26: "all page titles
+   *  should have (DEMO) at the end of the name of the site to communicate its a demo"). Leave out for none. The header
+   *  keeps the bare product. */
+  titleTag?: string;
   /** The site's description for search and link previews. */
   description: string;
   /** The firm's own website. */

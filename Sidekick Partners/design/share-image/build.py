@@ -225,7 +225,7 @@ def render(src, out):
 def preview_card(png, width):
     """How a shared link reads in LinkedIn: the picture, then the page title and the domain under it."""
     return (f'<div class="li" style="width:{width}px"><img src="{png}" alt="" width="{width}">'
-            f'<div class="li-t"><b>{TITLE} (prototype)</b><span>{DOMAIN}</span></div></div>')
+            f'<div class="li-t"><b>{TITLE} (DEMO)</b><span>{DOMAIN}</span></div></div>')
 
 
 ROUND_LEDE = (f"The picture LinkedIn, Slack, iMessage and X show when someone shares {DOMAIN}. Today there is none, so a "

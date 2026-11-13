@@ -254,14 +254,14 @@ export function UIProvider({ children, palette, sheet }: { children: ReactNode; 
           <div className="bd">
             {BUILDER.name ? (
               <p>
-                Scout is a working prototype {builderFirst()} built to start a conversation with {firm.short}. Essentially it&apos;s an alpha that he would love to get production-ready as a {firm.short} team member. Below&apos;s a recap.
+                Scout is a working demo {builderFirst()} built to start a conversation with {firm.short}. Essentially it&apos;s an alpha that he would love to get production-ready as a {firm.short} team member. Below&apos;s a recap.
               </p>
             ) : (
-              <p>Scout is a working prototype. Below&apos;s what it does today and what the production version adds.</p>
+              <p>Scout is a working demo. Below&apos;s what it does today and what the production version adds.</p>
             )}
             <div className="cols">
               <div>
-                <b>Phase I · The Prototype, Running Now</b>
+                <b>Phase I · The Demo, Running Now</b>
                 <ul>
                   {door.now.map((x) => (
                     <li key={x}>{x}</li>
@@ -278,7 +278,7 @@ export function UIProvider({ children, palette, sheet }: { children: ReactNode; 
               </div>
             </div>
             <div className="acts2">
-              <span className="why2">{BUILDER.name ? <>Phase I: a quick prototype. Phase II: production-ready, built by {builderFirst()} and {firm.short} together.</> : "Phase I: a quick prototype. Phase II: production-ready."}</span>
+              <span className="why2">{BUILDER.name ? <>Phase I: a quick demo. Phase II: production-ready, built by {builderFirst()} and {firm.short} together.</> : "Phase I: a quick demo. Phase II: production-ready."}</span>
               <button className="btn" title="Close (Esc)" onClick={() => setDoorKey(null)}>
                 Cancel<Kbd>Esc</Kbd>
               </button>

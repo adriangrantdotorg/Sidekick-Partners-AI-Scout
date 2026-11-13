@@ -82,7 +82,7 @@ export default async function Page() {
           </ul>
           <h2 id="phase2">Phase II</h2>
           <p>
-            Phase I is this prototype: {BUILDER.name ? <>built by {builderFirst()} alone, on free public sources</> : "built on free public sources"}. <Phase2Link /> is the production version{BUILDER.name ? <>, built with {firm.short}</> : null}: team-only access, trusted ratings, real-time updates, email alerts,{" "}
+            Phase I is this demo: {BUILDER.name ? <>built by {builderFirst()} alone, on free public sources</> : "built on free public sources"}. <Phase2Link /> is the production version{BUILDER.name ? <>, built with {firm.short}</> : null}: team-only access, trusted ratings, real-time updates, email alerts,{" "}
             {creators ? "social networks through the firm's accounts, " : ""}PitchBook and Crunchbase, and LinkedIn.
           </p>
         </div>

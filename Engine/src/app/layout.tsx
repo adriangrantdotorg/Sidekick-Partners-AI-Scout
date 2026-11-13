@@ -8,7 +8,7 @@ import { Shell } from "@/components/Shell";
 import { Ticker } from "@/components/Ticker";
 import { hasTrends } from "@/lib/queries";
 import { sharePreview, siteUrl } from "@/lib/share";
-import { firm, DEFAULT_LOOK, BUILDER } from "@/firm";
+import { firm, DEFAULT_LOOK, BUILDER, SITE_TITLE } from "@/firm";
 import { DEFAULT_FONTS } from "@/lib/fonts.mjs";
 
 // The address link previews resolve opengraph-image.jpg against: LinkedIn, Slack and X need an absolute https URL.
@@ -18,11 +18,11 @@ const SHARE = sharePreview();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
-  title: { default: `${firm.product}`, template: `%s · ${firm.product}` },
-  description: `Deal sourcing for ${firm.name}: startups, trends, sponsors and funds inside ${firm.short}'s thesis, every fact linked to its source.${BUILDER.name ? ` A prototype by ${BUILDER.name}.` : ""}`,
+  title: { default: SITE_TITLE, template: `%s · ${SITE_TITLE}` },
+  description: `Deal sourcing for ${firm.name}: startups, trends, sponsors and funds inside ${firm.short}'s thesis, every fact linked to its source.${BUILDER.name ? ` A demo by ${BUILDER.name}.` : ""}`,
   robots: { index: false, follow: false },
   // The picture is src/app/opengraph-image.jpg (design/share-image/, user's pick "Product Shot", 10-31-26).
-  openGraph: { type: "website", siteName: `${firm.product}`, title: SHARE.title, description: SHARE.description, url: "/" },
+  openGraph: { type: "website", siteName: SITE_TITLE, title: SHARE.title, description: SHARE.description, url: "/" },
   twitter: { card: "summary_large_image", title: SHARE.title, description: SHARE.description },
 };
 

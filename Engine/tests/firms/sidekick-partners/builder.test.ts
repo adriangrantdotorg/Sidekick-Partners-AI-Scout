@@ -19,13 +19,13 @@ describe("a copy whose firm names no builder", () => {
   it("the not-affiliated line names no one", async () => {
     const { DISCLAIMER, BUILDER } = await import("@/firm");
     expect(BUILDER).toEqual({ name: "", url: "" });
-    expect(DISCLAIMER).toBe("An independent prototype. Not affiliated with or endorsed by Sidekick Partners.");
+    expect(DISCLAIMER).toBe("An independent demo. Not affiliated with or endorsed by Sidekick Partners.");
   });
   it("About has no Talk to button, no builder and no LinkedIn", async () => {
     const About = (await import("@/app/about/page")).default;
     const html = await render(await About());
     expect(html).not.toMatch(/data-talk|Talk to|built by|linkedin\.com|user/i);
-    expect(html).toContain("Phase I is this prototype: built on free public sources.");
+    expect(html).toContain("Phase I is this demo: built on free public sources.");
   });
   it("the Talk link draws nothing, a locked chip names no one, the site's description names no one", async () => {
     const { TalkLink } = await import("@/components/talk");
@@ -33,7 +33,7 @@ describe("a copy whose firm names no builder", () => {
     const { phase2Tip } = await import("@/lib/phase2");
     expect(phase2Tip()).toBe("Phase II: the production version");
     const { metadata } = await import("@/app/layout");
-    expect(String(metadata.description)).not.toMatch(/prototype by/);
+    expect(String(metadata.description)).not.toMatch(/demo by/);
   });
   it("no page's code spells a person's name or link: only brand/builder.json does", () => {
     const files: string[] = [];

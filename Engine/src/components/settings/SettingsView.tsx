@@ -1134,8 +1134,8 @@ function Phase2Pane() {
     <>
       <p className="sub">
         {BUILDER.name
-          ? `Phase I is this prototype: built by ${builderFirst()} alone, on free public sources, to start a conversation with ${firm.short}. Phase II is the production-ready version ${builderFirst()} and ${firm.short} build together, should they decide to.`
-          : "Phase I is this prototype, built on free public sources. Phase II is the production-ready version."}
+          ? `Phase I is this demo: built by ${builderFirst()} alone, on free public sources, to start a conversation with ${firm.short}. Phase II is the production-ready version ${builderFirst()} and ${firm.short} build together, should they decide to.`
+          : "Phase I is this demo, built on free public sources. Phase II is the production-ready version."}
       </p>
       <Card title="Phase II · Built Together">
         {PHASE2_ITEMS.map(([door, text], i) => (

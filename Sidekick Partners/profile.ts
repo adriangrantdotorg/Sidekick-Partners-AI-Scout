@@ -72,8 +72,10 @@ const sidekick: FirmProfile = {
   short: "Sidekick",
   // the name on screen (user, 10-29-26)
   product: "Sidekick Partners AI Scout",
+  // every tab and link preview says it is a demo (user, 11-12-26)
+  titleTag: "(DEMO)",
   description:
-    "Deal sourcing for Sidekick Partners: Seed and Series A startups in its five industries, every fact linked to its source. An independent prototype, not affiliated with Sidekick Partners.",
+    "Deal sourcing for Sidekick Partners: Seed and Series A startups in its five industries, every fact linked to its source. An independent demo, not affiliated with Sidekick Partners.",
   site: "https://www.sidekickpartners.com",
   // the public copy (Open Source Maker, the Plan's final step, 11-05-26); it answers once user publishes it
   repoUrl: "https://github.com/adriangrantdotorg/Sidekick-Partners-AI-Scout",

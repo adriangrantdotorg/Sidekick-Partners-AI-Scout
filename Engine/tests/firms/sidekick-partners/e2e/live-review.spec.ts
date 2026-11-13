@@ -18,7 +18,7 @@ test("Synergistic Funds: the new name and address, the old address sends you on,
   await expect(page.locator("main .ph-lede")).toContainText("Funds synergistic to Sidekick Partners");
   await expect(page.locator("main h2", { hasText: "Their Latest Deals" })).toBeVisible();
   await expect(page.locator("main h2", { hasText: "The Funds Scout Watches" })).toBeVisible();
-  for (const gone of ["Consumer Funds", "PitchBook, X and LinkedIn", "links only in this prototype"]) await expect(page.locator("body")).not.toContainText(gone);
+  for (const gone of ["Consumer Funds", "PitchBook, X and LinkedIn", "links only in this demo"]) await expect(page.locator("body")).not.toContainText(gone);
   await expect(page.locator(".top .nav")).toContainText("Synergistic Funds");
 });
 

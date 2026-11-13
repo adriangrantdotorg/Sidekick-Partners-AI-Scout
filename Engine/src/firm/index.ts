@@ -27,7 +27,9 @@ export const possessive = (name: string) => (name.endsWith("s") ? `${name}'` : `
 export const firmSlug = firm.short.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 /** The top bar's two-line name, from the product: "COURTSIDE" over "VENTURES SCOUT" (until a firm's own logo, Plan step 11). */
 export const BRAND_LINES = ((w: string[]) => [w[0], w.slice(1).join(" ")].map((x) => x.toUpperCase()))(firm.product.split(" ")) as [string, string];
-/** The footer's and About page's line: Scout is user's own prototype and never speaks as the firm (Plan section 1). */
+/** The site's name in every tab title: "Sidekick Partners AI Scout (DEMO)" (the product, then the firm's titleTag). */
+export const SITE_TITLE = firm.titleTag ? `${firm.product} ${firm.titleTag}` : firm.product;
+/** The footer's and About page's line: Scout is user's own demo and never speaks as the firm (Plan section 1). */
 /** The look a page draws before its script reads the viewer's device setting or their own pick (brand.defaultLook). */
 export const DEFAULT_LOOK: "light" | "dark" = firm.brand?.defaultLook ?? "dark";
 export const DISCLAIMER = disclaimer(firm.name);

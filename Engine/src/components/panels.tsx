@@ -197,7 +197,7 @@ export function NotSaved() {
   return (
     <section className="x-already x-notsaved" aria-label="Not Saved" data-md="skip">
       <b>Not Saved</b>
-      <span>You&apos;re viewing a prototype, so this result disappears when you leave the page. Saving comes in Phase II{BUILDER.name ? `, once ${builderFirst()} joins the team` : ""}.</span>
+      <span>You&apos;re viewing a demo, so this result disappears when you leave the page. Saving comes in Phase II{BUILDER.name ? `, once ${builderFirst()} joins the team` : ""}.</span>
     </section>
   );
 }

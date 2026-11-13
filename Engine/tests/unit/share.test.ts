@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { parseShare, sharePreview, siteUrl, SHARE_LIMITS } from "@/lib/share";
+import { firm, SITE_TITLE } from "@/firm";
 
 describe("share preview (content/share-preview.md)", () => {
   it("fits LinkedIn's one-line card: title 60, description 125 characters or less", () => {
@@ -24,6 +25,15 @@ describe("share preview (content/share-preview.md)", () => {
     expect(siteUrl({ SITE_URL: "", VERCEL_PROJECT_PRODUCTION_URL: "example-firm-scout.vercel.app" }, null)).toBe(real);
     expect(siteUrl({ SITE_URL: "[SENSITIVE]" }, null)).toBeNull();
     expect(siteUrl({ SITE_URL: "javascript:alert(1)" }, null)).toBeNull();
+  });
+
+  it("every tab title and the share title end with the firm's (DEMO) tag (user, 11-12-26)", () => {
+    const layout = readFileSync("src/app/layout.tsx", "utf8");
+    // one name for every page: the default and the template both read SITE_TITLE, never the bare product
+    expect(layout).toMatch(/title:\s*\{\s*default:\s*SITE_TITLE,\s*template:\s*`%s · \$\{SITE_TITLE\}`/);
+    expect(layout).not.toMatch(/\$\{firm\.product\}/);
+    expect(SITE_TITLE).toBe(firm.titleTag ? `${firm.product} ${firm.titleTag}` : firm.product);
+    if (firm.titleTag) expect(sharePreview().title.endsWith(firm.titleTag), `share-preview.md's Title should end with ${firm.titleTag}`).toBe(true);
   });
 
   it("the layout takes its share words from the file, never a copy in code", () => {
