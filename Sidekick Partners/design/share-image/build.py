@@ -31,7 +31,7 @@ FONTS = ("https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600;700"
 # Real words only: the site's own name, its share description (brand/share-preview.md) and its footer line.
 TITLE = "Sidekick Partners AI Scout"
 LINE = "Sourcing Seed and Series A startups in Sidekick Partners' five industries, every fact&nbsp;sourced."
-BY = "An independent prototype"
+BY = "An independent prototype by the user"
 INDUSTRIES = ["Premium Consumer Brands", "Consumer Health", "E-Commerce Software", "Vertical SaaS + Embedded Payments",
               "Tech-Enabled Roll-Ups + AI Services"]
 DOMAIN = "sidekick..org"

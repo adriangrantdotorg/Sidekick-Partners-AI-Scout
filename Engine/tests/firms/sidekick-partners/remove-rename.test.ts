@@ -152,7 +152,7 @@ describe("the top bar names Sidekick, never Courtside", () => {
 describe("About and the footer: user's independent prototype", () => {
   // the builder comes from brand/builder.json, private to this repo (the public copy credits no one: builder.test.ts)
   it.skipIf(!BUILDER.name)("the line, word for word (Plan section 1)", () => {
-    expect(DISCLAIMER).toBe("An independent prototype. Not affiliated with or endorsed by Sidekick Partners.");
+    expect(DISCLAIMER).toBe("An independent prototype by the user. Not affiliated with or endorsed by Sidekick Partners.");
   });
   it.skipIf(!BUILDER.name)("About carries it, the Phase II line, and no creators, shows or Courtside sources", async () => {
     const About = (await import("@/app/about/page")).default;
