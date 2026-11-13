@@ -26,7 +26,7 @@ build = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(build)
 
 HERE = pathlib.Path(__file__).parent
-SITE = "https://sidekick-partners-scout.vercel.app"
+SITE = "https://sidekick..org"
 LEDE = "How early Scout would have sourced a startup."  # user's words, 11-04-26
 ANY_COPY = ("Type any startup's name, in Sidekick's portfolio or not. Scout finds its funding announcement, asks you to "
             "confirm its website, then checks public records for an earlier signal.")

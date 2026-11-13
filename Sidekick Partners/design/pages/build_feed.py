@@ -15,7 +15,7 @@ import urllib.request
 from datetime import date
 
 HERE = pathlib.Path(__file__).parent
-SITE = "https://sidekick-partners-scout.vercel.app"
+SITE = "https://sidekick..org"
 AREAS = {"consumer-brands": "Premium Consumer Brands", "consumer-health": "Consumer Health", "ecommerce-software": "E-Commerce Software",
          "vertical-saas": "Vertical SaaS + Embedded Payments", "roll-ups": "Tech-Enabled Roll-Ups + AI Services"}
 TODAY = date(2026, 11, 3)

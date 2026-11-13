@@ -17,6 +17,6 @@ Copy this section's list into the new firm's `NOTES.md` and fill it at its launc
 
 ## Before its first launch
 
-- A responsive framework comes first (see the root `CLAUDE.md`).
+- Pick a responsive framework first.
 - Its design round, a screen review and every moving part answered in `effects`.
 - No seed yet: its first launch starts from its profile, then `npm run seed:export` writes its own.

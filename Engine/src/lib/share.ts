@@ -24,10 +24,11 @@ function linkedProject(): string | undefined {
   }
 }
 
-/** The site's public address, or null. SITE_URL is a Sensitive variable on Vercel: a Mac build (`npm run update`,
- * `vercel build`) reads the placeholder "[SENSITIVE]" instead, and `new URL()` on it failed the build; with it skipped,
- * the share image's address came out as localhost (10-31-26). So a Mac build falls back to the linked project's
- * <name>.vercel.app; a build on Vercel reads the real SITE_URL. */
+/** The site's public address, or null. SITE_URL is a Config setting on Vercel (11-12-26), so a Mac build (`npm run
+ * update`, `vercel build`) reads it. A Sensitive one reads as the placeholder "[SENSITIVE]": `new URL()` on it failed
+ * the build, and with it skipped the share image's address came out as localhost (10-31-26). So a Mac build that can't
+ * read it falls back to the linked project's <name>.vercel.app, which `update.sh` refuses to deploy when SITE_URL names
+ * a custom domain; a build on Vercel reads the real SITE_URL. */
 export function siteUrl(env: Record<string, string | undefined> = process.env, project: string | null = linkedProject() ?? null): string | null {
   const vercel = env.VERCEL_PROJECT_PRODUCTION_URL;
   for (const v of [env.SITE_URL, vercel && `https://${vercel}`, project && `https://${project}.vercel.app`]) {

@@ -34,7 +34,7 @@ LINE = "Sourcing Seed and Series A startups in Sidekick Partners' five industrie
 BY = "An independent prototype"
 INDUSTRIES = ["Premium Consumer Brands", "Consumer Health", "E-Commerce Software", "Vertical SaaS + Embedded Payments",
               "Tech-Enabled Roll-Ups + AI Services"]
-DOMAIN = "sidekick-partners-scout.vercel.app"
+DOMAIN = "sidekick..org"
 ALT = "Sidekick Partners AI Scout, an independent prototype by the user for sourcing Seed and Series A startups."
 PICK = "A2"  # user, 11-03-26, on A: "do a version where its just this"
 

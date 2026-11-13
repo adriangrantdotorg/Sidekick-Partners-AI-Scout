@@ -20,7 +20,7 @@ build = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(build)
 
 HERE = pathlib.Path(__file__).parent
-SITE = "https://sidekick-partners-scout.vercel.app"
+SITE = "https://sidekick..org"
 LEDE = "Ideas that two or more independent sources raised this week, each in one of Sidekick's industries."
 
 

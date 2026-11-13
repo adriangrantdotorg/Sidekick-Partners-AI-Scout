@@ -33,6 +33,11 @@ build() { VR build --prod > "$LOG/build.log" 2>&1; }
 build || { grep -q "Error connecting to database" "$LOG/build.log" && { printf '▶ The database dropped a connection mid-build; building again\n'; sleep 5; build; }; } || fail "the build failed (see .logs/build.log)" "fix what the log names, then npm run update"
 # The share image needs the public address; a Mac build once baked in localhost (10-31-26, siteUrl in src/lib/share.ts)
 grep -rqs 'property="og:image" content="http://localhost' "$ROOT/.vercel/output/static" && fail "the build points the share image at localhost" "check .vercel/project.json names the Vercel project, then npm run update"
+# ...and at SITE_URL's address: a Sensitive SITE_URL reads "[SENSITIVE]" here, so the build fell back to <name>.vercel.app
+# while the site had moved to a custom domain (11-12-26). SITE_URL is a Config setting (CLAUDE.md).
+SITE=$(grep '^SITE_URL=' .env.local | cut -d= -f2 | tr -d '"')
+OTHER=$(grep -rhoE 'property="og:url" content="https?://[^/"]+' "$ROOT/.vercel/output" 2>/dev/null | sed 's/.*content="//' | sort -u | grep -vxF "$SITE" | head -1)
+[ -n "$SITE" ] && [ -n "$OTHER" ] && fail "the build's share preview names $OTHER, not SITE_URL ($SITE)" "store SITE_URL on Vercel as Config: npx vercel env add SITE_URL production --value $SITE --no-sensitive --force --yes, then npm run update"
 printf '▶ Deploying the build\n'
 VR deploy --prebuilt --prod --yes > "$LOG/deploy.log" 2>&1 || fail "the deploy failed (see .logs/deploy.log)" "npm run update"
 URL=$(grep '^SITE_URL=' .env.local | cut -d= -f2 | tr -d '"')

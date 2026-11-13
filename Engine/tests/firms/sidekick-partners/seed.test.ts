@@ -29,7 +29,8 @@ describe.skipIf(!HERE)("Sidekick's launch seed", () => {
     expect(FILE).toContain(`/${FIRMS["sidekick-partners"]}/seed/`);
     const { seedFirmError } = await import("@/lib/seed");
     expect(seedFirmError(seed)).toBeNull();
-    expect(seed.source).toContain("sidekick-partners-scout.vercel.app");
+    // exported from the live site: its address since 11-12-26, or the first one the launch seed names
+    expect(seed.source).toMatch(/sidekick\.\.org|sidekick-partners-scout\.vercel\.app/);
   });
 
   it("its counts match its rows, and it carries what a fresh site needs on day one", () => {
