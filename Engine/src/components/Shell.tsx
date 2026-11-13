@@ -61,6 +61,16 @@ export function Logo() {
   );
 }
 
+/** The Demo tag beside the logo (user, 11-12-26; Sidekick's pick: Sidekick Partners/design/demo-signal, A1). Only a
+ *  site with a builder is someone's demo, so the public copy (no builder) draws none. */
+function DemoTag() {
+  return BUILDER.name ? (
+    <span className="demo-tag" title={DISCLAIMER}>
+      Demo
+    </span>
+  ) : null;
+}
+
 /** The header's mark: the firm's own logo with its word beside it (brand.logo), else Scout's mark and the firm's name. */
 export function BrandMark() {
   const own = firm.brand?.logo;
@@ -73,6 +83,7 @@ export function BrandMark() {
           <img className="brand-logo" src={brandLogo.src} alt={firm.name} />
           <span className="brand-rule" aria-hidden="true" />
           <span className="brand-word">{own.word}</span>
+          <DemoTag />
         </div>
       </>
     );

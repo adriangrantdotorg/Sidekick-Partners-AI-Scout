@@ -50,6 +50,11 @@ html[data-motion="off"] body::before, html[data-motion="off"] body::after { anim
 .brand.own, a.brand.own { background:transparent; gap:13px; padding:0 24px 0 28px; align-items:center; }
 /* the logo, the rule and AI SCOUT share Sidekick's line: Engine's .brand-lock aligns them on the baseline */
 .brand.own img.brand-logo { height:30px; width:auto; }
+/* the Demo tag (user, 11-12-26, design/demo-signal A1): light brass, small capitals; the header stays dark in both looks */
+.brand .demo-tag { --demo-tag:#e2c27d; font:700 16px/1 'Source Sans 3', sans-serif; font-variant:small-caps !important;
+  text-transform:lowercase !important; letter-spacing:.06em; padding:5px 11px 6px; margin-left:4px; }
+@media (max-width:1320px) { .brand .demo-tag { font-size:13px; padding:4px 8px 5px; } }
+@media (max-width:700px) { .brand .demo-tag { font-size:10px; padding:2px 6px 3px; } }
 .brand-rule { width:2px; height:30px; background:var(--mint); box-shadow:0 0 10px 1px var(--mint); border-radius:2px; flex:none; }
 /* AI SCOUT's capitals as tall as Sidekick's letters: font size = logo height × 300 / 463 / 0.77 (design/NOTES.md) */
 .brand-word { font:600 25.2px/1 var(--font-brand); color:var(--mint); letter-spacing:.05em; white-space:nowrap; }
